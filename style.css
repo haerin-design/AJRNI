@@ -1,0 +1,35 @@
+.Navbar { /* شريط التنقل */
+    background-color: white;
+    color: rgb(25, 40, 126);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.links { /* الروابط */
+    display: flex;
+    gap: 30px;
+}
+
+.icons { /* الأيقونات */
+    display: flex;
+    gap: 20px;
+    position: absolute;
+    left: 400px;
+}
+
+.icons i {
+    font-size: 18px;
+}
+
+.input-box { /* البحث */
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+}
+
+.input-box:focus {
+  border-color: #6c63ff;
+}
