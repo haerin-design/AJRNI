@@ -1,34 +1,536 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-    <title>Home Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>أجرني | AJRNI</title>
+
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-    <header class="Navbar">
+<header class="header"> <!---->
 
-        <div class="links"> <!--القوائم بالشريط-->
-            <p>الصفحة الرئيسية</p>
-            <p>المفضلات</p>
-            <p>العروض</p>
-            <p>المنتجات</p>
+    <div class="logo-area">
+        <div class="logo-circle">
+            <i class="fa-solid fa-box-open"></i>
         </div>
 
-        <div class="icons"> <!--الأيقونات-->
+        <div class="logo-text">
+            <h1>AJRNI</h1>
+            <span>RENT • BUY • REUSE</span>
+        </div>
+    </div>
+
+
+    <nav class="navbar"> <!-- القوائم بالشريط -->
+
+        <a href="#" class="active">الرئيسية</a>
+        <a href="#products">المنتجات</a>
+        <a href="#offers">العروض</a>
+        <a href="#contact">تواصل معنا</a>
+
+    </nav>
+
+
+    <div class="header-actions"> <!-- الأيقونات -->
+
+        <button>
             <i class="fa-solid fa-cart-shopping"></i>
-            <i class="fa-regular fa-heart"></i>
-            <i class="fa-solid fa-user"></i>
-        </div>
+        </button>
 
-        <div class="input-box"> <!--البحث-->
-                <input type="text" class="input-box" placeholder="ابحث عن المزيد من المنجات">
-                <i class="bx bxs-user"></i>
+        <button>
+            <i class="fa-regular fa-heart"></i>
+        </button>
+
+        <button>
+            <i class="fa-regular fa-user"></i>
+        </button>
+
+    </div>
+
+
+    <div class="search-box"> <!-- البحث -->
+
+        <input type="text"
+               placeholder="ابحث عن منتجاتك المفضلة...">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+    </div>
+
+</header>
+
+<main>
+
+    <!-- HERO + SIDE CATEGORIES -->
+
+    <section class="top-section"> <!---->
+
+        <div class="hero">
+
+            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1200&q=80"
+                 alt="ملابس">
+
+            <div class="hero-overlay">
+
+                <div class="hero-content">
+
+                    <div class="small-logo">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+
+                    <h2>كل ما تحتاجه في مكان واحد</h2>
+
+                    <p>
+                        ملابس عصرية  • كاميرات احترافية
+                    </p>
+
+                    <button class="main-btn">
+                        تسوق الآن
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+
+                </div>
+
             </div>
 
-    </header>
+
+            <button class="slider-arrow right">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <button class="slider-arrow left">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+
+            <div class="dots">
+                <span></span>
+                <span class="active-dot"></span>
+                <span></span>
+                <span></span>
+            </div>
+
+        </div>
+
+
+        <!-- SIDE CARDS -->
+
+        <div class="side-categories">
+
+            <div class="category-card">
+
+                <div class="category-info">
+                    <h3>الملابس</h3>
+                    <p>اكتشف أحدث المجموعات</p>
+                    <button>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=400&q=80"
+                     alt="الملابس">
+
+            </div>
+
+
+            <div class="category-card">
+
+                <div class="category-info">
+                    <h3>النظارات</h3>
+                    <p>أناقة في كل زاوية</p>
+                    <button>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=400&q=80"
+                     alt="النظارات">
+
+            </div>
+
+
+            <div class="category-card">
+
+                <div class="category-info">
+                    <h3>الكاميرات</h3>
+                    <p>التقط أجمل لحظاتك</p>
+                    <button>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80"
+                     alt="الكاميرات">
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <section class="features">
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+
+            <div>
+                <h3>شحن سريع</h3>
+                <p>لجميع مناطق المملكة</p>
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div>
+                <h3>دفع آمن</h3>
+                <p>جميع طرق الدفع</p>
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                <i class="fa-solid fa-certificate"></i>
+            </div>
+
+            <div>
+                <h3>منتجات أصلية</h3>
+                <p>100%</p>
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                <i class="fa-solid fa-headset"></i>
+            </div>
+
+            <div>
+                <h3>دعم العملاء</h3>
+                <p>على مدار الساعة</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= CONTENT GRID ================= -->
+
+    <section class="content-grid">
+
+
+        <!-- LEFT MAIN CONTENT -->
+
+        <div class="main-content">
+
+            <!-- Categories -->
+
+            <div class="section-heading">
+
+                <a href="#">عرض الكل <i class="fa-solid fa-arrow-left"></i></a>
+
+                <h2>أقسام المتجر</h2>
+
+            </div>
+
+
+            <div class="store-categories">
+
+                <div class="store-category">
+
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=80">
+
+                    <div class="category-overlay">
+
+                        <h3>الكاميرات</h3>
+
+                        <span>
+                            تصفح الآن
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="store-category">
+
+                    <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=80">
+
+                    <div class="category-overlay">
+
+                        <h3>النظارات</h3>
+
+                        <span>
+                            تصفح الآن
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="store-category">
+
+                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80">
+
+                    <div class="category-overlay">
+
+                        <h3>الملابس</h3>
+
+                        <span>
+                            تصفح الآن
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Bottom Banner -->
+
+            <div class="bottom-banner">
+
+                <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=1200&q=80">
+
+                <div class="banner-text">
+
+                    <h2>إطلالتك تبدأ من هنا</h2>
+
+                    <p>
+                        اكتشف أحدث المنتجات بأفضل الأسعار
+                    </p>
+
+                    <button>
+                        تسوق الآن
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= PRODUCTS SIDEBAR ================= -->
+
+        <aside class="products-sidebar">
+
+            <div class="section-heading">
+
+                <a href="#">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    عرض الكل
+                </a>
+
+                <h2>
+                    <i class="fa-solid fa-star"></i>
+                    المنتجات المميزة
+                </h2>
+
+            </div>
+
+
+            <div class="products">
+
+
+                <!-- Product 1 -->
+
+                <div class="product-card">
+
+                    <div class="product-image">
+
+                        <span class="favorite">
+                            <i class="fa-regular fa-heart"></i>
+                        </span>
+
+                        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=500&q=80">
+
+                    </div>
+
+                    <h3>Canon EOS R7</h3>
+
+                    <div class="price">
+                        <strong>4,299</strong>
+                        <span>ريـس</span>
+                    </div>
+
+                    <button class="cart-btn">
+                        أضف إلى السلة
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+
+                </div>
+
+
+
+                <!-- Product 2 -->
+
+                <div class="product-card">
+
+                    <div class="product-image">
+
+                        <span class="favorite">
+                            <i class="fa-regular fa-heart"></i>
+                        </span>
+
+                        <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=500&q=80">
+
+                    </div>
+
+                    <h3>نظارة شمسية كلاسيك</h3>
+
+                    <div class="price">
+                        <strong>549</strong>
+                        <span>ريـس</span>
+                    </div>
+
+                    <button class="cart-btn">
+                        أضف إلى السلة
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+
+                </div>
+
+
+
+                <!-- Product 3 -->
+
+                <div class="product-card">
+
+                    <div class="product-image">
+
+                        <span class="favorite">
+                            <i class="fa-regular fa-heart"></i>
+                        </span>
+
+                        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=500&q=80">
+
+                    </div>
+
+                    <h3>بلوفر رجالي</h3>
+
+                    <div class="price">
+                        <strong>199</strong>
+                        <span>ريـس</span>
+                    </div>
+
+                    <button class="cart-btn">
+                        أضف إلى السلة
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Smart Choice Banner -->
+
+            <div class="smart-banner">
+
+                <div class="smart-logo">
+                    <i class="fa-solid fa-box-open"></i>
+                    <strong>AGARNI</strong>
+                    <small>RENT • BUY • REUSE</small>
+                </div>
+
+                <div class="smart-text">
+
+                    <h2>اختياراتك الذكية</h2>
+
+                    <p>لأسلوب حياة أفضل</p>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </section>
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer id="contact">
+
+    <div class="footer-logo">
+
+        <div class="logo-circle">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <div>
+            <h2>AGARNI</h2>
+            <span>RENT • BUY • REUSE</span>
+        </div>
+
+    </div>
+
+    <p>
+        أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان.
+    </p>
+
+    <div class="social">
+
+        <a href="#">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-brands fa-x-twitter"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-brands fa-snapchat"></i>
+        </a>
+
+    </div>
+
+</footer>
 
 </body>
 </html>
