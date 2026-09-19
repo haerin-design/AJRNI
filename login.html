@@ -14,904 +14,305 @@
             color: #073b78;
             min-height: 100vh;
         }
-        header { /*HEADER*/ 
-            height: 102px;
-            background: white;
-            border-bottom: 1px solid #dceaf7;
-
+        main { /*اطار التسجيل*/
+            min-height: calc(100vh - 102px); /*يحدد الحد الأدنى لارتفاع القسم ليملأ الشاشة تقريبًا*/
             display: flex;
-            align-items: center;
-            padding: 0 35px;
-
-            box-shadow: 0 2px 12px rgba(0, 70, 140, 0.04);
-
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            text-decoration: none;
-            color: #073b78;
-
-            min-width: 330px;
-        }
-        .logo-icon { /* Logo icon */
-            width: 76px;
-            height: 76px;
-            border: 3px solid #073b78;
-            border-radius: 50%;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-weight: bold;
-            font-size: 25px;
-            position: relative;
-        }
-        .logo-icon::before {
-            content: "";
-            position: absolute;
-            width: 47px;
-            height: 47px;
-            border: 2px solid #073b78;
-            transform: rotate(45deg);
-        }
-        .logo-letter {
-            position: relative;
-            z-index: 2;
-            background: white;
-            padding: 2px 7px;
-        }
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-        .logo-name {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 5px;
-        }
-        .logo-slogan {
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 4px;
-            margin-top: 2px;
-        }
-        .header-icons { /* Header icons */
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            margin-right: 45px;
-        }
-        .icon-button {
-            width: 40px;
-            height: 65px;
-
-            border: none;
-            background: transparent;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            color: #073b78;
-            cursor: pointer;
-
-            position: relative;
-            text-decoration: none;
-        }
-        .icon-button svg {
-            width: 30px;
-            height: 30px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-        .icon-button:hover {
-            color: #1268bd;
-        }
-        .icon-button.active::after { /* Active underline */
-            content: "";
-
-            position: absolute;
-            bottom: 0;
-            left: 4px;
-            right: 4px;
-
-            height: 3px;
-            background: #073b78;
-        }
-        .cart-number {
-            position: absolute;
-
-            top: 5px;
-            right: -2px;
-
-            width: 22px;
-            height: 22px;
-
-            background: #073b78;
-            color: white;
-
-            border-radius: 50%;
-
-            font-size: 11px;
-            font-weight: bold;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    
-        nav { /* Navigation */
-            display: flex;
-            align-items: center;
-            gap: 38px;
-        }
-        nav a {
-            color: #073b78;
-            text-decoration: none;
-
-            font-size: 15px;
-            font-weight: 500;
-
-            padding: 40px 0;
-
-            position: relative;
-            cursor: pointer;
-        }
-        nav a:hover {
-            color: #1268bd;
-        }
-        nav a.active::after {
-            content: "";
-            position: absolute;
-
-            left: 0;
-            right: 0;
-            bottom: 29px;
-
-            height: 2px;
-            background: #073b78;
-        }
-        .search-container {/*SEARCH*/
-            margin-left: auto;
-
-            width: 398px;
-            height: 53px;
-
-            border: 1.5px solid #c9dff3;
-            border-radius: 30px;
-
-            display: flex;
-            align-items: center;
-
-            padding: 0 18px;
-
-            background: white;
-        }
-        .search-container svg {
-            width: 24px;
-            height: 24px;
-
-            stroke: #073b78;
-            fill: none;
-            stroke-width: 2;
-        }
-        .search-container input {
-            width: 100%;
-
-            border: none;
-            outline: none;
-
-            font-size: 15px;
-            color: #073b78;
-
-            padding-left: 15px;
-        }
-        .search-container input::placeholder {
-            color: #8ba8c5;
-        }
-        main {/*MAIN*/
-            min-height: calc(100vh - 102px);
-
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-
-            padding: 50px 20px 70px;
+            justify-content: center; /*يخلي العناصر بالمنتصف*/
+            align-items: flex-start; /* يبدأ ترتيب العناصر من الأعلى */
+            padding: 50px 20px 70px; /* مسافه داخليه*/
         }
         .register-card {
             width: 800px;
-
             background: white;
-
-            border-radius: 18px;
-
-            padding: 45px 38px 35px;
-
+            border-radius: 18px; /*ييخلي زوايا العنصر دائريه*/
+            padding: 45px 38px 35px; 
             box-shadow:
                 0 15px 45px rgba(10, 83, 150, 0.10);
-
-            border: 1px solid #e2effa;
+            border: 1px solid #e2effa; /*اطار حول العنصر*/
         }
-        .register-header {
+        .register-header { /*عنوان التسجيل*/
             text-align: center;
             margin-bottom: 32px;
         }
-        .register-header h1 {
+        .register-header h1 {/*عنوان التسجيل*/
             font-size: 34px;
             color: #073b78;
-            margin-bottom: 8px;
+            margin-bottom: 8px; /*مسافه تحت العنصر*/
         }
-        .register-header p {
+        .register-header p { /*عنوان التسجيل*/
             color: #517ba4;
             font-size: 16px;
         }
-        .section-title {  /*ACCOUNT TYPE*/
+        .section-title { /* اختيار نوع الحساب*/
             font-size: 14px;
             font-weight: bold;
             margin-bottom: 12px;
             color: #073b78;
         }
-        .account-options {
+        .account-options { /* اختيار نوع الحساب*/
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr!important;
             gap: 14px;
-
             margin-bottom: 25px;
+    
         }
-        .account-option {
+        .account-option { /* اختيار نوع الحساب*/
             border: 1.5px solid #cbdff1;
             border-radius: 12px;
-
             min-height: 105px;
-
             padding: 15px;
-
             cursor: pointer;
-
             display: flex;
             align-items: center;
             gap: 15px;
-
             transition: 0.2s ease;
         }
-        .account-option:hover {
+        .account-option:hover { /* اختيار نوع الحساب*/
             border-color: #277bc4;
             background: #f8fcff;
         }
-        .account-option.selected {
+        .account-option.selected { /* اختيار نوع الحساب*/
             border-color: #287ac2;
             box-shadow: inset 0 0 0 1px #287ac2;
             background: #fafdff;
         }
-        .radio {
+        .radio { /* اختيار نوع الحساب*/
             width: 20px;
             height: 20px;
-
             border: 2px solid #bfd5e9;
             border-radius: 50%;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             flex-shrink: 0;
         }
-        .account-option.selected .radio {
+        .account-option.selected .radio { /* اختيار نوع الحساب*/
             border-color: #287ac2;
         }
-        .account-option.selected .radio::after {
+        .account-option.selected .radio::after { /* اختيار نوع الحساب*/
             content: "";
-
             width: 9px;
             height: 9px;
-
             border-radius: 50%;
             background: #287ac2;
         }
-        .account-icon {
+        .account-icon { /*ايقونات او رسمات نوع الحساب*/
             width: 30px;
             height: 30px;
-
             color: #073b78;
             flex-shrink: 0;
         }
-        .account-icon svg {
+        .account-icon svg { /*ايقونات او رسمات نوع الحساب*/
             width: 100%;
             height: 100%;
-
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
         }
-        .account-content strong {
+        .account-content strong { /*نص نوع الحساب*/
             display: block;
             font-size: 15px;
             margin-bottom: 5px;
         }
-        .account-content span {
+        .account-content span { /*نص نوع الحساب*/
             color: #7698b8;
             font-size: 13px;
         }
-        .form-group { /* FORM */
+        .form-group { /* حقول النموذج*/
             margin-bottom: 17px;
         }
-        .form-group label {
+        .form-group label { /* حقول النموذج*/
             display: block;
-
             font-size: 13px;
             font-weight: bold;
-
             margin-bottom: 8px;
-
             color: #073b78;
         }
-        .input-wrapper {
+        .input-wrapper { /* حقول النموذج*/
             height: 52px;
-
             border: 1.5px solid #d1e3f3;
             border-radius: 9px;
-
             display: flex;
             align-items: center;
-
             padding: 0 14px;
-
             transition: 0.2s;
         }
-        .input-wrapper:focus-within {
+        .input-wrapper:focus-within { /* حقول النموذج*/
             border-color: #287ac2;
             box-shadow: 0 0 0 3px rgba(40, 122, 194, 0.08);
         }
-        .input-wrapper svg {
+        .input-wrapper svg { /* حقول النموذج*/
             width: 21px;
             height: 21px;
-
             stroke: #2870ad;
             fill: none;
             stroke-width: 2;
-
             flex-shrink: 0;
         }
-        .input-wrapper input {
+        .input-wrapper input { /* حقول النموذج*/
             border: none;
             outline: none;
-
             width: 100%;
-
             font-size: 14px;
-
             padding-left: 13px;
-
             color: #073b78;
         }
-        .input-wrapper input::placeholder {
+        .input-wrapper input::placeholder { /* حقول النموذج*/
             color: #8caac6;
         }
-        .password-toggle {
+        .password-toggle { /*اظهار واخفاء كلمه المرور*/
             background: none;
             border: none;
-
             cursor: pointer;
-
             display: flex;
             align-items: center;
         }
-        .password-toggle svg {
+        .password-toggle svg { /*اظهار واخفاء كلمه المرور*/
             width: 19px;
             height: 19px;
         }
-        .terms {  /*TERMS*/
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-
-            font-size: 13px;
-
-            margin-top: 5px;
-            margin-bottom: 22px;
-
-            color: #577c9e;
-        }
-        .terms input {
-            width: 18px;
-            height: 18px;
-
-            accent-color: #073b78;
-
-            cursor: pointer;
-        }
-        .terms a {
-            color: #073b78;
-            font-weight: bold;
-        }
-        .create-button { /*BUTTON*/
+        .create-button { /*زر انشاء الحساب*/
             width: 100%;
             height: 50px;
-
             border: none;
             border-radius: 28px;
-
             background: #064681;
             color: white;
-
             font-size: 16px;
             font-weight: bold;
-
             cursor: pointer;
-
             transition: 0.2s;
-
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
-        .create-button:hover {
+        .create-button:hover { /*زر انشاء الحساب*/
             background: #053968;
             transform: translateY(-1px);
         }
-        .create-button svg {
+        .create-button svg { /*زر انشاء الحساب*/
             width: 20px;
             height: 20px;
-
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
         }
-        .login-area {
+        .login-area { /*رابط تسجيل الدخول*/
             border-top: 1px solid #e1edf7;
-
             margin-top: 18px;
             padding-top: 18px;
-
             text-align: center;
-
             font-size: 13px;
             color: #6c8daa;
         }
-        .login-area a {
+        .login-area a { /*رابط تسجيل الدخول*/
             color: #073b78;
             font-weight: bold;
             text-decoration: none;
         }
-        .search-results { /* SEARCH RESULTS*/
-            position: fixed;
-
-            top: 92px;
-            right: 35px;
-
-            width: 398px;
-
-            background: white;
-
-            border: 1px solid #d8e8f5;
-            border-radius: 12px;
-
-            box-shadow: 0 10px 30px rgba(0, 70, 140, 0.12);
-
+        .message { /*رسائل النجاح والخطأ*/
             display: none;
-
-            overflow: hidden;
-
-            z-index: 2000;
-        }
-        .search-results.show {
-            display: block;
-        }
-        .search-result {
-            padding: 15px 18px;
-
-            cursor: pointer;
-
-            border-bottom: 1px solid #edf4fa;
-        }
-        .search-result:hover {
-            background: #f5faff;
-        }
-        .search-result strong {
-            display: block;
-            color: #073b78;
-            margin-bottom: 4px;
-        }
-        .search-result span {
-            color: #7895af;
-            font-size: 12px;
-        }
-        .message { /* SUCCESS MESSAGE*/
-            display: none;
-
             margin-top: 18px;
-
             padding: 13px;
-
             border-radius: 8px;
-
             text-align: center;
-
             font-size: 14px;
         }
-        .message.success {
+        .message.success { /*رسائل النجاح والخطأ*/
             display: block;
-
             background: #edf9f1;
             color: #21733b;
             border: 1px solid #c9ead4;
         }
-        .message.error {
+        .message.error { /*رسائل النجاح والخطأ*/
             display: block;
-
             background: #fff1f1;
             color: #a63838;
             border: 1px solid #f0caca;
         }
-        @media (max-width: 1250px) {  /* RESPONSIVE*/
-            nav {
-                gap: 20px;
-            }
-
-            .header-icons {
-                margin-right: 20px;
-                gap: 10px;
-            }
-
-            .logo {
-                min-width: 280px;
-            }
-
-            .search-container {
-                width: 280px;
-            }
-        }
-        @media (max-width: 1000px) {
-            header {
-                height: auto;
-                min-height: 85px;
-
-                flex-wrap: wrap;
-
-                padding: 12px 20px;
-                gap: 10px;
-            }
-
-            .logo {
-                min-width: auto;
-            }
-
-            nav {
-                order: 3;
-                width: 100%;
-
-                justify-content: center;
-
-                overflow-x: auto;
-            }
-
-            nav a {
-                padding: 10px 0;
-                white-space: nowrap;
-            }
-
-            nav a.active::after {
-                bottom: 3px;
-            }
-
-            .search-container {
-                margin-left: auto;
-                width: 260px;
-            }
-
-            .search-results {
-                top: 82px;
-                right: 20px;
-            }
-        }
-        @media (max-width: 650px) {
-            .logo-name {
-                font-size: 23px;
-            }
-
-            .logo-slogan {
-                font-size: 8px;
-            }
-
-            .logo-icon {
-                width: 55px;
-                height: 55px;
-            }
-
-            .logo-icon::before {
-                width: 35px;
-                height: 35px;
-            }
-
-            .header-icons {
-                gap: 3px;
-            }
-
-            .search-container {
-                width: 100%;
-                order: 2;
-            }
-
-            .search-results {
-                top: 145px;
-                left: 20px;
-                right: 20px;
-                width: auto;
-            }
-
             main {
                 padding: 25px 12px;
             }
-
             .register-card {
                 padding: 30px 20px;
             }
-
             .register-header h1 {
                 font-size: 27px;
             }
-
             .account-options {
                 grid-template-columns: 1fr;
             }
-        }
     </style>
 </head>
 <body>
-    <header><!--HEADER-->
-        <a href="index.html" class="logo"><!-- LOGO -->
-
-            <div class="logo-icon">
-                <span class="logo-letter">A</span>
-            </div>
-
-            <div class="logo-text">
-                <div class="logo-name">AGARNI</div>
-                <div class="logo-slogan">RENT · BUY · REUSE</div>
-            </div>
-
-        </a>
-        <div class="header-icons"> <!-- HEADER ICONS -->
-            <!-- CART -->
-            <a href="cart.html"
-               class="icon-button"
-               title="Shopping Cart">
-
-                <svg viewBox="0 0 24 24">
-                    <circle cx="9" cy="20" r="1"></circle>
-                    <circle cx="18" cy="20" r="1"></circle>
-
-                    <path d="M2 3h3l2.5 11h10l3-8H6"></path>
-                </svg>
-
-                <span class="cart-number" id="cartCount">0</span>
-
-            </a>
-            <!-- FAVORITES -->
-            <a href="favorites.html"
-               class="icon-button"
-               title="Favorites">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M20.8 8.8
-                             C20.8 13.5 12 20 12 20
-                             S3.2 13.5 3.2 8.8
-                             C3.2 6.1 5.3 4 8 4
-                             C9.7 4 11.2 4.9 12 6.2
-                             C12.8 4.9 14.3 4 16 4
-                             C18.7 4 20.8 6.1 20.8 8.8Z">
-                    </path>
-                </svg>
-
-            </a>
-            <!-- USER -->
-            <a href="register.html"
-               class="icon-button active"
-               title="Account">
-
-                <svg viewBox="0 0 24 24">
-
-                    <circle cx="12" cy="7" r="3.5"></circle>
-
-                    <path d="M5 21
-                             C5.5 16.8 8 14.5 12 14.5
-                             C16 14.5 18.5 16.8 19 21">
-                    </path>
-
-                </svg>
-
-            </a>
-
-        </div>
-        <nav><!-- NAVIGATION -->
-
-            <a href="index.html">
-                Home
-            </a>
-
-            <a href="about.html">
-                About Us
-            </a>
-
-            <a href="categories.html">
-                Categories
-            </a>
-
-            <a href="offers.html">
-                Offers
-            </a>
-
-            <a href="brands.html">
-                Brands
-            </a>
-
-            <a href="blog.html">
-                Blog
-            </a>
-
-        </nav>
-        <div class="search-container"> <!-- SEARCH -->
-
-            <svg viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7"></circle>
-                <path d="M16.5 16.5L21 21"></path>
-            </svg>
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search for products, brands..."
-                autocomplete="off">
-
-        </div>
-    </header>
-    <div class="search-results" id="searchResults"></div> <!-- SEARCH RESULTS -->
-    <main> <!--MAIN REGISTER-->
+    <main> <!--اطار التسجيل-->
         <div class="register-card">
-
             <div class="register-header">
-
-                <h1>Create Your Account</h1>
-
-                <p>
-                    Join AGARNI and start renting, buying, and reusing.
-                </p>
-
+                <h1>إنشاء حساب</h1><!--عنوان انشاء الصفخه-->
+                <p> .أنضم الى أجرني وابدأ رحلة التأجير والاستئجار</p>
             </div>
-            <div class="section-title"><!-- ACCOUNT TYPE -->
-
-                I want to:
-            </div>
-
-
+            <div class="section-title">:اريد ان اكون</div>
             <div class="account-options">
-<!-- CUSTOMER -->
-                <div
-                    class="account-option selected"
+<!-- مربع اختيار انا عميل -->
+                <div class="account-option selected"
                     id="customerOption"
-                    onclick="selectAccount('customer')"
-                >
-
+                    onclick="selectAccount('customer')">
                     <div class="radio"></div>
-
                     <div class="account-icon">
-
                         <svg viewBox="0 0 24 24">
-
-                            <circle cx="12" cy="7" r="3"></circle>
-
+                            <circle cx="12" cy="7" r="3"></circle><!--رسم الشخص-->
                             <path d="M5 21
                                      C5.5 16.5 8 14 12 14
                                      C16 14 18.5 16.5 19 21">
                             </path>
-
                         </svg>
-
                     </div>
-
                     <div class="account-content">
-
-                        <strong>
-                            Rent / Buy Products
-                        </strong>
-
-                        <span>
-                            I'm a customer
-                        </span>
-
+                        <strong>مستأجر/ شراء منتجات</strong>
+                        <span>انا عميل</span>
                     </div>
-
                 </div>
-<!-- SELLER -->
-                <div
-                    class="account-option"
+<!-- مربع اختيار الموجر -->
+                <div class="account-option"
                     id="sellerOption"
-                    onclick="selectAccount('seller')"
-                >
-
+                    onclick="selectAccount('seller')">
                     <div class="radio"></div>
-
                     <div class="account-icon">
-
-                        <svg viewBox="0 0 24 24">
-
+                        <svg viewBox="0 0 24 24"><!--رسم البيت-->
                             <path d="M4 10h16"></path>
-
                             <path d="M5 10v9h14v-9"></path>
-
                             <path d="M3 10l2-6h14l2 6"></path>
-
                             <path d="M9 19v-5h6v5"></path>
-
                         </svg>
-
                     </div>
-
                     <div class="account-content">
-
-                        <strong>
-                            Rent / Sell Products
-                        </strong>
-
-                        <span>
-                            I'm a seller / owner
-                        </span>
-
+                        <strong>مؤجر/ بيع منتجات</strong>
+                        <span>انا بائع</span>
                     </div>
-
                 </div>
-
             </div>
-            <form id="registerForm"><!-- FORM-->
-                <div class="form-group"><!-- FULL NAME -->
-
-
-                    <label>
-                        Full Name
-                    </label>
-
+            <form id="registerForm"><!-- نموذج التسجيل-->
+                <div class="form-group"><!-- الاسم -->
+                    <label>الاسم كامل</label>
                     <div class="input-wrapper">
-
-                        <svg viewBox="0 0 24 24">
-
+                        <svg viewBox="0 0 24 24"><!--رسم الشخص-->
                             <circle cx="12" cy="7" r="3"></circle>
-
                             <path d="M5 21
                                      C5.5 16.5 8 14 12 14
                                      C16 14 18.5 16.5 19 21">
                             </path>
-
                         </svg>
-
-                        <input
-                            type="text"
+                        <input type="text"
                             id="fullName"
-                            placeholder="Enter your full name"
-                            required
-                        >
-
+                            placeholder="اكتب اسمك كاملاً"
+                            required>
                     </div>
-
                 </div>
-                <div class="form-group"><!-- EMAIL -->
-
-                    <label>
-                        Email Address
-                    </label>
-
+                <div class="form-group"><!-- ايميل -->
+                    <label>عنوان البريد الالكتروني</label>
                     <div class="input-wrapper">
-
-                        <svg viewBox="0 0 24 24">
-
+                        <svg viewBox="0 0 24 24"><!--رسم البريد-->
                             <rect
                                 x="3"
                                 y="5"
@@ -919,31 +320,18 @@
                                 height="14"
                                 rx="2">
                             </rect>
-
                             <path d="M3 7l9 6 9-6"></path>
-
                         </svg>
-
-                        <input
-                            type="email"
+                        <input type="email"
                             id="email"
-                            placeholder="Enter your email address"
-                            required
-                        >
-
+                            placeholder="اكتب عنوان بريدك"
+                            required>
                     </div>
-
                 </div>
-                <div class="form-group"><!-- PASSWORD -->
-
-                    <label>
-                        Password
-                    </label>
-
+                <div class="form-group"><!-- الباسوورد -->
+                    <label>الرمز السري</label>
                     <div class="input-wrapper">
-
-                        <svg viewBox="0 0 24 24">
-
+                        <svg viewBox="0 0 24 24"><!--رسم القفل-->
                             <rect
                                 x="5"
                                 y="10"
@@ -951,51 +339,30 @@
                                 height="10"
                                 rx="2">
                             </rect>
-
                             <path d="M8 10V7a4 4 0 018 0v3"></path>
-
                         </svg>
-
-                        <input
-                            type="password"
+                        <input type="password"
                             id="password"
-                            placeholder="Enter your password"
-                            required
-                        >
-
-                        <button
-                            type="button"
+                            placeholder="اكتب رمزك السري"
+                            required>
+                        <button type="button"
                             class="password-toggle"
-                            onclick="togglePassword('password', this)"
-                        >
-
-                            <svg viewBox="0 0 24 24">
-
+                            onclick="togglePassword('password', this)"><!--العين الي تظهر الباس-->
+                            <svg viewBox="0 0 24 24"><!--رسمه العين-->
                                 <path d="M2 12s3.5-6 10-6
                                          s10 6 10 6
                                          s-3.5 6-10 6
                                          s-10-6-10-6Z">
                                 </path>
-
                                 <circle cx="12" cy="12" r="2.5"></circle>
-
                             </svg>
-
                         </button>
-
                     </div>
-
                 </div>
-                <div class="form-group"><!-- CONFIRM PASSWORD -->
-
-                    <label>
-                        Confirm Password
-                    </label>
-
+                <div class="form-group"><!-- خانه تاكيد الباس -->
+                    <label>تأكيد الرمز السري</label>
                     <div class="input-wrapper">
-
-                        <svg viewBox="0 0 24 24">
-
+                        <svg viewBox="0 0 24 24"><!--رسم القفل-->
                             <rect
                                 x="5"
                                 y="10"
@@ -1003,347 +370,121 @@
                                 height="10"
                                 rx="2">
                             </rect>
-
                             <path d="M8 10V7a4 4 0 018 0v3"></path>
-
                         </svg>
-
-                        <input
-                            type="password"
+                        <input type="password"
                             id="confirmPassword"
-                            placeholder="Confirm your password"
-                            required
-                        >
-
-                        <button
-                            type="button"
+                            placeholder="اكد رمزك السري"required>
+                        <button type="button"
                             class="password-toggle"
-                            onclick="togglePassword('confirmPassword', this)"
-                        >
-
-                            <svg viewBox="0 0 24 24">
-
+                            onclick="togglePassword('confirmPassword', this)"><!--العين الي تظهر الباس-->
+                            <svg viewBox="0 0 24 24"><!--رسمه العين-->
                                 <path d="M2 12s3.5-6 10-6
                                          s10 6 10 6
                                          s-3.5 6-10 6
                                          s-10-6-10-6Z">
                                 </path>
-
                                 <circle cx="12" cy="12" r="2.5"></circle>
-
                             </svg>
-
                         </button>
-
                     </div>
-
                 </div>
-                <div class="terms"><!-- TERMS -->
-                    <input
-                        type="checkbox"
-                        id="terms"
-                        required
-                    >
-
-                    <label for="terms">
-                        I agree to the
-                        <a href="terms.html">
-                            Terms & Conditions
-                        </a>
-                        and
-                        <a href="privacy.html">
-                            Privacy Policy
-                        </a>
-                    </label>
-
-                </div>
-<!-- BUTTON -->
-                <button
-                    type="submit"
-                    class="create-button"
-                >
-
-                    Create Account
-
-                    <svg viewBox="0 0 24 24">
-
+<!-- زر الارسال -->
+                <button type="submit"
+                    class="create-button">انشئ الحساب
+                    <svg viewBox="0 0 24 24"><!--رسمه السهم-->
                         <path d="M5 12h13"></path>
                         <path d="M13 6l6 6-6 6"></path>
-
                     </svg>
-
                 </button>
-<!-- MESSAGE -->
-                <div
-                    id="formMessage"
+<!-- رساله لتسجيل الدخول -->
+                <div id="formMessage"
                     class="message">
                 </div>
-
             </form>
-            <div class="login-area"><!-- LOGIN -->
-                Already have an account?
-
-                <a href="login.html">
-                    Log In
-                </a>
-
+            <div class="login-area"><!-- تسجيل دخول -->
+                لديك حساب؟
+                <a href="">سجل الدخول</a>
             </div>
-
         </div>
-
     </main>
-<!--JAVASCRIPT-->
     <script>
-        let selectedAccount = "customer";/* ACCOUNT TYPE*/
-
+        let selectedAccount = "customer";/* المسؤول عن الضغط على مستاجر وموجر*/
         function selectAccount(type) {
-
             selectedAccount = type;
-
             const customer =
                 document.getElementById("customerOption");
-
             const seller =
                 document.getElementById("sellerOption");
-
             if (type === "customer") {
-
                 customer.classList.add("selected");
                 seller.classList.remove("selected");
-
             } else {
-
                 seller.classList.add("selected");
                 customer.classList.remove("selected");
-
             }
         }
-/* PASSWORD SHOW / HIDE*/
+/* يخلي زر العين يغير كلمة المرور من مخفية إلى ظاهره والعكس*/
         function togglePassword(inputId, button) {
-
             const input =
                 document.getElementById(inputId);
-
             if (input.type === "password") {
-
                 input.type = "text";
-
             } else {
-
                 input.type = "password";
-
             }
         }
-/*REGISTER FORM */
+/* التحقق من تطابق كلمه المرور ونوع الحساب ورساله خطااو نجاح*/
         document
             .getElementById("registerForm")
             .addEventListener("submit", function(event) {
-
                 event.preventDefault();
-
                 const name =
                     document.getElementById("fullName").value.trim();
-
                 const email =
                     document.getElementById("email").value.trim();
-
                 const password =
                     document.getElementById("password").value;
-
                 const confirmPassword =
                     document.getElementById("confirmPassword").value;
-
                 const message =
                     document.getElementById("formMessage");
-/* Password check */
+
                 if (password !== confirmPassword) {
-
                     message.textContent =
-                        "Passwords do not match.";
-
+                        ".الرمز السري غير متطابق";
                     message.className =
                         "message error";
-
                     return;
                 }
-/* Password length */
+
                 if (password.length < 6) {
-
                     message.textContent =
-                        "Password must be at least 6 characters.";
-
+                        ".يجب ان يكون الرمز السري يحوي على8 خانات";
                     message.className =
                         "message error";
-
                     return;
                 }
-/* Account type */
+/* رساله لنجاح التسجيل*/
                 const accountText =
                     selectedAccount === "customer"
-                        ? "Customer"
-                        : "Seller / Owner";
+                        ? "كعميل"
+                        : "كبائع";
                 /*
                    هنا حاليًا نحاكي إنشاء الحساب.
                    لاحقًا يمكن ربطها بالـ Backend / Database.
                 */
                 message.textContent =
-                    `Account created successfully as ${accountText}.`;
-
+                    `اكتمل تسجيلك بنجاح ${accountText}.`;
                 message.className =
                     "message success";
-
                 console.log({
                     name: name,
                     email: email,
                     accountType: selectedAccount
                 });
+                
             });
- /* SEARCH*/
-        const searchInput =
-            document.getElementById("searchInput");
-
-        const searchResults =
-            document.getElementById("searchResults");
-        /*
-           المنتجات التجريبية.
-           لاحقًا تقدر تستبدلها ببيانات
-           المنتجات الحقيقية من قاعدة البيانات.
-        */
-        const products = [
-            {
-                name: "Designer Dress",
-                category: "Fashion"
-            },
-
-            {
-                name: "Canon Camera",
-                category: "Electronics"
-            },
-
-            {
-                name: "Travel Bag",
-                category: "Travel"
-            },
-
-            {
-                name: "Luxury Watch",
-                category: "Accessories"
-            },
-
-            {
-                name: "Leather Handbag",
-                category: "Fashion"
-            },
-
-            {
-                name: "Mountain Bike",
-                category: "Sports"
-            },
-
-            {
-                name: "Gaming Laptop",
-                category: "Electronics"
-            }
-
-        ];
-        searchInput.addEventListener("input", function() {
-            const query =
-                this.value.trim().toLowerCase();
-
-
-            searchResults.innerHTML = "";
-            if (!query) {
-
-                searchResults.classList.remove("show");
-
-                return;
-            }
-            const results =
-                products.filter(product =>
-                    product.name
-                        .toLowerCase()
-                        .includes(query) ||
-
-                    product.category
-                        .toLowerCase()
-                        .includes(query)
-                );
-            if (results.length === 0) {
-
-                searchResults.innerHTML = `
-                    <div class="search-result">
-                        <strong>No results found</strong>
-                        <span>Try another product or brand.</span>
-                    </div>
-                `;
-            } else {
-                results.forEach(product => {
-
-                    const item =
-                        document.createElement("div");
-
-                    item.className =
-                        "search-result";
-
-                    item.innerHTML = `
-                        <strong>${product.name}</strong>
-                        <span>${product.category}</span>
-                    `;
-
-                    item.addEventListener("click", function() {
-
-                        /*
-                           هنا نقدر لاحقًا نخليه يفتح
-                           صفحة المنتج الحقيقية.
-                        */
-
-                        searchInput.value =
-                            product.name;
-
-                        searchResults.classList.remove("show");
-
-                        alert(
-                            "Opening: " +
-                            product.name
-                        );
-
-                    });
-
-                    searchResults.appendChild(item);
-                });
-            }
-            searchResults.classList.add("show");
-        });
-/* Close search when clicking outside */
-        document.addEventListener("click", function(event) {
-
-            if (
-                !event.target.closest(".search-container") &&
-                !event.target.closest(".search-results")
-            ) {
-
-                searchResults.classList.remove("show");
-
-            }
-
-        });
-        /* =========================
-           CART COUNT
-        ========================= */
-
-        /*
-           هذا مثال بسيط.
-           لو عندك localStorage للعربة،
-           نقدر نربطه به مباشرة.
-        */
-
-        const savedCart =
-            JSON.parse(
-                localStorage.getItem("cart") || "[]"
-            );
-
-        document.getElementById("cartCount").textContent =
-            savedCart.length;
     </script>
 </body>
 </html>
