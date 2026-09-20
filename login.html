@@ -1,18 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --navy: #062b52;
+            --dark-navy: #041f3b;
+            --light-blue: #eef5fb;
+            --border: #e2e8ef;
+            --text: #15283b;
+            --gray: #718096;
+            --white: #ffffff;
+        }
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #f8fcff, #eef7ff);
-            color: #073b78;
-            min-height: 100vh;
+            font-family: "Cairo", sans-serif;
+            background: #ffffff;
+            color: var(--text);
         }
         main { /*اطار التسجيل*/
             min-height: calc(100vh - 102px); /*يحدد الحد الأدنى لارتفاع القسم ليملأ الشاشة تقريبًا*/
@@ -176,7 +194,7 @@
             height: 50px;
             border: none;
             border-radius: 28px;
-            background: #064681;
+            background: #062b52;
             color: white;
             font-size: 16px;
             font-weight: bold;
@@ -188,7 +206,7 @@
             gap: 10px;
         }
         .create-button:hover { /*زر انشاء الحساب*/
-            background: #053968;
+            background: #062b52;
             transform: translateY(-1px);
         }
         .create-button svg { /*زر انشاء الحساب*/
@@ -243,14 +261,67 @@
             .account-options {
                 grid-template-columns: 1fr;
             }
+            /* الخط تحت أيقونة الشخص في صفحة التسجيل */
+            .header-actions a {
+                position: relative;
+                color: var(--navy);
+                font-size: 22px;
+            }
+            .header-actions a.active::after {
+                content: "";
+                position: absolute;
+                bottom: -10px;
+                right: 0;
+                left: 0;
+                height: 3px;
+                background: var(--navy);
+            }
     </style>
 </head>
 <body>
+<header class="header"> <!--الشريط-->
+    <div class="logo-area">
+        <div class="logo-circle">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+        <div class="logo-text">
+            <a href="index.html"><h1>AJRNI</h1></a>
+            <span>RENT • BUY • REUSE</span>
+        </div>
+    </div>
+    <nav class="navbar"> <!-- القوائم بالشريط -->
+        <a href="index.html" >الرئيسية</a>
+        <a href="products.html">المنتجات</a>
+        <a href="#offers">العروض</a>
+        <a href="contacct.html">تواصل معنا</a>
+    </nav>
+    <div class="header-actions"> <!-- الأيقونات -->
+        <button>
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
+
+        <button>
+            <i class="fa-regular fa-heart"></i>
+        </button><!--ايقونة صفحه التسجيل-->
+        <a href="login.html"class="active">
+            <button>
+            <i class="fa-regular fa-user"></i>
+        </button></a>
+    </div>
+    <div class="search-box"> <!-- البحث -->
+
+        <input type="text"
+               placeholder="ابحث عن منتجاتك المفضلة...">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
+</header>      
+        </div> 
     <main> <!--اطار التسجيل-->
         <div class="register-card">
             <div class="register-header">
                 <h1>إنشاء حساب</h1><!--عنوان انشاء الصفخه-->
-                <p> .أنضم الى أجرني وابدأ رحلة التأجير والاستئجار</p>
+                <p>أنضم الى أجرني وابدأ رحلة التأجير والاستئجار.</p>
             </div>
             <div class="section-title">:اريد ان اكون</div>
             <div class="account-options">

@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root {
+    --navy: #062b52;
+    --dark-navy: #041f3b;
+    --light-blue: #eef5fb;
+    --border: #e2e8ef;
+    --text: #15283b;
+    --gray: #718096;
+    --white: #ffffff;
+}
+body {
+    font-family: "Cairo", sans-serif;
+    background: #ffffff;
+    color: var(--text);
+}
+.page-title{
+    text-align:center;
+    padding:55px 20px 35px;
+}
+.page-title h2{
+    color:#0b427a;
+    font-size:42px;
+    margin-bottom:12px;
+}
+.page-title p{
+    color:#66809b;
+    font-size:16px;
+}
+.contact-card{
+    max-width:1050px;
+    margin:0 auto 80px;
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 12px 35px rgba(21,67,108,.1);
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+}
+.contact-form{
+    padding:45px}.contact-form h2{
+    color:#0b427a;
+    font-size:31px;
+    margin-bottom:10px}
+.description{color:#6d849b;font-size:14px;line-height:1.6;margin-bottom:28px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;color:#123e70;font-size:14px;font-weight:bold;margin-bottom:8px}
+.form-group input,.form-group textarea{width:100%;border:1px solid #d6e3ee;border-radius:10px;background:#fcfeff;padding:13px 15px;font-family:Arial,sans-serif;font-size:14px;color:#123e70;outline:0;transition:.3s}
+.form-group input{height:50px}
+.form-group textarea{resize:vertical;min-height:130px}
+.form-group input:focus,.form-group textarea:focus{border-color:#0b63a2;box-shadow:0 0 0 3px rgba(11,99,162,.08)}
+.checkbox{display:flex;align-items:flex-start;gap:9px;margin:5px 0 22px;color:#657d95;font-size:13px;line-height:1.5}
+.checkbox input{margin-top:3px}
+.checkbox a{color:#0b4f89;font-weight:bold}
+.contact-form button{width:100%;height:52px;border:0;border-radius:28px;background:#07528f;color:#fff;font-size:16px;font-weight:bold;cursor:pointer;transition:.3s}
+.contact-form button:hover{background:#063e6c;transform:translateY(-1px)}
+.contact-details{background:linear-gradient(145deg,#082f58,#0b5c91);position:relative;overflow:hidden;min-height:600px}
+.contact-details:before{content:"";position:absolute;width:430px;height:430px;border-radius:50%;background:rgba(255,255,255,.07);top:-160px;right:-160px}
+.contact-details:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05);bottom:-130px;left:-130px}
+.details-content{position:relative;z-index:2;padding:55px 45px;color:#fff}
+.small-title{font-size:28px;font-weight:bold;letter-spacing:5px;margin-bottom:55px}
+.details-content h2{font-size:34px;line-height:1.35;font-weight:500;margin-bottom:20px}
+.details-description{color:#d8e9f5;font-size:14px;line-height:1.7;max-width:350px}
+.blue-line{width:40px;height:2px;background:#fff;margin:25px 0 35px}
+.detail-item{display:flex;align-items:center;gap:15px;margin-bottom:28px}
+.detail-icon{width:46px;height:46px;border:1px solid rgba(255,255,255,.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px}
+.detail-item h3{font-size:15px;margin-bottom:5px}
+.detail-item p{color:#d6e8f5;font-size:13px}
+.faq-section{max-width:900px;margin:0 auto 90px;padding:0 20px}
+.faq-title{text-align:center;margin-bottom:30px}
+.faq-title h2{color:#0b427a;font-size:32px;margin-bottom:10px}
+.faq-title p{color:#6c849c;font-size:15px}
+.faq-item{background:#fff;border:1px solid #e0e9f1;border-radius:12px;margin-bottom:12px;overflow:hidden;box-shadow:0 4px 14px rgba(20,65,100,.04)}
+.faq-question{width:100%;border:0;background:#fff;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;color:#123e70;font-size:15px;font-weight:bold;text-align:left}
+.faq-question:hover{background:#f8fbfe}
+.faq-question b{color:#0b5b98;font-size:24px;font-weight:normal;transition:.3s}
+.faq-answer{max-height:0;overflow:hidden;background:#f9fcff;transition:max-height .35s ease}
+.faq-answer p{padding:0 22px 20px;color:#657e96;font-size:14px;line-height:1.7}
+.faq-item.active .faq-answer{max-height:180px}
+.faq-item.active .faq-question b{transform:rotate(45deg)}@media(max-width:1100px){
+        .page-title h2{font-size:32px}.contact-form{padding:30px 22px}.details-content{padding:40px 25px}.details-content h2{font-size:29px}.faq-title h2{font-size:27px}}
