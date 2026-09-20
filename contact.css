@@ -1,27 +1,50 @@
 * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --navy: #062b52;
-            --dark-navy: #041f3b;
-            --light-blue: #eef5fb;
-            --border: #e2e8ef;
-            --text: #15283b;
-            --gray: #718096;
-            --white: #ffffff;
-        }
-        body {
-            font-family: "Cairo", sans-serif;
-            background: #ffffff;
-            color: var(--text);
-        }
-.page-title{text-align:center;padding:55px 20px 35px}
-.page-title h2{color:#0b427a;font-size:42px;margin-bottom:12px}
-.page-title p{color:#66809b;font-size:16px}
-.contact-card{max-width:1050px;margin:0 auto 80px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 12px 35px rgba(21,67,108,.1);display:grid;grid-template-columns:1.1fr .9fr}
-.contact-form{padding:45px}.contact-form h2{color:#0b427a;font-size:31px;margin-bottom:10px}
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root {
+    --navy: #062b52;
+    --dark-navy: #041f3b;
+    --light-blue: #eef5fb;
+    --border: #e2e8ef;
+    --text: #15283b;
+    --gray: #718096;
+    --white: #ffffff;
+}
+body {
+    font-family: "Cairo", sans-serif;
+    background: #ffffff;
+    color: var(--text);
+}
+.page-title{
+    text-align:center;
+    padding:55px 20px 35px;
+}
+.page-title h2{
+    color:#0b427a;
+    font-size:42px;
+    margin-bottom:12px;
+}
+.page-title p{
+    color:#66809b;
+    font-size:16px;
+}
+.contact-card{
+    max-width:1050px;
+    margin:0 auto 80px;
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 12px 35px rgba(21,67,108,.1);
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+}
+.contact-form{
+    padding:45px}.contact-form h2{
+    color:#0b427a;
+    font-size:31px;
+    margin-bottom:10px}
 .description{color:#6d849b;font-size:14px;line-height:1.6;margin-bottom:28px}
 .form-group{margin-bottom:18px}
 .form-group label{display:block;color:#123e70;font-size:14px;font-weight:bold;margin-bottom:8px}
