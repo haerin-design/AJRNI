@@ -5,34 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تواصل معنا - أجرني</title>
     <link rel="stylesheet" href="contact.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-
 <body>
-
-<header class="header">
+    <header class="header"> <!--الشريط-->
     <div class="logo-area">
-        <div class="logo-circle">A</div>
+        <div class="logo-circle">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
         <div class="logo-text">
-            <h1>AJRNI</h1>
-            <span>RENT · BUY · REUSE</span>
+            <a href="index.html"><h1>AJRNI</h1></a>
+            <span>RENT • BUY • REUSE</span>
         </div>
     </div>
-
-    <nav class="navbar">
-        <a href="index.html">الرئيسية</a>
-        <a href="about.html">من نحن</a>
-        <a href="categories.html">الفئات</a>
-        <a href="offers.html">العروض</a>
-        <a href="#">العلامات التجارية</a>
-        <a href="#">المدونة</a>
-        <a href="contact.html" class="active">تواصل معنا</a>
+    <nav class="navbar"> <!-- القوائم بالشريط -->
+        <a href="index.html" >الرئيسية</a>
+        <a href="products.html">المنتجات</a>
+        <a href="#offers">العروض</a>
+        <a href="contacct.html" class="active">تواصل معنا</a>
     </nav>
-
-    <div class="search-box">
-        <span>⌕</span>
-        <input type="text" placeholder="ابحث عن المنتجات، العلامات التجارية...">
+    <div class="header-actions"> <!-- الأيقونات -->
+        <button>
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
+        <button>
+            <i class="fa-regular fa-heart"></i>
+        </button><!--ايقونة صفحه التسجيل-->
+        <a href="signin.html">
+            <button>
+            <i class="fa-regular fa-user"></i>
+        </button></a>
     </div>
-</header>
+    <div class="search-box"> <!-- البحث -->
+        <input type="text"
+               placeholder="ابحث عن منتجاتك المفضلة...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
+</header> 
 
 
 <main>
@@ -138,6 +154,7 @@
 </main>
 
 
+<!--FOOTER-->
 <footer id="contact">
     <div class="footer-logo">
         <div class="logo-circle">

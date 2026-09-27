@@ -200,16 +200,10 @@
         </a>
     </div>
 </footer>
-
-
-
     <!-- =========================================
          JAVASCRIPT
     ========================================== -->
-
     <script>
-
-
         /* =====================================
            SHOW / HIDE PASSWORD
         ===================================== */
@@ -525,38 +519,6 @@
 
             }
         );
-        /* =====================================
-           CLOSE SEARCH
-        ===================================== */
-        document.addEventListener(
-            "click",
-            function(event) {
-                if (
-                    !event.target.closest(
-                        ".search-container"
-                    )
-                    &&
-                    !event.target.closest(
-                        ".search-results"
-                    )
-                ) {
-                    searchResults
-                        .classList
-                        .remove("show");
-                }
-            }
-        );
-        /* =====================================
-           CART COUNT
-        ===================================== */
-        const savedCart =
-            JSON.parse(
-                localStorage.getItem("cart") || "[]"
-            );
-        document
-            .getElementById("cartCount")
-            .textContent =
-            savedCart.length;
     </script>
 </body>
 </html>
