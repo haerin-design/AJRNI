@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 :root {
-    --navy: #062b52;
+    --navy: hsl(211, 86%, 17%);
     --dark-navy: #041f3b;
     --light-blue: #eef5fb;
     --border: #e2e8ef;
