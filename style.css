@@ -965,3 +965,39 @@ footer p {
     }
 
 }
+
+
+
+
+/* =========================================
+   تنسيق زر المفضلة الموحد للموقع (Favorite Button)
+   ========================================= */
+.fav-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
+  color: #94a3b8;
+  z-index: 10;
+}
+
+.fav-btn:hover {
+  transform: scale(1.1);
+  color: #ef4444;
+}
+
+.fav-btn.active {
+  color: #ef4444;
+  border-color: #fecaca;
+  background: #fff5f5;
+}
