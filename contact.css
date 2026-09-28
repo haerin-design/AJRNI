@@ -21,22 +21,10 @@
     text-align: center;
     padding: 55px 20px 35px;
 }
-<<<<<<< HEAD
-:root {
-    --navy: hsl(211, 86%, 17%);
-    --dark-navy: #041f3b;
-    --light-blue: #eef5fb;
-    --border: #e2e8ef;
-    --text: #15283b;
-    --gray: #718096;
-    --white: #ffffff;
-=======
-
 .page-title h2 {
     color: #0b427a;
     font-size: 42px;
     margin-bottom: 12px;
->>>>>>> a65a226bbb7b47d6ed51629d86386c899bd7cbf8
 }
 
 .page-title p {
