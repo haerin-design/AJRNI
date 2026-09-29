@@ -22,6 +22,7 @@
     padding: 55px 20px 35px;
 }
 
+
 :root {
     --navy: hsl(211, 86%, 17%);
     --dark-navy: #041f3b;
@@ -31,6 +32,7 @@
     --gray: #718096;
     --white: #ffffff;
 }
+
 .page-title h2 {
     color: #0b427a;
     font-size: 42px;
