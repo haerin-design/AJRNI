@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <title>المنتجات - أجرني (AJRNI)</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تواصل معنا - أجرني</title>
-    <link rel="stylesheet" href="contact.css">
     <link rel="stylesheet" href="style.css">
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +12,202 @@
     <!-- Icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+         *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --navy: #062b52;
+            --dark-navy: #041f3b;
+            --light-blue: #eef5fb;
+            --border: #e2e8ef;
+            --text: #15283b;
+            --gray: #718096;
+            --white: #ffffff;
+        }
+        body {
+            font-family: "Cairo", sans-serif;
+            background: #ffffff;
+            color: var(--text);
+        }
+        header {
+            background-color: #0b1c3f;
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .logo span {
+            color: #4a90e2;
+        }
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+        nav a:hover,
+        nav a.active {
+            color: #4a90e2;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .section-title {
+            font-size: 24px;
+            color: #0b1c3f;
+            margin-bottom: 25px;
+            border-right: 4px solid #4a90e2;
+            padding-right: 10px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .product-img-container {
+            position: relative;
+            height: 220px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        .product-img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+        .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.2s;
+            z-index: 2;
+        }
+        .wishlist-btn:hover {
+            background-color: rgba(255, 255, 255, 1);
+            transform: scale(1.05);
+        }
+        .product-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .product-category {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        .product-name {
+            font-size: 18px;
+            color: #0b1c3f;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .product-price {
+            font-size: 18px;
+            color: #27ae60;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .btn-add {
+            width: 100%;
+            background-color: #0b1c3f;
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: auto;
+            transition: background-color 0.3s;
+        }
+        .btn-add:hover {
+            background-color: #1e3a8a;
+        }
+        footer {
+            background-color: #0b1c3f;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+            font-size: 14px;
+            border-top: 4px solid #4a90e2;
+        }
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                padding: 15px;
+            }
+            nav {
+                justify-content: center;
+                gap: 14px;
+            }
+            .container {
+                margin: 25px auto;
+                padding: 0 15px;
+            }
+            .section-title {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="header"> <!--الشريط-->
