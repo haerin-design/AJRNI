@@ -176,18 +176,18 @@ img {
 
 .top-section {
     display: grid;
-    grid-template-columns: 2.25fr 1fr;
-    gap: 20px;
+    grid-template-columns: 2fr 1fr;
+    gap: 20PX;
 
-    padding: 18px 20px;
+    padding: 22px 0 22px 25px;
 }
 
 
 /* HERO */
 
 .hero {
-    height: 350px;
-    border-radius: 14px;
+    height: 450px;
+    border-radius: 20px;
     overflow: hidden;
     position: relative;
 }

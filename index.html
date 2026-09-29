@@ -79,50 +79,48 @@
 
         <div class="hero">
 
-            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1200&q=80"
-                 alt="ملابس">
+    <img id="heroImage" src="clothes1.jpg" alt="ملابس">
 
-            <div class="hero-overlay">
+    <div class="hero-overlay">
 
-                <div class="hero-content">
+        <div class="hero-content">
 
-                    <div class="small-logo">
-                        <i class="fa-solid fa-box-open"></i>
-                    </div>
+            <h2 id="heroTitle">كل ما تحتاجه في مكان واحد</h2>
 
-                    <h2>كل ما تحتاجه في مكان واحد</h2>
+            <p id="heroDescription">
+                ملابس عصرية • كاميرات احترافية
+            </p>
 
-                    <p>
-                        ملابس عصرية  • كاميرات احترافية
-                    </p>
-                    <a href="products.html">
-                    <button class="main-btn">
-                        تسوق الآن
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button></a>
+            <a href="products.html">
+                <button class="main-btn">
+                    تسوق الآن
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </a>
 
-                </div>
+        </div>
+
+    </div>
+
+    <!-- سهم اليمين -->
+    <button class="slider-arrow right" id="nextBtn">
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <!-- سهم اليسار -->
+    <button class="slider-arrow left" id="prevBtn">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <!-- النقاط -->
+    <div class="dots" id="dots"></div>
+
+</div>
+
 
             </div>
 
-
-            <button class="slider-arrow right">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
-
-            <button class="slider-arrow left">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-
-
-            <div class="dots">
-                <span></span>
-                <span class="active-dot"></span>
-                <span></span>
-                <span></span>
-            </div>
-
-        </div> <br>
+ <br>
 
     <section class="features"> <!-- مربعات الخصائص-->
 
@@ -214,15 +212,15 @@
                             <i class="fa-regular fa-heart"></i>
                         </span>
 
-                        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=500&q=80">
+                        <img src="canon.jpg">
 
                     </div>
 
                     <h3>Canon EOS R7</h3>
 
                     <div class="price">
-                        <strong>4,299</strong>
-                        <span>ريـس</span>
+                        <strong>1500</strong>
+                        <span>ر.س</span>
                     </div>
 
                     <button class="cart-btn">
@@ -244,15 +242,15 @@
                             <i class="fa-regular fa-heart"></i>
                         </span>
 
-                        <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=500&q=80">
+                        <img src="sunglasses.jpg">
 
                     </div>
 
                     <h3>نظارة شمسية كلاسيك</h3>
 
                     <div class="price">
-                        <strong>549</strong>
-                        <span>ريـس</span>
+                        <strong>250</strong>
+                        <span>ر.س</span>
                     </div>
 
                     <button class="cart-btn">
@@ -274,15 +272,15 @@
                             <i class="fa-regular fa-heart"></i>
                         </span>
 
-                        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=500&q=80">
+                        <img src="rolex.jpg">
 
                     </div>
 
-                    <h3>بلوفر رجالي</h3>
+                    <h3>ساعة رجالية روليكس</h3>
 
                     <div class="price">
-                        <strong>199</strong>
-                        <span>ريـس</span>
+                        <strong>300</strong>
+                        <span>ر.س</span>
                     </div>
 
                     <button class="cart-btn">
@@ -365,4 +363,104 @@
 
 </footer>
 </body>
+<script>
+
+const slides = [
+    {
+        image: "clothes1.jpg",
+        title: "كل ما تحتاجه في مكان واحد",
+        description: "ملابس عصرية • كاميرات احترافية"
+    },
+    {
+        image: "watches.jpg",
+        title: "أناقة تناسب ذوقك",
+        description: "أحدث المنتجات الرجالية والنسائية"
+    },
+    {
+        image: "cameras.jpg",
+        title: "تقنية باحترافية",
+        description: "كاميرات ومعدات تصوير احترافية"
+    },
+    {
+        image: "resycle.jpg",
+        title: "تسوق بسهولة",
+        description: "اعد استخدام المنتجات بذكاء مع اجرني"
+    }
+];
+
+let currentSlide = 0;
+
+const heroImage = document.getElementById("heroImage");
+const heroTitle = document.getElementById("heroTitle");
+const heroDescription = document.getElementById("heroDescription");
+const dotsContainer = document.getElementById("dots");
+
+
+// إنشاء النقاط
+slides.forEach((slide, index) => {
+
+    const dot = document.createElement("span");
+
+    if (index === 0) {
+        dot.classList.add("active-dot");
+    }
+
+    dot.addEventListener("click", () => {
+        currentSlide = index;
+        showSlide();
+    });
+
+    dotsContainer.appendChild(dot);
+});
+
+
+function showSlide() {
+
+    heroImage.src = slides[currentSlide].image;
+
+    heroTitle.textContent = slides[currentSlide].title;
+
+    heroDescription.textContent =
+        slides[currentSlide].description;
+
+    // تحديث النقاط
+    const dots = dotsContainer.querySelectorAll("span");
+
+    dots.forEach(dot => {
+        dot.classList.remove("active-dot");
+    });
+
+    dots[currentSlide].classList.add("active-dot");
+}
+
+
+// السهم التالي
+document.getElementById("nextBtn").addEventListener("click", () => {
+
+    currentSlide++;
+
+    if (currentSlide >= slides.length) {
+        currentSlide = 0;
+    }
+
+    showSlide();
+
+});
+
+
+// السهم السابق
+document.getElementById("prevBtn").addEventListener("click", () => {
+
+    currentSlide--;
+
+    if (currentSlide < 0) {
+        currentSlide = slides.length - 1;
+    }
+
+    showSlide();
+
+});
+
+</script>
+
 </html>
