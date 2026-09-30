@@ -1001,3 +1001,11 @@ footer p {
   border-color: #fecaca;
   background: #fff5f5;
 }
+
+footer a {
+    display: block;
+    font-size: 12px;
+    margin-top: 8px;
+    color: #888;
+    text-decoration: none;
+}

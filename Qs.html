@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Tahoma, sans-serif;
+    background: #f4f9fd;
+    color: #123e70;
+    direction: rtl;
+}
+
+
+/* Header */
+
+.header {
+    min-height: 100px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 15px 35px;
+    gap: 30px;
+    border-bottom: 1px solid #e5edf5;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 270px;
+    direction: ltr;
+}
+
+.logo-circle {
+    width: 62px;
+    height: 62px;
+    border: 3px solid #0b427a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0b427a;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.logo-text h1 {
+    color: #0b427a;
+    font-size: 30px;
+    letter-spacing: 5px;
+}
+
+.logo-text span {
+    color: #173f6c;
+    font-size: 9px;
+    letter-spacing: 3px;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex: 1;
+    white-space: nowrap;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #173f6c;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 0;
+}
+
+.navbar a:hover {
+    color: #0b6bad;
+}
+
+.navbar a.active {
+    color: #0b427a;
+    border-bottom: 3px solid #0b427a;
+}
+
+.search-box {
+    width: 285px;
+    height: 48px;
+    border: 1px solid #d7e4ef;
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    padding: 0 17px;
+    background: white;
+    direction: ltr;
+}
+
+.search-box span {
+    font-size: 27px;
+    margin-right: 8px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 13px;
+    text-align: right;
+}
+
+
+/* Page title */
+
+.page-title {
+    text-align: center;
+    padding: 65px 20px 35px;
+}
+
+.page-title h2 {
+    color: #0b427a;
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.page-title p {
+    color: #66809b;
+    font-size: 16px;
+}
+
+
+/* FAQ */
+
+.faq-section {
+    max-width: 900px;
+    margin: 0 auto 90px;
+    padding: 0 20px;
+}
+
+.faq-intro {
+    text-align: center;
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 25px;
+    box-shadow: 0 7px 25px rgba(21, 67, 108, 0.07);
+}
+
+.faq-intro h3 {
+    color: #0b427a;
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.faq-intro p {
+    color: #6c849c;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.faq-item {
+    background: white;
+    border: 1px solid #e0e9f1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(20, 65, 100, 0.04);
+}
+
+.faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    min-height: 68px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #123e70;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary:hover {
+    background: #f8fbfe;
+}
+
+.faq-item summary b {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #eef5fa;
+    color: #0b5b98;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    font-weight: normal;
+    transition: 0.25s;
+}
+
+.faq-item[open] summary b {
+    transform: rotate(45deg);
+    background: #e4f0f8;
+}
+
+.faq-answer {
+    background: #f9fcff;
+    border-top: 1px solid #e7eef4;
+    padding: 18px 22px 20px;
+}
+
+.faq-answer p {
+    color: #657e96;
+    font-size: 14px;
+    line-height: 2;
+}
+
+
+/* Footer */
+
+.footer {
+    min-height: 155px;
+    background: #f1f6fa;
+    border-top: 1px solid #e5edf5;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
+    align-items: center;
+    gap: 25px;
+    padding: 25px 55px;
+    direction: ltr;
+}
+
+.footer-social {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.footer-social a {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    background: #07365f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.footer-copy,
+.footer-description {
+    color: #6a829b;
+    font-size: 13px;
+    line-height: 1.8;
+    text-align: center;
+    direction: rtl;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    direction: ltr;
+}
+
+.footer-brand-mark {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #07365f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+}
+
+.footer-brand strong {
+    display: block;
+    color: #0b427a;
+    font-size: 25px;
+    letter-spacing: 5px;
+}
+
+.footer-brand span {
+    display: block;
+    color: #66809b;
+    font-size: 8px;
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+
+    .header {
+        gap: 18px;
+        padding: 15px 20px;
+    }
+
+    .logo-area {
+        min-width: auto;
+    }
+
+    .navbar {
+        gap: 12px;
+    }
+
+    .navbar a {
+        font-size: 11px;
+    }
+
+    .search-box {
+        width: 220px;
+    }
+}
+
+@media (max-width: 850px) {
+
+    .header {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .navbar {
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .footer {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 35px 20px;
+    }
+
+    .footer-social {
+        justify-content: center;
+    }
+
+    .footer-brand {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .page-title h2 {
+        font-size: 32px;
+    }
+
+    .faq-section {
+        padding: 0 14px;
+    }
+
+    .faq-item summary {
+        font-size: 14px;
+        padding: 18px;
+    }
+
+    .faq-answer {
+        padding: 16px 18px;
+    }
+}
+    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الأسئلة الشائعة - أجرني</title>
+<link rel="stylesheet" href="css/faq.css">
+</head>
+<body>
+<header class="header">
+<div class="logo-area"><div class="logo-circle">A</div><div class="logo-text"><h1>AJRNI</h1><span>RENT · BUY · REUSE</span></div></div>
+<nav class="navbar">
+<a href="index.html">الرئيسية</a><a href="about.html">من نحن</a><a href="categories.html">الفئات</a><a href="offers.html">العروض</a><a href="#">العلامات التجارية</a><a href="#">المدونة</a><a href="contact.html">تواصل معنا</a><a href="faq.html" class="active">الأسئلة الشائعة</a>
+</nav>
+<div class="search-box"><span>⌕</span><input type="text" placeholder="ابحث عن المنتجات، العلامات التجارية..."></div>
+</header>
+<main>
+<section class="page-title"><h2>الأسئلة الشائعة</h2><p>إليك إجابات عن أكثر الأسئلة شيوعًا حول منصة أجرني.</p></section>
+<section class="faq-section">
+<div class="faq-intro"><h3>كيف يمكننا مساعدتك؟</h3><p>جمعنا لك أهم الأسئلة والإجابات التي قد تحتاج إليها أثناء استخدام منصة أجرني.</p></div>
+<div class="faq-list">
+<details class="faq-item"><summary><span>كيف يمكنني استئجار منتج؟</span><b>+</b></summary><div class="faq-answer"><p>يمكنك تصفح الفئات واختيار المنتج الذي تريده، ثم الاطلاع على تفاصيل المنتج وتحديد مدة الإيجار وإكمال الطلب.</p></div></details>
+<details class="faq-item"><summary><span>هل يمكنني شراء المنتجات من منصة أجرني؟</span><b>+</b></summary><div class="faq-answer"><p>نعم، يمكنك شراء المنتجات المتاحة للبيع من خلال المنصة وإكمال عملية الطلب حسب تفاصيل المنتج.</p></div></details>
+<details class="faq-item"><summary><span>هل يمكنني بيع منتجاتي على أجرني؟</span><b>+</b></summary><div class="faq-answer"><p>نعم، يمكنك إنشاء حساب كبائع وإضافة المنتجات التي ترغب في عرضها للتأجير أو البيع.</p></div></details>
+<details class="faq-item"><summary><span>كيف يمكنني إنشاء حساب؟</span><b>+</b></summary><div class="faq-answer"><p>اضغط على إنشاء حساب، ثم اختر نوع الحساب، وأدخل الاسم والبريد الإلكتروني وكلمة المرور وأكمل البيانات المطلوبة.</p></div></details>
+<details class="faq-item"><summary><span>كيف يمكنني التواصل مع خدمة العملاء؟</span><b>+</b></summary><div class="faq-answer"><p>يمكنك التواصل مع فريق أجرني من خلال صفحة تواصل معنا أو عبر البريد الإلكتروني support@ajrni.com.</p></div></details>
+<details class="faq-item"><summary><span>هل يمكنني إلغاء الطلب؟</span><b>+</b></summary><div class="faq-answer"><p>يعتمد إلغاء الطلب على حالة الطلب والشروط الخاصة بالمنتج. يمكنك التواصل مع خدمة العملاء لمعرفة التفاصيل.</p></div></details>
+<details class="faq-item"><summary><span>هل بياناتي الشخصية آمنة؟</span><b>+</b></summary><div class="faq-answer"><p>نحرص على حماية بيانات المستخدمين والحفاظ على خصوصية معلومات الحساب والطلبات.</p></div></details>
+</div>
+</section>
+</main>
+<footer class="footer">
+<div class="footer-social"><a href="#">◉</a><a href="#">X</a><a href="#">◎</a></div>
+<div class="footer-copy">2026 - RENT • BUY • REUSE © جميع الحقوق محفوظة لمنصة أجرني (AJRNI)</div>
+<div class="footer-description">أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان</div>
+<div class="footer-brand"><div class="footer-brand-mark">✉️</div><div><strong>AJRNI</strong><span>RENT · BUY · REUSE</span></div></div>
+</footer>
+</body>
+</html>
