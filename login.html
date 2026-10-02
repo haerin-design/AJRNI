@@ -541,6 +541,93 @@
 
             }
         );
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const addButtons = document.querySelectorAll(".cart-btn");
+
+    addButtons.forEach(button => {
+
+        button.addEventListener("click", function () {
+
+            const productCard = button.closest(".product-card");
+
+            const product = {
+                name: productCard.dataset.name,
+                price: Number(productCard.dataset.price),
+                image: productCard.dataset.image,
+                quantity: 1
+            };
+
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            // البحث عن المنتج إذا كان موجودًا
+            const existingProduct = cart.find(
+                item => item.name === product.name
+            );
+
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                cart.push(product);
+            }
+
+            // حفظ السلة
+            localStorage.setItem("cart", JSON.stringify(cart));
+
+            // تغيير شكل الزر مؤقتًا
+            const oldText = button.textContent;
+
+            button.textContent = "✓ تمت الإضافة";
+            button.style.backgroundColor = "#27ae60";
+
+            setTimeout(() => {
+                button.textContent = oldText;
+                button.style.backgroundColor = "";
+            }, 1200);
+
+            // تحديث رقم السلة
+            updateCartCount();
+        });
+    });
+
+    updateCartCount();
+});
+
+
+// تحديث عدد المنتجات فوق أيقونة السلة
+function updateCartCount() {
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const count = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
+
+    const cartButton = document.querySelector(
+        ".header-actions .fa-cart-shopping"
+    );
+
+    if (!cartButton) return;
+
+    const oldBadge = document.querySelector(".cart-count");
+
+    if (oldBadge) {
+        oldBadge.remove();
+    }
+
+    if (count > 0) {
+
+        const badge = document.createElement("span");
+
+        badge.className = "cart-count";
+        badge.textContent = count;
+
+        cartButton.parentElement.style.position = "relative";
+        cartButton.parentElement.appendChild(badge);
+    }
+}
     </script>
 </body>
 </html>
