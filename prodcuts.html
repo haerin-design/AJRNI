@@ -198,6 +198,23 @@
                 font-size: 20px;
             }
         }
+
+        .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #e74c3c;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
     </style>
 </head>
 <body>
@@ -220,6 +237,7 @@
     <div class="header-actions"> <!-- الأيقونات -->
         <button>
             <i class="fa-solid fa-cart-shopping"></i>
+            <a href="cart.html"></a>
         </button>
         <div class="header-favorite">
     <a href="favorite.html">
@@ -275,10 +293,10 @@
                 2000 ر.س
             </div>
 
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
-
+            <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
         </div>
 
     </div>
@@ -311,9 +329,10 @@
                 399 ر.س
             </div>
 
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
+            <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
         </div>
 
@@ -349,9 +368,10 @@
                 699 ر.س
             </div>
 
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
+            <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
         </div>
 
@@ -387,9 +407,10 @@
                 700 ر.س
             </div>
 
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
+            <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
         </div>
 
@@ -423,11 +444,10 @@
             <div class="product-price">
                 650 ر.س
             </div>
-
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
-
+<button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
         </div>
 
     </div>
@@ -463,10 +483,10 @@
                 900 ر.س
             </div>
 
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
-
+            <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
         </div>
 
     </div>
@@ -502,9 +522,10 @@
                 250 ر.س
             </div>
 
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
+            <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
         </div>
 
@@ -539,9 +560,10 @@
                 300 ر.س
             </div>
 
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
+            <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
         </div>
 
@@ -578,10 +600,10 @@
                 350 ر.س
             </div>
 
-            <button class="btn-add">
-                أضف إلى السلة
-            </button>
-
+           <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
         </div>
 
     </div>
@@ -591,109 +613,95 @@
 
 <script>
 
-function addToFavorites(button) {
-
-    const product = button.closest(".product-card");
-
-    const name = product.dataset.name;
-    const price = product.dataset.price;
-    const image = product.dataset.image;
-
-    let favorites =
-        JSON.parse(localStorage.getItem("favorites")) || [];
-
-    const exists =
-        favorites.some(item => item.name === name);
-
-    if (exists) {
-
-        // حذف المنتج من المفضلة
-        favorites = favorites.filter(item => item.name !== name);
-
-        localStorage.setItem(
-            "favorites",
-            JSON.stringify(favorites)
-        );
-
-        // رجوع القلب إلى فارغ
-        setFavoriteHeart(button, false);
-
-    } else {
-
-        // إضافة المنتج للمفضلة
-        favorites.push({
-            name: name,
-            price: price,
-            image: image
-        });
-
-        localStorage.setItem(
-            "favorites",
-            JSON.stringify(favorites)
-        );
-
-        // تحويل القلب إلى أحمر
-        setFavoriteHeart(button, true);
-    }
-}
-
-
-// تغيير شكل القلب
-function setFavoriteHeart(button, isFavorite) {
-
-    const heart = button.querySelector("i");
-
-    if (!heart) return;
-
-    if (isFavorite) {
-
-        heart.classList.remove("fa-regular");
-        heart.classList.add("fa-solid");
-
-        heart.style.color = "red";
-
-    } else {
-
-        heart.classList.remove("fa-solid");
-        heart.classList.add("fa-regular");
-
-        heart.style.color = "";
-
-    }
-}
-
-
-// فحص المفضلة عند فتح الصفحة
 document.addEventListener("DOMContentLoaded", function () {
 
-    const favorites =
-        JSON.parse(localStorage.getItem("favorites")) || [];
+    const addButtons = document.querySelectorAll(".btn-add");
 
-    const products =
-        document.querySelectorAll(".product-card");
+    addButtons.forEach(button => {
 
-    products.forEach(product => {
+        button.addEventListener("click", function () {
 
-        const name = product.dataset.name;
+            const productCard = button.closest(".product-card");
 
-        if (!name) return;
+            const product = {
+                name: productCard.dataset.name,
+                price: Number(productCard.dataset.price),
+                image: productCard.dataset.image,
+                category: productCard.querySelector(".product-category").textContent.trim(),
+                quantity: 1
+            };
 
-        const button =
-            product.querySelector(".wishlist-btn, .favorite");
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        if (!button) return;
+            // البحث عن المنتج إذا كان موجودًا
+            const existingProduct = cart.find(
+                item => item.name === product.name
+            );
 
-        const isFavorite =
-            favorites.some(item => item.name === name);
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                cart.push(product);
+            }
 
-        setFavoriteHeart(button, isFavorite);
+            // حفظ السلة
+            localStorage.setItem("cart", JSON.stringify(cart));
+
+            // تغيير شكل الزر مؤقتًا
+            const oldText = button.textContent;
+
+            button.textContent = "✓ تمت الإضافة";
+            button.style.backgroundColor = "#27ae60";
+
+            setTimeout(() => {
+                button.textContent = oldText;
+                button.style.backgroundColor = "";
+            }, 1200);
+
+            // تحديث رقم السلة
+            updateCartCount();
+        });
     });
 
+    updateCartCount();
 });
 
 
+// تحديث عدد المنتجات فوق أيقونة السلة
+function updateCartCount() {
 
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const count = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
+
+    const cartButton = document.querySelector(
+        ".header-actions .fa-cart-shopping"
+    );
+
+    if (!cartButton) return;
+
+    const oldBadge = document.querySelector(".cart-count");
+
+    if (oldBadge) {
+        oldBadge.remove();
+    }
+
+    if (count > 0) {
+
+        const badge = document.createElement("span");
+
+        badge.className = "cart-count";
+        badge.textContent = count;
+
+        cartButton.parentElement.style.position = "relative";
+        cartButton.parentElement.appendChild(badge);
+    }
+}
 </script>
+
     </main>
 
 <!--FOOTER-->
