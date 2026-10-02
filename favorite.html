@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>أجرني | AJRNI</title>
-
+    <title>المفضلة - AJRNI</title>
     <link rel="stylesheet" href="style.css">
-
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,84 +14,52 @@
     <!-- Icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-          <style>.favorites-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 30px;
-}
-
-.favorites-grid .product-card {
-    width: 100%;
-    background: white;
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-.favorites-grid .product-image img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-</style>
 </head>
-
 <body>
-
 <header class="header"> <!---->
-
     <div class="logo-area">
         <div class="logo-circle">
             <i class="fa-solid fa-box-open"></i>
         </div>
-
         <div class="logo-text">
-            <h1>AJRNI</h1>
+            <a href="index.html"><h1>AJRNI</h1></a>
             <span>RENT • BUY • REUSE</span>
         </div>
     </div>
-
-
     <nav class="navbar"> <!-- القوائم بالشريط -->
-
-        <a href="#" class="active">الرئيسية</a>
+        <a href="index.html" >الرئيسية</a>
         <a href="prodcuts.html">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
-
     </nav>
-
-
     <div class="header-actions"> <!-- الأيقونات -->
-
+        <a href="cart.html">
         <button>
             <i class="fa-solid fa-cart-shopping"></i>
         </button>
+        </a>
 
-        <button>
-            <i class="fa-regular fa-heart"></i>
-            <a href="favorite.html"class="active"></a>
+        <a href="favorite.html"class="active">
+            <button>
+            <i class="fa-regular fa-heart" ></i>
         </button>
+        </a>
+
         <a href="signin.html"><!--ايقونة صفحه التسجيل-->
             <button>
             <i class="fa-regular fa-user"></i>
-        </button></a>
+        </button>
+        </a>
         
-
     </div>
 
 
     <div class="search-box"> <!-- البحث -->
-
         <input type="text"
                placeholder="ابحث عن منتجاتك المفضلة...">
 
         <i class="fa-solid fa-magnifying-glass"></i>
-
     </div>
-
 </header>
 
    <div id="favorites-container" class="favorites-grid"></div>
