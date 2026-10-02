@@ -221,7 +221,9 @@
         <button>
             <i class="fa-solid fa-cart-shopping"></i>
         </button>
-        <button>
+        <div class="header-favorite">
+    <a href="favorite.html">
+        <button type="button">
             <i class="fa-regular fa-heart"></i>
         </button><!--ايقونة صفحه التسجيل-->
         <a href="signin.html">
@@ -240,127 +242,393 @@
         <h2 class="section-title">
             قائمة المنتجات المتاحة للبيع
         </h2>
-        <div class="products-grid">
-            
-            <div class="product-card">
-                <div class="product-img-container">
-                    <span class="badge">خصم 10%</span>
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="macbook.jpg" alt="لابتوب أبل آي باد / ماك">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">الإلكترونيات</div>
-                    <div class="product-name">لابتوب أبل آي باد / ماك</div>
-                    <div class="product-price">2000 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('لابتوب أبل')">أضف إلى السلة</button>
-                </div>
-            </div>
+        <div class="products">
 
-            <div class="product-card">
-                <div class="product-img-container">
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="brown glasses.jpg" alt="نظارة شمسية إطار ذهبي">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">الإكسسوارات</div>
-                    <div class="product-name">نظارة شمسية إطار ذهبي</div>
-                    <div class="product-price">399 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('نظارة شمسية إطار ذهبي')">أضف إلى السلة</button>
-                </div>
-            </div>
+    <!-- Product 1 -->
+    <div class="product-card"
+         data-name="لابتوب أبل آي باد / ماك"
+         data-price="2000"
+         data-image="macbook.jpg">
 
-            <div class="product-card">
-                <div class="product-img-container">
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="bag.jpg" alt="شنطة شانيل">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">الحقائب</div>
-                    <div class="product-name">شنطة شانيل</div>
-                    <div class="product-price">699 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('شنطة شانيل')">أضف إلى السلة</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container">
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="printer.jpg" alt="طابعة كانون متعددة الوظائف">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">أجهزة المكتب</div>
-                    <div class="product-name">طابعة كانون متعددة الوظائف</div>
-                    <div class="product-price">700 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('طابعة كانون متعددة الوظائف')">أضف إلى السلة</button>
-                </div>
-            </div>
+        <div class="product-img-container">
+
+            <span class="badge">خصم 10%</span>
+
+            <button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
 
 
-            <div class="product-card">
-                <div class="product-img-container">
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="dress.jpg" alt="فستان سهرة كحلي مطرز">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">الملابس النسائية</div>
-                    <div class="product-name">فستان سهرة كحلي مطرز</div>
-                    <div class="product-price">650 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('فستان سهرة كحلي مطرز')">أضف إلى السلة</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-img-container">
-                    <span class="badge">خصم 15%</span>
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="cam.jpg" alt="كاميرا فوجي فيلم كلاسيك">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">أجهزة التصوير</div>
-                    <div class="product-name">كاميرا فوجي فيلم كلاسيك</div>
-                    <div class="product-price">900 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('كاميرا فوجي فيلم كلاسيك')">أضف إلى السلة</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container">
-                    <span class="badge">مميز</span>
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="heels.jpg" alt="كعب سان لوران">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">احذية نسائية</div>
-                    <div class="product-name">كعب سان لوران</div>
-                    <div class="product-price">250 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('كعب سان لوران')">أضف إلى السلة</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container">
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="ck watch.jpg" alt="ساعة كالفن">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">الساعات</div>
-                    <div class="product-name">ساعة رجالية كالفن كلاين</div>
-                    <div class="product-price">300 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('ساعة رجالية كالفن كلاين')">أضف إلى السلة</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container">
-                    <span class="badge">مميز</span>
-                    <button class="wishlist-btn" onclick="toggleWishlist(this)">🤍</button>
-                    <img src="ps5.jpg" alt="بلايستيشن">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">الألكترونيات</div>
-                    <div class="product-name">بلايستيشن 5</div>
-                    <div class="product-price">350 ر.س</div>
-                    <button class="btn-add" onclick="buyProduct('بلايستيشن 5')">أضف إلى السلة</button>
-                </div>
-            </div>
+            <img src="macbook.jpg" alt="لابتوب أبل آي باد / ماك">
 
         </div>
+
+        <div class="product-info">
+
+            <div class="product-category">الإلكترونيات</div>
+
+            <div class="product-name">
+                لابتوب أبل آي باد / ماك
+            </div>
+
+            <div class="product-price">
+                2000 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Product 2 -->
+    <div class="product-card"
+         data-name="نظارة شمسية إطار ذهبي"
+         data-price="399"
+         data-image="brown glasses.jpg">
+
+        <div class="product-img-container">
+<button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
+
+            <img src="brown glasses.jpg" alt="نظارة شمسية إطار ذهبي">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-category">الإكسسوارات</div>
+
+            <div class="product-name">
+                نظارة شمسية إطار ذهبي
+            </div>
+
+            <div class="product-price">
+                399 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Product 3 -->
+    <div class="product-card"
+         data-name="شنطة شانيل"
+         data-price="699"
+         data-image="bag.jpg">
+
+        <div class="product-img-container">
+
+           <button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
+
+
+            <img src="bag.jpg" alt="شنطة شانيل">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-category">الحقائب</div>
+
+            <div class="product-name">
+                شنطة شانيل
+            </div>
+
+            <div class="product-price">
+                699 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Product 4 -->
+    <div class="product-card"
+         data-name="طابعة كانون متعددة الوظائف"
+         data-price="700"
+         data-image="printer.jpg">
+
+        <div class="product-img-container">
+
+           <button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
+
+
+            <img src="printer.jpg" alt="طابعة كانون متعددة الوظائف">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-category">أجهزة المكتب</div>
+
+            <div class="product-name">
+                طابعة كانون متعددة الوظائف
+            </div>
+
+            <div class="product-price">
+                700 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Product 5 -->
+    <div class="product-card"
+         data-name="فستان سهرة كحلي مطرز"
+         data-price="650"
+         data-image="dress.jpg">
+
+        <div class="product-img-container">
+
+            <button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
+
+            <img src="dress.jpg" alt="فستان سهرة كحلي مطرز">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-category">الملابس النسائية</div>
+
+            <div class="product-name">
+                فستان سهرة كحلي مطرز
+            </div>
+
+            <div class="product-price">
+                650 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Product 6 -->
+    <div class="product-card"
+         data-name="كاميرا فوجي فيلم كلاسيك"
+         data-price="900"
+         data-image="cam.jpg">
+
+        <div class="product-img-container">
+
+            <span class="badge">خصم 15%</span>
+
+            <button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
+
+            <img src="cam.jpg" alt="كاميرا فوجي فيلم كلاسيك">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-category">أجهزة التصوير</div>
+
+            <div class="product-name">
+                كاميرا فوجي فيلم كلاسيك
+            </div>
+
+            <div class="product-price">
+                900 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Product 7 -->
+    <div class="product-card"
+         data-name="كعب سان لوران"
+         data-price="250"
+         data-image="heels.jpg">
+
+        <div class="product-img-container">
+
+            <span class="badge">مميز</span>
+
+            <button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
+
+            <img src="heels.jpg" alt="كعب سان لوران">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-category">أحذية نسائية</div>
+
+            <div class="product-name">
+                كعب سان لوران
+            </div>
+
+            <div class="product-price">
+                250 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Product 8 -->
+    <div class="product-card"
+         data-name="ساعة رجالية كالفن كلاين"
+         data-price="300"
+         data-image="ck watch.jpg">
+
+        <div class="product-img-container">
+
+            <button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
+
+            <img src="ck watch.jpg" alt="ساعة كالفن">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-category">الساعات</div>
+
+            <div class="product-name">
+                ساعة رجالية كالفن كلاين
+            </div>
+
+            <div class="product-price">
+                300 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Product 9 -->
+    <div class="product-card"
+         data-name="بلايستيشن 5"
+         data-price="350"
+         data-image="ps5.jpg">
+
+        <div class="product-img-container">
+
+            <span class="badge">مميز</span>
+
+            <button class="wishlist-btn" onclick="addToFavorites(this)">
+    <i class="fa-regular fa-heart"></i>
+</button>
+
+            <img src="ps5.jpg" alt="بلايستيشن">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-category">الإلكترونيات</div>
+
+            <div class="product-name">
+                بلايستيشن 5
+            </div>
+
+            <div class="product-price">
+                350 ر.س
+            </div>
+
+            <button class="btn-add">
+                أضف إلى السلة
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function addToFavorites(button) {
+
+    const product = button.closest(".product-card");
+
+    const name = product.dataset.name;
+    const price = product.dataset.price;
+    const image = product.dataset.image;
+
+    let favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const exists =
+        favorites.some(item => item.name === name);
+
+    if (!exists) {
+
+        favorites.push({
+            name: name,
+            price: price,
+            image: image
+        });
+
+        localStorage.setItem(
+            "favorites",
+            JSON.stringify(favorites)
+        );
+    }
+
+    // تحويل القلب من فارغ إلى ممتلئ وأحمر
+    const heart = button.querySelector("i");
+
+    heart.classList.remove("fa-regular");
+    heart.classList.add("fa-solid");
+
+    heart.style.color = "red";
+}
+
+</script>
     </main>
 
 <!--FOOTER-->

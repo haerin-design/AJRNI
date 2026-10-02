@@ -50,9 +50,14 @@
             <i class="fa-solid fa-cart-shopping"></i>
         </button>
 
-        <button>
+        <div class="header-favorite">
+    <a href="favorite.html">
+        <button type="button">
             <i class="fa-regular fa-heart"></i>
         </button>
+    </a>
+</div>
+
         <a href="signin.html"><!--ايقونة صفحه التسجيل-->
             <button>
             <i class="fa-regular fa-user"></i>
@@ -201,96 +206,91 @@
 
             <div class="products">
 
+    <!-- Product 1 -->
+    <div class="product-card" data-name="Canon EOS R7" data-price="1500" data-image="canon.jpg">
 
-                <!-- Product 1 -->
+        <div class="product-image">
 
-                <div class="product-card">
+            <span class="favorite" onclick="addToFavorites(this)">
+                <i class="fa-regular fa-heart"></i>
+            </span>
 
-                    <div class="product-image">
+            <img src="canon.jpg">
 
-                        <span class="favorite">
-                            <i class="fa-regular fa-heart"></i>
-                        </span>
+        </div>
 
-                        <img src="canon.jpg">
+        <h3>Canon EOS R7</h3>
 
-                    </div>
+        <div class="price">
+            <strong>1500</strong>
+            <span>ر.س</span>
+        </div>
 
-                    <h3>Canon EOS R7</h3>
+        <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
-                    <div class="price">
-                        <strong>1500</strong>
-                        <span>ر.س</span>
-                    </div>
-
-                    <button class="cart-btn">
-                        أضف إلى السلة
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </button>
-
-                </div>
+    </div>
 
 
+    <!-- Product 2 -->
+    <div class="product-card" data-name="نظارة شمسية كلاسيك" data-price="250" data-image="sunglasses.jpg">
 
-                <!-- Product 2 -->
+        <div class="product-image">
 
-                <div class="product-card">
+            <span class="favorite" onclick="addToFavorites(this)">
+                <i class="fa-regular fa-heart"></i>
+            </span>
 
-                    <div class="product-image">
+            <img src="sunglasses.jpg">
 
-                        <span class="favorite">
-                            <i class="fa-regular fa-heart"></i>
-                        </span>
+        </div>
 
-                        <img src="sunglasses.jpg">
+        <h3>نظارة شمسية كلاسيك</h3>
 
-                    </div>
+        <div class="price">
+            <strong>250</strong>
+            <span>ر.س</span>
+        </div>
 
-                    <h3>نظارة شمسية كلاسيك</h3>
+        <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
-                    <div class="price">
-                        <strong>250</strong>
-                        <span>ر.س</span>
-                    </div>
-
-                    <button class="cart-btn">
-                        أضف إلى السلة
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </button>
-
-                </div>
+    </div>
 
 
+    <!-- Product 3 -->
+    <div class="product-card" data-name="ساعة رجالية روليكس" data-price="300" data-image="rolex.jpg">
 
-                <!-- Product 3 -->
+        <div class="product-image">
 
-                <div class="product-card">
+            <span class="favorite" onclick="addToFavorites(this)">
+                <i class="fa-regular fa-heart"></i>
+            </span>
 
-                    <div class="product-image">
+            <img src="rolex.jpg">
 
-                        <span class="favorite">
-                            <i class="fa-regular fa-heart"></i>
-                        </span>
+        </div>
 
-                        <img src="rolex.jpg">
+        <h3>ساعة رجالية روليكس</h3>
 
-                    </div>
+        <div class="price">
+            <strong>300</strong>
+            <span>ر.س</span>
+        </div>
 
-                    <h3>ساعة رجالية روليكس</h3>
+        <button class="cart-btn">
+            أضف إلى السلة
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
-                    <div class="price">
-                        <strong>300</strong>
-                        <span>ر.س</span>
-                    </div>
+    </div>
 
-                    <button class="cart-btn">
-                        أضف إلى السلة
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </button>
+</div>
 
-                </div>
-
-            </div>
 
 
 
@@ -463,6 +463,39 @@ document.getElementById("prevBtn").addEventListener("click", () => {
     showSlide();
 
 });
+
+function addToFavorites(button) {
+
+    const product = button.closest(".product-card");
+
+    const name = product.dataset.name;
+    const price = product.dataset.price;
+    const image = product.dataset.image;
+
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const exists = favorites.some(item => item.name === name);
+
+    if (!exists) {
+
+        favorites.push({
+            name: name,
+            price: price,
+            image: image
+        });
+
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+    }
+
+    // تغيير القلب إلى أحمر
+    const heart = button.querySelector("i");
+
+    heart.classList.remove("fa-regular");
+    heart.classList.add("fa-solid");
+
+    heart.style.color = "red";
+}
+
 
 </script>
 

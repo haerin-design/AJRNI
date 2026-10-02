@@ -1009,3 +1009,31 @@ footer a {
     color: #888;
     text-decoration: none;
 }
+
+.favorites-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 25px !important;
+    width: 100% !important;
+    padding: 30px !important;
+    box-sizing: border-box !important;
+}
+
+.favorites-grid .product-card {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.favorites-grid .product-image {
+    width: 100% !important;
+    height: 220px !important;
+}
+
+.favorites-grid .product-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 12px;
+}
