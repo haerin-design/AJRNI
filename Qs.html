@@ -16,102 +16,6 @@ body {
 }
 
 
-/* Header */
-
-.header {
-    min-height: 100px;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    padding: 15px 35px;
-    gap: 30px;
-    border-bottom: 1px solid #e5edf5;
-}
-
-.logo-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 270px;
-    direction: ltr;
-}
-
-.logo-circle {
-    width: 62px;
-    height: 62px;
-    border: 3px solid #0b427a;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #0b427a;
-    font-size: 30px;
-    font-weight: bold;
-}
-
-.logo-text h1 {
-    color: #0b427a;
-    font-size: 30px;
-    letter-spacing: 5px;
-}
-
-.logo-text span {
-    color: #173f6c;
-    font-size: 9px;
-    letter-spacing: 3px;
-}
-
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    flex: 1;
-    white-space: nowrap;
-}
-
-.navbar a {
-    text-decoration: none;
-    color: #173f6c;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 12px 0;
-}
-
-.navbar a:hover {
-    color: #0b6bad;
-}
-
-.navbar a.active {
-    color: #0b427a;
-    border-bottom: 3px solid #0b427a;
-}
-
-.search-box {
-    width: 285px;
-    height: 48px;
-    border: 1px solid #d7e4ef;
-    border-radius: 28px;
-    display: flex;
-    align-items: center;
-    padding: 0 17px;
-    background: white;
-    direction: ltr;
-}
-
-.search-box span {
-    font-size: 27px;
-    margin-right: 8px;
-}
-
-.search-box input {
-    border: none;
-    outline: none;
-    width: 100%;
-    font-size: 13px;
-    text-align: right;
-}
-
 
 /* Page title */
 
@@ -228,84 +132,6 @@ body {
 }
 
 
-/* Footer */
-
-.footer {
-    min-height: 155px;
-    background: #f1f6fa;
-    border-top: 1px solid #e5edf5;
-    display: grid;
-    grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
-    align-items: center;
-    gap: 25px;
-    padding: 25px 55px;
-    direction: ltr;
-}
-
-.footer-social {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-}
-
-.footer-social a {
-    width: 43px;
-    height: 43px;
-    border-radius: 50%;
-    background: #07365f;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 17px;
-    font-weight: bold;
-}
-
-.footer-copy,
-.footer-description {
-    color: #6a829b;
-    font-size: 13px;
-    line-height: 1.8;
-    text-align: center;
-    direction: rtl;
-}
-
-.footer-brand {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    direction: ltr;
-}
-
-.footer-brand-mark {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: #07365f;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 23px;
-}
-
-.footer-brand strong {
-    display: block;
-    color: #0b427a;
-    font-size: 25px;
-    letter-spacing: 5px;
-}
-
-.footer-brand span {
-    display: block;
-    color: #66809b;
-    font-size: 8px;
-    letter-spacing: 2px;
-    margin-top: 5px;
-}
-
 
 /* Responsive */
 
@@ -385,7 +211,6 @@ body {
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>أجرني | AJRNI</title>
 
     <link rel="stylesheet" href="style.css">
@@ -410,7 +235,7 @@ body {
         </div>
 
         <div class="logo-text">
-            <h1>AJRNI</h1>
+            <a href="index.html"><h1>AJRNI</h1></a>
             <span>RENT • BUY • REUSE</span>
         </div>
     </div>
@@ -418,7 +243,7 @@ body {
 
     <nav class="navbar"> <!-- القوائم بالشريط -->
 
-        <a href="#" class="active">الرئيسية</a>
+        <a href="index.html">الرئيسية</a>
         <a href="prodcuts.html">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
