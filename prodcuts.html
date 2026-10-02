@@ -670,6 +670,107 @@ function updateCartCount() {
         cartButton.parentElement.appendChild(badge);
     }
 }
+
+function addToFavorites(button) {
+
+    const product = button.closest(".product-card");
+
+    const name = product.dataset.name;
+    const price = product.dataset.price;
+    const image = product.dataset.image;
+
+    let favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const exists =
+        favorites.some(item => item.name === name);
+
+    if (exists) {
+
+        // حذف المنتج من المفضلة
+        favorites = favorites.filter(item => item.name !== name);
+
+        localStorage.setItem(
+            "favorites",
+            JSON.stringify(favorites)
+        );
+
+        // رجوع القلب إلى فارغ
+        setFavoriteHeart(button, false);
+
+    } else {
+
+        // إضافة المنتج للمفضلة
+        favorites.push({
+            name: name,
+            price: price,
+            image: image
+        });
+
+        localStorage.setItem(
+            "favorites",
+            JSON.stringify(favorites)
+        );
+
+        // تحويل القلب إلى أحمر
+        setFavoriteHeart(button, true);
+    }
+}
+
+
+// تغيير شكل القلب
+function setFavoriteHeart(button, isFavorite) {
+
+    const heart = button.querySelector("i");
+
+    if (!heart) return;
+
+    if (isFavorite) {
+
+        heart.classList.remove("fa-regular");
+        heart.classList.add("fa-solid");
+
+        heart.style.color = "red";
+
+    } else {
+
+        heart.classList.remove("fa-solid");
+        heart.classList.add("fa-regular");
+
+        heart.style.color = "";
+
+    }
+}
+
+
+// فحص المفضلة عند فتح الصفحة
+document.addEventListener("DOMContentLoaded", function () {
+
+    const favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const products =
+        document.querySelectorAll(".product-card");
+
+    products.forEach(product => {
+
+        const name = product.dataset.name;
+
+        if (!name) return;
+
+        const button =
+            product.querySelector(".wishlist-btn, .favorite");
+
+        if (!button) return;
+
+        const isFavorite =
+            favorites.some(item => item.name === name);
+
+        setFavoriteHeart(button, isFavorite);
+    });
+
+});
+
 </script>
 
     </main>
@@ -717,17 +818,5 @@ function updateCartCount() {
     </div>
 
 </footer>
-    <script>
-        function toggleWishlist(button) {
-            if (button.textContent.trim() === '🤍') {
-                button.textContent = '❤️';
-            } else {
-                button.textContent = '🤍';
-            }
-        }
-        function buyProduct(productName) {
-            alert('تم إضافة ' + productName + ' إلى السلة بنجاح.');
-        }
-    </script>
 </body>
 </html>
