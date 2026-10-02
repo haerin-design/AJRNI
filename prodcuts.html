@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <title>المنتجات - أجرني (AJRNI)</title>
+    <title>المنتجات - AJRNI</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
@@ -31,38 +31,6 @@
             font-family: "Cairo", sans-serif;
             background: #ffffff;
             color: var(--text);
-        }
-        header {
-            background-color: #0b1c3f;
-            color: white;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .logo span {
-            color: #4a90e2;
-        }
-        nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-size: 15px;
-            transition: color 0.3s;
-        }
-        nav a:hover,
-        nav a.active {
-            color: #4a90e2;
         }
         .container {
             max-width: 1200px;
@@ -218,7 +186,7 @@
     </style>
 </head>
 <body>
-    <header class="header"> <!--الشريط-->
+<header class="header"> <!--الشريط-->
     <div class="logo-area">
         <div class="logo-circle">
             <i class="fa-solid fa-box-open"></i>
@@ -229,28 +197,27 @@
         </div>
     </div>
     <nav class="navbar"> <!-- القوائم بالشريط -->
-        <a href="index.html" >الرئيسية</a>
+        <a href="index.html">الرئيسية</a>
         <a href="prodcuts.html" class="active">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
     </nav>
     <div class="header-actions"> <!-- الأيقونات -->
-        <div class="header-cart">
-    <a href="cart.html"></a>
-        <button type="button">
+        <a href="cart.html">
+        <button>
             <i class="fa-solid fa-cart-shopping"></i>
         </button>
-
-
-        <div class="header-favorite">
-    <a href="favorite.html">
-        <button type="button">
+        </a>
+        <a href="favorite.html">
+            <button>
             <i class="fa-regular fa-heart"></i>
-        </button><!--ايقونة صفحه التسجيل-->
-        <a href="signin.html">
+        </button>
+        </a>
+        <a href="signin.html"><!--ايقونة صفحه التسجيل-->
             <button>
             <i class="fa-regular fa-user"></i>
-        </button></a>
+        </button>
+        </a>
     </div>
     <div class="search-box"> <!-- البحث -->
         <input type="text"
