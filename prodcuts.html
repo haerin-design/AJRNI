@@ -605,8 +605,22 @@ function addToFavorites(button) {
     const exists =
         favorites.some(item => item.name === name);
 
-    if (!exists) {
+    if (exists) {
 
+        // حذف المنتج من المفضلة
+        favorites = favorites.filter(item => item.name !== name);
+
+        localStorage.setItem(
+            "favorites",
+            JSON.stringify(favorites)
+        );
+
+        // رجوع القلب إلى فارغ
+        setFavoriteHeart(button, false);
+
+    } else {
+
+        // إضافة المنتج للمفضلة
         favorites.push({
             name: name,
             price: price,
@@ -617,16 +631,67 @@ function addToFavorites(button) {
             "favorites",
             JSON.stringify(favorites)
         );
-    }
 
-    // تحويل القلب من فارغ إلى ممتلئ وأحمر
+        // تحويل القلب إلى أحمر
+        setFavoriteHeart(button, true);
+    }
+}
+
+
+// تغيير شكل القلب
+function setFavoriteHeart(button, isFavorite) {
+
     const heart = button.querySelector("i");
 
-    heart.classList.remove("fa-regular");
-    heart.classList.add("fa-solid");
+    if (!heart) return;
 
-    heart.style.color = "red";
+    if (isFavorite) {
+
+        heart.classList.remove("fa-regular");
+        heart.classList.add("fa-solid");
+
+        heart.style.color = "red";
+
+    } else {
+
+        heart.classList.remove("fa-solid");
+        heart.classList.add("fa-regular");
+
+        heart.style.color = "";
+
+    }
 }
+
+
+// فحص المفضلة عند فتح الصفحة
+document.addEventListener("DOMContentLoaded", function () {
+
+    const favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const products =
+        document.querySelectorAll(".product-card");
+
+    products.forEach(product => {
+
+        const name = product.dataset.name;
+
+        if (!name) return;
+
+        const button =
+            product.querySelector(".wishlist-btn, .favorite");
+
+        if (!button) return;
+
+        const isFavorite =
+            favorites.some(item => item.name === name);
+
+        setFavoriteHeart(button, isFavorite);
+    });
+
+});
+
+
 
 </script>
     </main>
