@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>AJRNI - العروض</title>
+  <title>AJRNI | العروض</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
@@ -228,14 +228,15 @@
     justify-content: space-between;
     width: 100%;
   }
-  .product-image {
+  .product-image-container {
   position: relative; /* عشان يثبت القلب داخل مربع الصورة */
 }
 
 .fav-btn {
   position: absolute;
   top: 10px;
-  left: 10px; /* يسار  */
+  left: 10px !important; /* يسار  */
+  right:auto !important;
   background: #ffffff;
   border: none;
   width: 32px;
@@ -248,57 +249,150 @@
   align-items: center;
   justify-content: center;
 }
+
+/* 1. ضبط شبكة عرض المنتجات لتكون بجانب بعضها بشكل استجابي */
+.products-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 20px !important;
+  justify-content: flex-start !important;
+}
+
+/* 2. ضبط عرض بطاقة المنتج لتكون بعرض مناسب */
+.product-card {
+  width: calc(33.333% - 14px) !important; /* يجعل 3 منتجات في الصف الواحد */
+  min-width: 240px !important;
+  box-sizing: border-box !important;
+}
+
+/* 3. ضبط حاوية الصورة بحدود وارتفاع ثابت */
+.product-img-container {
+  position: relative !important;
+  width: 100% !important;
+  height: 200px !important; /* ارتفاع موحد للصور */
+  overflow: hidden !important;
+  background-color: #f9f9f9 !important;
+}
+
+/* 4. إجبار الصورة على التكيف دون الخروج عن الحدود */
+.product-img-container img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important; /* يحافظ على تناسق الصورة بدون تشويه */
+}
   </style>
 </head>
 <body>
 
-  <header class="header">
-  <div class="logo-area">
-    <div class="logo-circle">
-      <i class="fa-solid fa-box-open"></i>
+  <header class="header"> <!--الشريط-->
+    <div class="logo-area">
+        <div class="logo-circle">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+        <div class="logo-text">
+            <a href="index.html"><h1>AJRNI</h1></a>
+            <span>RENT • BUY • REUSE</span>
+        </div>
     </div>
-    <div class="logo-text">
-      <a href="index.html"><h1>AJRNI</h1></a>
-      <span>RENT . BUY . REUSE</span>
+    <nav class="navbar"> <!-- القوائم بالشريط -->
+        <a href="index.html">الرئيسية</a>
+        <a href="prodcuts.html">المنتجات</a>
+        <a href="offers.html"class="active" >العروض</a>
+        <a href="contacct.html">تواصل معنا</a>
+    </nav>
+    <div class="header-actions"> <!-- الأيقونات -->
+        <a href="cart.html">
+        <button>
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
+        </a>
+        <a href="favorite.html">
+            <button>
+            <i class="fa-regular fa-heart"></i>
+        </button>
+        </a>
+        <a href="signin.html"><!--ايقونة صفحه التسجيل-->
+            <button>
+            <i class="fa-regular fa-user"></i>
+        </button>
+        </a>
     </div>
-  </div>
-
-  <nav class="nav-links">
-    <a href="index.html">الرئيسية</a>
-    <a href="products.html">المنتجات</a>
-    <a href="offers.html" class="active">العروض</a>
-    <a href="contacct.html">تواصل معنا</a>
-  </nav>
-
-  <div class="header-icons">
-    <a href="favorite.html"><i class="fa-regular fa-heart"></i></a>
-    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
-    <a href="login.html"><i class="fa-regular fa-user"></i></a>
-  </div>
+    <div class="search-box"> <!-- البحث -->
+        <input type="text"
+               placeholder="ابحث عن منتجاتك المفضلة...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
 </header>
   <div class="container">
   <h2 class="section-title">العروض</h2>
-
-  <div class="products-grid">
-    <!-- بطاقة منتج عليه عرض -->
-    <div class="product-card">
-      <div class="product-badge">عرض خاص</div>
-      <div class="product-image">
-        <button class="fav-btn" type="button" onclick="toggleFav(this)">🤍</button>
-        <img src="نظاره.webp" alt="نظارة شمسية">
-      </div>
-      <div class="product-info">
-        <h3>نظارة شمسية</h3>
-        <p class="description"> </p>
-                <div class="price-area">
-          <span class="old-price">150 ر.س</span>
-          <span class="new-price">99 ر.س</span>
-        </div>
-        <button class="add-to-cart-btn" onclick="addToCart(this)">أضف للسلة</button>
-      </div>
     </div>
   </div>
 </div>
+
+<div class="products-grid" style="display: flex !important; flex-wrap: wrap !important; gap: 25px !important; justify-content: flex-start !important; width: 100% !important;">
+
+  <!-- المنتج الأول -->
+  <div class="product-card" style="flex: 1 1 300px !important; max-width: 380px !important; min-width: 280px !important; box-sizing: border-box !important;">
+    <div class="product-img-container" style="position: relative !important; height: 280px !important; width: 100% !important;">
+      <div class="product-badge" style="position: absolute !important; top: 12px !important; right: 12px !important; left: auto !important; z-index: 2;">عرض خاص</div>
+      <button class="fav-btn" type="button" onclick="toggleFav(this)" style="position: absolute !important; top: 12px !important; left: 12px !important; right: auto !important; z-index: 2;">
+        <i class="far fa-heart"></i>
+      </button>
+      <img src="glasses1.jpg" alt="نظارة شمسية" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
+    </div>
+    <div class="product-info" style="padding: 15px !important;">
+      <span class="category">الإكسسوارات</span>
+      <h3 style="font-size: 1.2rem !important; margin: 10px 0 !important;">نظارة شمسية</h3>
+      <div class="price-area">
+        <span class="old-price">150 ر.س</span>
+        <span class="new-price">99 ر.س</span>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCart(this)" style="width: 100% !important; padding: 12px !important; margin-top: 10px !important;">أضف إلى السلة <i class="fas fa-shopping-cart"></i></button>
+    </div>
+  </div>
+
+  <!-- المنتج الثاني -->
+  <div class="product-card" style="flex: 1 1 300px !important; max-width: 380px !important; min-width: 280px !important; box-sizing: border-box !important;">
+    <div class="product-img-container" style="position: relative !important; height: 280px !important; width: 100% !important;">
+      <div class="product-badge" style="position: absolute !important; top: 12px !important; right: 12px !important; left: auto !important; z-index: 2;">عرض خاص</div>
+      <button class="fav-btn" type="button" onclick="toggleFav(this)" style="position: absolute !important; top: 12px !important; left: 12px !important; right: auto !important; z-index: 2;">
+        <i class="far fa-heart"></i>
+      </button>
+      <img src="rolex.jpg" alt="ساعة أنيقة" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
+    </div>
+    <div class="product-info" style="padding: 15px !important;">
+      <span class="category">الإكسسوارات</span>
+      <h3 style="font-size: 1.2rem !important; margin: 10px 0 !important;">ساعة أنيقة</h3>
+      <div class="price-area">
+        <span class="old-price">500 ر.س</span>
+        <span class="new-price">350 ر.س</span>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCart(this)" style="width: 100% !important; padding: 12px !important; margin-top: 10px !important;">أضف إلى السلة <i class="fas fa-shopping-cart"></i></button>
+    </div>
+  </div>
+
+  <!-- المنتج الثالث -->
+  <div class="product-card" style="flex: 1 1 300px !important; max-width: 380px !important; min-width: 280px !important; box-sizing: border-box !important;">
+    <div class="product-img-container" style="position: relative !important; height: 280px !important; width: 100% !important;">
+      <div class="product-badge" style="position: absolute !important; top: 12px !important; right: 12px !important; left: auto !important; z-index: 2;">خصم 15%</div>
+      <button class="fav-btn" type="button" onclick="toggleFav(this)" style="position: absolute !important; top: 12px !important; left: 12px !important; right: auto !important; z-index: 2;">
+        <i class="far fa-heart"></i>
+      </button>
+      <img src="ck watch.jpg" alt="ساعة يد" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
+    </div>
+    <div class="product-info" style="padding: 15px !important;">
+      <span class="category">الإكسسوارات</span>
+      <h3 style="font-size: 1.2rem !important; margin: 10px 0 !important;">ساعة يد فاخرة</h3>
+      <div class="price-area">
+        <span class="old-price">400 ر.س</span>
+        <span class="new-price">299 ر.س</span>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCart(this)" style="width: 100% !important; padding: 12px !important; margin-top: 10px !important;">أضف إلى السلة <i class="fas fa-shopping-cart"></i></button>
+    </div>
+  </div>
+
+</div>
+
 <!-- كودـ JavaScript -->
 <script>
   // تفاعل زر أضف إلى السلة
@@ -320,5 +414,47 @@
     }
   }
 </script>
+
+<footer id="contact">
+
+    <div class="footer-logo">
+
+        <div class="logo-circle">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <div>
+            <h2>AJRNI</h2>
+            <span>RENT • BUY • REUSE</span>
+        </div>
+
+    </div>
+
+    <p>
+        أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان
+    </p> 
+
+    <a href="Qs.html">الأسئلة الشائعة</a>
+    
+    <p>جميع الحقوق محفوظة منصة أجرني (AJRNI) ©️ 2026 - RENT • BUY • REUSE</p>
+
+
+    <div class="social">
+
+        <a href="#">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-brands fa-x-twitter"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-brands fa-snapchat"></i>
+        </a>
+
+    </div>
+
+</footer>
 </body>
 </html>
