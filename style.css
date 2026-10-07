@@ -261,7 +261,6 @@ img {
     margin-right: 8px;
 }
 
-
 /* SLIDER */
 
 .slider-arrow {
@@ -310,66 +309,6 @@ img {
 .dots .active-dot {
     background: var(--navy);
 }
-
-
-/* =========================
-   SIDE CATEGORIES
-========================= */
-
-.side-categories {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.category-card {
-    height: 106px;
-
-    border: 1px solid #e4e9ee;
-    border-radius: 13px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 8px 15px;
-
-    box-shadow: 0 2px 8px rgba(0,0,0,.03);
-    overflow: hidden;
-}
-
-.category-card img {
-    width: 145px;
-    height: 90px;
-
-    object-fit: cover;
-    border-radius: 9px;
-}
-
-.category-info {
-    text-align: right;
-}
-
-.category-info h3 {
-    font-size: 20px;
-    margin-bottom: 1px;
-}
-
-.category-info p {
-    color: var(--gray);
-    font-size: 12px;
-    margin-bottom: 5px;
-}
-
-.category-info button {
-    width: 30px;
-    height: 30px;
-
-    border-radius: 50%;
-    background: var(--navy);
-    color: white;
-}
-
 
 /* =========================
    FEATURES
@@ -1067,4 +1006,3 @@ footer a {
     align-items: center;
     justify-content: center;
 }
-
