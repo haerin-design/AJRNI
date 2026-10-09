@@ -1,544 +1,248 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
+    <title>سلة المشتريات - أجرني</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>سلة المشتريات -  AJRNI</title>
-
     <link rel="stylesheet" href="style.css">
-
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <!-- Icons -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "Cairo", sans-serif;
-        }
-
-        body {
-            background: #f4f5f7;
-            color: #333;
-            direction: rtl;
-        }
-        .cart-link {
-            text-decoration: none;
-        }
-
-        .cart-main {
-            max-width: 1150px;
+        .container {
+            max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
         }
-
-        .cart-title {
+        .section-title {
+            font-size: 24px;
+            color: #0b1c3f;
             margin-bottom: 25px;
+            border-right: 4px solid #4a90e2;
+            padding-right: 10px;
         }
-
-        .cart-title h1 {
-            color: #0b192c;
-            font-size: 27px;
-            margin-bottom: 5px;
-        }
-
-        .cart-title p {
-            color: #718096;
-            font-size: 14px;
-        }
-
-        .cart-container {
+        
+        /* تخطيط صفحة السلة */
+        .cart-layout {
             display: grid;
-
-            /* المنتجات يمين - الحساب يسار */
-            grid-template-columns: 1fr 330px;
-
-            gap: 25px;
-
-            align-items: start;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 900px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .cart-items {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .cart-item {
+        /* قائمة المنتجات في السلة */
+        .cart-items-container {
             background: white;
-            border-radius: 12px;
-            padding: 15px;
-
-            display: flex;
-            align-items: center;
-
-            gap: 15px;
-
-            min-height: 125px;
-
-            border: 1px solid #edf0f3;
-
-            box-shadow:
-                0 3px 10px rgba(0,0,0,0.04);
-
-            transition: 0.2s;
-        }
-
-        .cart-item:hover {
-            box-shadow:
-                0 5px 15px rgba(0,0,0,0.07);
-        }
-
-        .item-image {
-            width: 105px;
-            height: 105px;
-
-            min-width: 105px;
-
-            background: #f7f8fa;
-
             border-radius: 10px;
-
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .cart-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 15px;
         }
-
-        .item-image img {
-            width: 100%;
-            height: 100%;
-
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
             object-fit: contain;
-
-            padding: 7px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            padding: 5px;
         }
-
-        .item-image .image-icon {
-            color: #cbd5e0;
-            font-size: 30px;
-        }
-
-
-        /* معلومات المنتج */
-
-        .item-details {
+        .cart-item-details {
             flex: 1;
-
-            min-width: 0;
-
-            padding: 0 5px;
         }
-
-        .item-details h3 {
+        .cart-item-title {
             font-size: 16px;
-
-            color: #182b3f;
-
+            font-weight: bold;
+            color: #0b1c3f;
             margin-bottom: 5px;
-
-            font-weight: 700;
         }
-
-        .item-category {
+        .cart-item-category {
             font-size: 12px;
-
-            color: #8a97a6;
-
-            margin-bottom: 7px;
+            color: #64748b;
+            margin-bottom: 8px;
         }
-
-        .item-price {
+        .cart-item-price {
             font-size: 15px;
-
-            color: #0b192c;
-
-            font-weight: 700;
+            color: #27ae60;
+            font-weight: bold;
         }
-
-        .item-actions {
-            min-width: 115px;
-
+        .cart-item-actions {
             display: flex;
-
-            flex-direction: column;
-
             align-items: center;
-
-            gap: 9px;
+            gap: 15px;
         }
-
-        .quantity-control {
+        .quantity-controls {
             display: flex;
-
             align-items: center;
-
-            border: 1px solid #dfe4e9;
-
-            border-radius: 7px;
-
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
             overflow: hidden;
-
-            height: 34px;
         }
-
-        .quantity-control button {
-            width: 32px;
-            height: 34px;
-
+        .quantity-btn {
+            background: #f1f5f9;
             border: none;
-
-            background: #f8fafc;
-
-            color: #0b192c;
-
+            padding: 5px 12px;
             cursor: pointer;
-
-            font-size: 16px;
-
+            font-weight: bold;
+            color: #334155;
+        }
+        .quantity-btn:hover {
+            background: #e2e8f0;
+        }
+        .quantity-display {
+            padding: 0 12px;
+            font-size: 14px;
             font-weight: bold;
         }
-
-        .quantity-control button:hover {
-            background: #edf2f7;
-        }
-
-        .quantity-control span {
-            width: 35px;
-
-            text-align: center;
-
-            font-size: 13px;
-
-            color: #333;
-        }
-
-        .item-total {
-            font-size: 13px;
-
-            font-weight: bold;
-
-            color: #0b192c;
-        }
-
         .remove-btn {
+            background: none;
             border: none;
-
-            background: transparent;
-
-            color: #e53e3e;
-
+            color: #ef4444;
             cursor: pointer;
-
-            font-size: 12px;
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 5px;
+            font-size: 16px;
+            transition: color 0.2s;
         }
-
         .remove-btn:hover {
-            color: #c53030;
+            color: #dc2626;
         }
 
+        /* ملخص السلة وخيارات الدفع والتوصيل */
         .cart-summary {
             background: white;
-
-            border-radius: 12px;
-
-            padding: 22px;
-
-            border: 1px solid #edf0f3;
-
-            box-shadow:
-                0 3px 10px rgba(0,0,0,0.04);
-
-            position: sticky;
-
-            top: 20px;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            height: fit-content;
         }
-
-        .cart-summary h2 {
-            color: #0b192c;
-
-            font-size: 19px;
-
+        .summary-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0b1c3f;
             margin-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
         }
-
         .summary-row {
             display: flex;
-
             justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 14px;
-
-            color: #667085;
-
-            font-size: 13px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #475569;
         }
-
-        .summary-row span:last-child {
-            color: #25364a;
-
-            font-weight: 600;
-        }
-
-        .cart-summary hr {
-            border: none;
-
-            border-top: 1px solid #e8ebef;
-
-            margin: 18px 0;
-        }
-
-        .summary-row.total {
-            color: #0b192c;
-
-            font-size: 17px;
-
-            font-weight: 800;
-
-            margin-bottom: 20px;
-        }
-
-        .summary-row.total span:last-child {
-            color: #0b192c;
-
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
             font-size: 18px;
+            font-weight: bold;
+            color: #0b1c3f;
+        }
+
+        /* قسم خيارات الدفع والتوصيل */
+        .checkout-options-section {
+            margin-top: 20px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 15px;
+        }
+        .option-group-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0b1c3f;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .option-group-title i {
+            color: #4a90e2;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #334155;
+            cursor: pointer;
+            background: #f8fafc;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .option-label:hover {
+            border-color: #4a90e2;
+            background: #f0f7ff;
+        }
+        .option-label input {
+            accent-color: #0b1c3f;
         }
 
         .checkout-btn {
             width: 100%;
-
-            background: #0b192c;
-
+            background-color: #27ae60;
             color: white;
-
             border: none;
-
             padding: 12px;
-
-            border-radius: 8px;
-
-            font-size: 14px;
-
+            border-radius: 6px;
+            font-size: 16px;
             font-weight: bold;
-
             cursor: pointer;
-
-            transition: 0.3s;
+            margin-top: 15px;
+            transition: background-color 0.3s;
         }
-
         .checkout-btn:hover {
-            background: #1a365d;
+            background-color: #219653;
         }
-
-        .continue-shopping {
-            display: block;
-
-            text-align: center;
-
-            margin-top: 13px;
-
-            color: #667085;
-
-            text-decoration: none;
-
-            font-size: 13px;
-        }
-
-        .continue-shopping:hover {
-            color: #0b192c;
-        }
-
         .empty-cart {
-            background: white;
-
-            border-radius: 12px;
-
-            padding: 60px 20px;
-
             text-align: center;
-
-            border: 1px solid #edf0f3;
+            padding: 40px 0;
+            color: #64748b;
         }
-
         .empty-cart i {
-            font-size: 55px;
-
-            color: #d5dbe2;
-
+            font-size: 48px;
+            color: #cbd5e1;
             margin-bottom: 15px;
         }
-
-        .empty-cart h3 {
-            color: #26384b;
-
-            font-size: 19px;
-
-            margin-bottom: 8px;
-        }
-
-        .empty-cart p {
-            color: #8995a3;
-
-            font-size: 13px;
-
-            margin-bottom: 20px;
-        }
-
         .empty-cart a {
             display: inline-block;
-
-            background: #0b192c;
-
+            margin-top: 15px;
+            background: #0b1c3f;
             color: white;
-
-            text-decoration: none;
-
-            padding: 10px 22px;
-
-            border-radius: 7px;
-
-            font-size: 13px;
-        }
-
-        @media (max-width: 850px) {
-
-            .cart-container {
-                grid-template-columns: 1fr;
-            }
-
-            .cart-summary {
-                position: static;
-
-                order: 2;
-            }
-
-        }
-
-
-        @media (max-width: 600px) {
-
-            .header {
-                padding: 15px;
-                justify-content: center;
-            }
-
-            .navbar {
-                order: 3;
-
-                width: 100%;
-
-                justify-content: center;
-
-                gap: 15px;
-            }
-
-            .cart-main {
-                margin: 25px auto;
-
-                padding: 0 12px;
-            }
-
-            .cart-title h1 {
-                font-size: 23px;
-            }
-
-            .cart-item {
-                padding: 12px;
-
-                gap: 10px;
-            }
-
-            .item-image {
-                width: 75px;
-                height: 75px;
-
-                min-width: 75px;
-            }
-
-            .item-details h3 {
-                font-size: 13px;
-            }
-
-            .item-category {
-                font-size: 10px;
-            }
-
-            .item-price {
-                font-size: 13px;
-            }
-
-            .item-actions {
-                min-width: 75px;
-            }
-
-            .item-total {
-                font-size: 11px;
-            }
-
-            .quantity-control {
-                height: 30px;
-            }
-
-            .quantity-control button {
-                width: 27px;
-                height: 30px;
-            }
-
-            .quantity-control span {
-                width: 25px;
-            }
-
-            .remove-btn {
-                font-size: 10px;
-            }
-
-        }
-        /*تفاصيل تنسيق منتجات الإيجار المضافة*/
-        .rent-tag-badge {
-            display: inline-block;
-            background: #e0f2fe;
-            color: #0369a1;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 2px 7px;
-            border-radius: 4px;
-            margin-bottom: 5px;
-        }
-
-        .rent-period-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
             border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 12px;
-            color: #475569;
-            margin: 6px 0;
-            line-height: 1.5;
+            text-decoration: none;
+            font-size: 14px;
         }
 
     </style>
 </head>
-
-
 <body>
 <header class="header"> <!--الشريط-->
     <div class="logo-area">
@@ -551,503 +255,192 @@
         </div>
     </div>
     <nav class="navbar"> <!-- القوائم بالشريط -->
-        <a href="index.html" >الرئيسية</a>
+        <a href="index.html">الرئيسية</a>
         <a href="prodcuts.html">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
     </nav>
     <div class="header-actions"> <!-- الأيقونات -->
         <a href="cart.html" class="active">
-        <button>
             <i class="fa-solid fa-cart-shopping"></i>
-        </button>
         </a>
         <a href="favorite.html">
-            <button>
             <i class="fa-regular fa-heart"></i>
-        </button>
         </a>
         <a href="signin.html"><!--ايقونة صفحه التسجيل-->
-            <button>
             <i class="fa-regular fa-user"></i>
-        </button>
         </a>
     </div>
-    <div class="search-box"> <!-- البحث -->
-        <input type="text"
-               placeholder="ابحث عن منتجاتك المفضلة...">
+    <div class="search-box">
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="ابحث عن منتجاتك المفضلة...">
+    <button id="searchButton" type="button">
         <i class="fa-solid fa-magnifying-glass"></i>
-    </div>
+    </button>
+</div>
 </header>
 
-<main class="cart-main">
+    <main class="container">
+        <h2 class="section-title">سلة المشتريات</h2>
 
-
-    <div class="cart-title">
-
-        <h1>
-            سلة المشتريات
-        </h1>
-
-        <p>
-            راجع منتجاتك قبل إتمام الطلب
-        </p>
-
-    </div>
-
-
-    <div class="cart-container">
-
-
-        <!-- المنتجات -->
-
-        <div
-            class="cart-items"
-            id="cartItems">
-
+        <div id="cart-content-area">
+            <!-- سيتم تعبئة محتويات السلة والخيارات هنا تلقائياً عبر JavaScript -->
         </div>
-
-
-        <!-- الحساب -->
-
-        <div class="cart-summary">
-
-            <h2>
-                ملخص الطلب
-            </h2>
-
-
-            <div class="summary-row">
-
-                <span>
-                    إجمالي المنتجات:
-                </span>
-
-                <span id="subtotal">
-                    0 ر.س
-                </span>
-
-            </div>
-
-
-            <div class="summary-row">
-
-                <span>
-                    رسوم التوصيل:
-                </span>
-
-                <span id="shipping">
-                    0 ر.س
-                </span>
-
-            </div>
-
-
-            <hr>
-
-
-            <div class="summary-row total">
-
-                <span>
-                    المجموع الكلي:
-                </span>
-
-                <span id="total">
-                    0 ر.س
-                </span>
-
-            </div>
-
-
-            <button
-                class="checkout-btn"
-                onclick="checkout()">
-
-                إتمام الطلب
-
-            </button>
-
-
-            <a
-                href="prodcuts.html"
-                class="continue-shopping">
-
-                متابعة التسوق
-
-            </a>
-
-        </div>
-
-    </div>
-
-</main>
-
-
-
-<!-- =========================
-     CART JAVASCRIPT
-========================= -->
-
-<script>
-
-const SHIPPING_COST = 30;
-
-
-// جلب السلة
-function getCart() {
-
-    return JSON.parse(
-        localStorage.getItem("cart")
-    ) || [];
-
-}
-
-
-// حفظ السلة
-function saveCart(cart) {
-
-    localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-    );
-
-}
-
-
-// عرض السلة
-function renderCart() {
-
-    const cart = getCart();
-
-    const cartItems =
-        document.getElementById("cartItems");
-
-
-    cartItems.innerHTML = "";
-
-
-    /* السلة فارغة */
-
-    if (cart.length === 0) {
-
-        cartItems.innerHTML = `
-
-            <div class="empty-cart">
-
-                <i class="fa-solid fa-cart-shopping"></i>
-
-                <h3>
-                    السلة فارغة
-                </h3>
-
-                <p>
-                    لم تقم بإضافة أي منتجات إلى السلة.
-                </p>
-
-                <a href="prodcuts.html">
-                    تصفح المنتجات
-                </a>
-
-            </div>
-
-        `;
-
-        updateSummary();
-
-        return;
-
-    }
-
-
-    /* المنتجات */
-
-    cart.forEach((product, index) => {
-
-
-        const itemTotal =
-            product.price * product.quantity;
-
-
-        const item =
-            document.createElement("div");
-
-
-        item.className =
-            "cart-item";
-
-
-        item.innerHTML = `
-
-            <!-- صورة المنتج -->
-
-            <div class="item-image">
-
-                <img
-                    src="${product.image}"
-                    alt="${product.name}"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                >
-
-                <i
-                    class="fa-solid fa-image image-icon"
-                    style="display:none;">
-                </i>
-
-            </div>
-
-
-            <!-- معلومات المنتج -->
-
-            <div class="item-details">
-
-                <h3>
-                    ${product.name}
-                </h3>
-
-                <p class="item-category">
-                    ${product.category}
-                </p>
-
-                <!-- سطر تفاصيل الإيجار المضاف -->
-
-                ${product.type === "إيجار" ? `
-                    <div style="font-size: 11px; color: #0284c7; background: #f0f9ff; padding: 4px 8px; border-radius: 4px; margin: 4px 0;">
-                        📅 من ${product.startDate} إلى ${product.endDate} (${product.days} أيام) | تأمين: ${product.deposit} ر.س
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderCart();
+        });
+
+        function renderCart() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const container = document.getElementById("cart-content-area");
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <p>سلة المشتريات فارغة حالياً!</p>
+                        <a href="prodcuts.html">تصفح المنتجات الآن</a>
                     </div>
-                ` : ""}
+                `;
+                return;
+            }
 
-                <p class="item-price">
+            let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            let shippingFee = 35; // رسوم توصيل ثابتة تجريبية
 
-                    ${product.price.toLocaleString("ar-SA")}
-
-                    ر.س
-
-                </p>
-
-            </div>
-
-
-            <!-- التحكم -->
-
-            <div class="item-actions">
-
-                <!--تم تعديل التحكم بالكمية لملائمة منتجات الإيجار  ايضاً-->
-
-                <div class="quantity-control" style="${product.type === 'إيجار' ? 'visibility: hidden;' : ''}">
-
-                    <button
-                        onclick="changeQuantity(${index}, -1)">
-
-                        −
-
-                    </button>
-
-
-                    <span>
-                        ${product.quantity}
-                    </span>
-
-
-                    <button
-                        onclick="changeQuantity(${index}, 1)">
-
-                        +
-
-                    </button>
-
+            let itemsHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                    <div class="cart-item-details">
+                        <div class="cart-item-category">${item.category}</div>
+                        <div class="cart-item-title">${item.name}</div>
+                        <div class="cart-item-price">${item.price} ر.س</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQty(${index}, -1)">-</button>
+                            <span class="quantity-display">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQty(${index}, 1)">+</button>
+                        </div>
+                        <button class="remove-btn" onclick="removeItem(${index})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
                 </div>
+            `).join('');
 
+            container.innerHTML = `
+                <div class="cart-layout">
+                    <div class="cart-items-container">
+                        <h3 style="margin-bottom: 15px; font-size:16px; color:#0b1c3f;">المنتجات المضافة (${cart.length})</h3>
+                        ${itemsHTML}
+                    </div>
 
-                <div class="item-total">
+                    <div class="cart-summary">
+                        <div class="summary-title">ملخص الطلب والدفع</div>
+                        
+                        <div class="summary-row">
+                            <span>مجموع المنتجات:</span>
+                            <span id="subtotal-val">${subtotal} ر.س</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>رسوم التوصيل والشحن:</span>
+                            <span>${shippingFee} ر.س</span>
+                        </div>
 
-                    ${itemTotal.toLocaleString("ar-SA")}
+                        <!-- خيارات التوصيل -->
+                        <div class="checkout-options-section">
+                            <div class="option-group-title"><i class="fa-solid fa-truck-fast"></i> اختر طريقة التوصيل:</div>
+                            <div class="options-list">
+                                <label class="option-label">
+                                    <input type="radio" name="shipping" checked> توصيل سريع لباب المنزل (خلال 24-48 ساعة)
+                                </label>
+                                <label class="option-label">
+                                    <input type="radio" name="shipping"> استلام من أقرب فرع (مجاناً)
+                                </label>
+                            </div>
 
-                    ر.س
+                            <div class="option-group-title"><i class="fa-solid fa-credit-card"></i> اختر طريقة الدفع:</div>
+                            <div class="options-list">
+                                <label class="option-label">
+                                    <input type="radio" name="payment" checked> بطاقة مدى / ائتمانية (Visa / Mastercard)
+                                </label>
+                                <label class="option-label">
+                                    <input type="radio" name="payment"> أبل باي (Apple Pay)
+                                </label>
+                                <label class="option-label">
+                                    <input type="radio" name="payment"> تقسيط مريح (عبر تابي أو تمارا بدون فوائد)
+                                </label>
+                                <label class="option-label">
+                                    <input type="radio" name="payment"> الدفع عند الاستلام
+                                </label>
+                            </div>
+                        </div>
 
+                        <div class="summary-total">
+                            <span>المجموع الكلي:</span>
+                            <span style="color: #27ae60;" id="total-val">${subtotal + shippingFee} ر.س</span>
+                        </div>
+
+                        <button class="checkout-btn" onclick="completeCheckout()">إتمام الطلب وتأكيد الشراء</button>
+                    </div>
                 </div>
-
-
-                <button
-                    class="remove-btn"
-                    onclick="removeItem(${index})">
-
-                    <i class="fa-solid fa-trash"></i>
-
-                    حذف
-
-                </button>
-
-
-            </div>
-
-        `;
-
-
-        cartItems.appendChild(item);
-
-    });
-
-
-    updateSummary();
-
-}
-
-
-// تغيير الكمية
-function changeQuantity(index, change) {
-
-    const cart = getCart();
-
-
-    cart[index].quantity += change;
-
-
-    if (cart[index].quantity <= 0) {
-
-        cart.splice(index, 1);
-
-    }
-
-
-    saveCart(cart);
-
-    renderCart();
-
-}
-
-
-// حذف المنتج
-function removeItem(index) {
-
-    const cart = getCart();
-
-
-    cart.splice(index, 1);
-
-
-    saveCart(cart);
-
-    renderCart();
-
-}
-
-
-// حساب الإجمالي
-function updateSummary() {
-
-    const cart = getCart();
-
-
-    const subtotal =
-        cart.reduce(
-            (total, item) =>
-                total +
-                (item.price * item.quantity),
-            0
-        );
-
-
-    const shipping =
-        subtotal > 0
-            ? SHIPPING_COST
-            : 0;
-
-
-    const total =
-        subtotal + shipping;
-
-
-    document.getElementById("subtotal")
-        .textContent =
-        subtotal.toLocaleString("ar-SA")
-        + " ر.س";
-
-
-    document.getElementById("shipping")
-        .textContent =
-        shipping.toLocaleString("ar-SA")
-        + " ر.س";
-
-
-    document.getElementById("total")
-        .textContent =
-        total.toLocaleString("ar-SA")
-        + " ر.س";
-
-}
-
-
-// إتمام الطلب
-function checkout() {
-
-    const cart = getCart();
-
-
-    if (cart.length === 0) {
-
-        alert("السلة فارغة.");
-
-        return;
-
-    }
-
-
-    alert(
-        "تم تجهيز طلبك بنجاح!"
-    );
-
-}
-
-
-// تشغيل الصفحة
-document.addEventListener(
-    "DOMContentLoaded",
-    renderCart
-);
-
-</script>
+            `;
+        }
+
+        function updateQty(index, change) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+        }
+
+        function removeItem(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+        }
+
+        function completeCheckout() {
+            alert("تم استلام طلبك بنجاح! شكراً لتسوقك عبر منصة أجرني (AJRNI).");
+            localStorage.removeItem("cart");
+            window.location.href = "index.html";
+        }
+    </script>
+
+<!--FOOTER-->
 <footer id="contact">
-
     <div class="footer-logo">
-
         <div class="logo-circle">
             <i class="fa-solid fa-box-open"></i>
         </div>
-
         <div>
             <h2>AJRNI</h2>
             <span>RENT • BUY • REUSE</span>
         </div>
-
     </div>
-
     <p>
         أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان
     </p> 
-
     <a href="Qs.html">الأسئلة الشائعة</a>
-    
     <p>جميع الحقوق محفوظة منصة أجرني (AJRNI) ©️ 2026 - RENT • BUY • REUSE</p>
-
-
     <div class="social">
-
         <a href="#">
             <i class="fa-brands fa-instagram"></i>
         </a>
-
         <a href="#">
             <i class="fa-brands fa-x-twitter"></i>
         </a>
-
         <a href="#">
             <i class="fa-brands fa-snapchat"></i>
         </a>
-
     </div>
-
 </footer>
-
 </body>
-
 </html>
