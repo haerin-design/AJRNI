@@ -35,6 +35,37 @@
     object-fit: cover;
     border-radius: 10px;
 }
+
+.favorites-grid .product-card {
+    position: relative;
+}
+
+.favorites-grid .product-card {
+    position: relative;
+}
+
+.remove-favorite {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: white;
+    color: #040160;
+    border: 1px solid #040160;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.remove-favorite:hover {
+    background-color: #040160;
+    color: white;
+}
 </style>
 </head>
 <body>
@@ -97,7 +128,7 @@
 
     } else {
 
-        favorites.forEach(product => {
+        favorites.forEach((product, index) => {
 
             container.innerHTML += `
                 <div class="product-card">
@@ -107,11 +138,16 @@
                     </div>
 
                     <h3>${product.name}</h3>
-
+                    
                     <div class="price">
                         <strong>${product.price}</strong>
                         <span>ر.س</span>
                     </div>
+
+<button class="remove-favorite"
+            onclick="removeFavorite(${index})">
+        ✕
+    </button>
 
                 </div>
             `;
@@ -205,6 +241,16 @@ function updateCartCount() {
         cartButton.parentElement.style.position = "relative";
         cartButton.parentElement.appendChild(badge);
     }
+}
+
+function removeFavorite(index) {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    favorites.splice(index, 1);
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+
+    location.reload();
 }
 </script>
 
