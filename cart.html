@@ -255,13 +255,13 @@
         </div>
     </div>
     <nav class="navbar"> <!-- القوائم بالشريط -->
-        <a href="index.html">الرئيسية</a>
+        <a href="index.html" class="active">الرئيسية</a>
         <a href="prodcuts.html">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
     </nav>
     <div class="header-actions"> <!-- الأيقونات -->
-        <a href="cart.html" class="active">
+        <a href="cart.html">
             <i class="fa-solid fa-cart-shopping"></i>
         </a>
         <a href="favorite.html">
@@ -275,12 +275,15 @@
     <input
         type="text"
         id="searchInput"
-        placeholder="ابحث عن منتجاتك المفضلة...">
+        placeholder="ابحث عن منتجاتك المفضلة..."
+    >
+
     <button id="searchButton" type="button">
         <i class="fa-solid fa-magnifying-glass"></i>
     </button>
 </div>
 </header>
+
 
     <main class="container">
         <h2 class="section-title">سلة المشتريات</h2>
@@ -352,13 +355,10 @@
 
                         <!-- خيارات التوصيل -->
                         <div class="checkout-options-section">
-                            <div class="option-group-title"><i class="fa-solid fa-truck-fast"></i> اختر طريقة التوصيل:</div>
+                            <div class="option-group-title"><i class="fa-solid fa-truck-fast"></i> طريقة التوصيل:</div>
                             <div class="options-list">
                                 <label class="option-label">
                                     <input type="radio" name="shipping" checked> توصيل سريع لباب المنزل (خلال 24-48 ساعة)
-                                </label>
-                                <label class="option-label">
-                                    <input type="radio" name="shipping"> استلام من أقرب فرع (مجاناً)
                                 </label>
                             </div>
 
