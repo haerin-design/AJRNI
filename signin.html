@@ -34,19 +34,13 @@
     </nav>
     <div class="header-actions"> <!-- الأيقونات -->
         <a href="cart.html">
-        <button>
             <i class="fa-solid fa-cart-shopping"></i>
-        </button>
         </a>
         <a href="favorite.html">
-            <button>
             <i class="fa-regular fa-heart"></i>
-        </button>
         </a>
         <a href="signin.html"class="active"><!--ايقونة صفحه التسجيل-->
-            <button>
             <i class="fa-regular fa-user"></i>
-        </button>
         </a>
     </div>
     <div class="search-box"> <!-- البحث -->
@@ -55,7 +49,6 @@
         <i class="fa-solid fa-magnifying-glass"></i>
     </div>
 </header>     
-        </div> 
     <main> <!--اطار التسجيل-->
         <div class="register-card">
             <div class="register-header">
@@ -271,32 +264,30 @@
             <i class="fa-brands fa-snapchat"></i>
         </a>
     </div>
-</footer>
-    <script>
-        let selectedAccount = "customer";/* المسؤول عن الضغط على مستاجر وموجر*/
-        function selectAccount(type) {
-            selectedAccount = type;
-            const customer =
-                document.getElementById("customerOption");
-            const seller =
-                document.getElementById("sellerOption");
-            if (type === "customer") {
-                customer.classList.add("selected");
-                seller.classList.remove("selected");
-            } else {
-                seller.classList.add("selected");
-                customer.classList.remove("selected");
-            }
+</footer><script>
+    let selectedAccount = "customer"; /* المسؤول عن الضغط على مستأجر ومؤجر */
+
+    function selectAccount(type) {
+        selectedAccount = type;
+        const customer = document.getElementById("customerOption");
+        const seller = document.getElementById("sellerOption");
+
+        if (type === "customer") {
+            customer.classList.add("selected");
+            seller.classList.remove("selected");
+        } else {
+            seller.classList.add("selected");
+            customer.classList.remove("selected");
         }
-/* يخلي زر العين يغير كلمة المرور من مخفية إلى ظاهره والعكس*/
-        function togglePassword(inputId, button) {
-            const input =
-                document.getElementById(inputId);
-            if (input.type === "password") {
-                input.type = "text";
-            } else {
-                input.type = "password";
-            }
+    }
+
+    /* تغيير حالة إظهار وإخفاء كلمة المرور */
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
         }
 /*  maram updates التحقق من تطابق كلمه المرور ونوع الحساب ورساله خطا او نجاح والتوجيه */
         document
@@ -352,91 +343,61 @@
                 
             });
 document.addEventListener("DOMContentLoaded", function () {
+    }
 
-    const addButtons = document.querySelectorAll(".cart-btn");
+    /* إرسال بيانات التسجيل إلى السيرفر والقاعدة */
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
 
-    addButtons.forEach(button => {
+        const message = document.getElementById("formMessage");
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
 
-        button.addEventListener("click", function () {
+        // 1. التحقق المحلي من كلمة المرور
+        if (password !== confirmPassword) {
+            message.textContent = "الرمز السري غير متطابق.";
+            message.className = "message error";
+            return;
+        }
 
-            const productCard = button.closest(".product-card");
+        if (password.length < 6) {
+            message.textContent = "يجب أن يكون الرمز السري 6 خانات على الأقل.";
+            message.className = "message error";
+            return;
+        }
 
-            const product = {
-                name: productCard.dataset.name,
-                price: Number(productCard.dataset.price),
-                image: productCard.dataset.image,
-                quantity: 1
-            };
+        // 2. تجهيز البيانات لإرسالها
+        const payload = {
+            fullName: document.getElementById("fullName").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            password: password,
+            confirmPassword: confirmPassword,
+            role: selectedAccount
+        };
 
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-            // البحث عن المنتج إذا كان موجودًا
-            const existingProduct = cart.find(
-                item => item.name === product.name
-            );
-
-            if (existingProduct) {
-                existingProduct.quantity += 1;
+        // 3. إرسال الطلب إلى api/register.php
+        fetch('api/register.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                message.textContent = data.message;
+                message.className = "message success";
+                setTimeout(() => { window.location.href = "login.html"; }, 1500);
             } else {
-                cart.push(product);
+                message.textContent = data.message;
+                message.className = "message error";
             }
-
-            // حفظ السلة
-            localStorage.setItem("cart", JSON.stringify(cart));
-
-            // تغيير شكل الزر مؤقتًا
-            const oldText = button.textContent;
-
-            button.textContent = "✓ تمت الإضافة";
-            button.style.backgroundColor = "#27ae60";
-
-            setTimeout(() => {
-                button.textContent = oldText;
-                button.style.backgroundColor = "";
-            }, 1200);
-
-            // تحديث رقم السلة
-            updateCartCount();
+        })
+        .catch(() => {
+            message.textContent = "حدث خطأ في الاتصال بالخادم.";
+            message.className = "message error";
         });
     });
-
-    updateCartCount();
-});
-
-
-// تحديث عدد المنتجات فوق أيقونة السلة
-function updateCartCount() {
-
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const count = cart.reduce(
-        (total, item) => total + item.quantity,
-        0
-    );
-
-    const cartButton = document.querySelector(
-        ".header-actions .fa-cart-shopping"
-    );
-
-    if (!cartButton) return;
-
-    const oldBadge = document.querySelector(".cart-count");
-
-    if (oldBadge) {
-        oldBadge.remove();
-    }
-
-    if (count > 0) {
-
-        const badge = document.createElement("span");
-
-        badge.className = "cart-count";
-        badge.textContent = count;
-
-        cartButton.parentElement.style.position = "relative";
-        cartButton.parentElement.appendChild(badge);
-    }
-}
-    </script>
+</script>
 </body>
 </html>

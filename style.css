@@ -176,7 +176,7 @@ img {
 
 .top-section {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 4fr 1fr;
     gap: 20PX;
 
     padding: 22px 0 22px 25px;
