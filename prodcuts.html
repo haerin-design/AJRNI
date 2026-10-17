@@ -1,39 +1,26 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>المنتجات - AJRNI</title>
-
     <link rel="stylesheet" href="style.css">
-
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link
         href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
+        rel="stylesheet">
     <!-- Icons -->
     <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
-
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --navy: #062b52;
             --dark-navy: #041f3b;
@@ -43,29 +30,24 @@
             --gray: #718096;
             --white: #ffffff;
         }
-
         body {
             font-family: "Cairo", sans-serif;
             background: #ffffff;
             color: var(--text);
         }
-
         a {
             text-decoration: none;
             color: inherit;
         }
-
         button {
             font-family: inherit;
             cursor: pointer;
         }
-
         .container {
             max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
         }
-
         .section-title {
             font-size: 24px;
             color: #0b1c3f;
@@ -73,17 +55,14 @@
             border-right: 4px solid #4a90e2;
             padding-right: 10px;
         }
-
         /* =========================
            PRODUCTS
         ========================= */
-
         .products {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 25px;
         }
-
         .product-card {
             background: white;
             border-radius: 10px;
@@ -94,12 +73,10 @@
             flex-direction: column;
             transition: transform 0.3s, box-shadow 0.3s;
         }
-
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
-
         .product-img-container {
             position: relative;
             height: 220px;
@@ -109,13 +86,11 @@
             justify-content: center;
             padding: 10px;
         }
-
         .product-img-container img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
         }
-
         .badge {
             position: absolute;
             top: 10px;
@@ -127,7 +102,6 @@
             border-radius: 4px;
             z-index: 2;
         }
-
         .wishlist-btn {
             position: absolute;
             top: 10px;
@@ -146,38 +120,32 @@
             transition: 0.2s;
             z-index: 2;
         }
-
         .wishlist-btn:hover {
             transform: scale(1.08);
         }
-
         .product-info {
             padding: 20px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
-
         .product-category {
             font-size: 13px;
             color: #64748b;
             margin-bottom: 5px;
         }
-
         .product-name {
             font-size: 18px;
             color: #0b1c3f;
             margin-bottom: 10px;
             font-weight: bold;
         }
-
         .product-price {
             font-size: 18px;
             color: #27ae60;
             font-weight: bold;
             margin-bottom: 15px;
         }
-
         .cart-btn {
             width: 100%;
             background-color: #0b1c3f;
@@ -190,15 +158,12 @@
             margin-top: auto;
             transition: 0.3s;
         }
-
         .cart-btn:hover {
             background-color: #1e3a8a;
         }
-
         /* =========================
            SEARCH
         ========================= */
-
         .search-box button {
             background: transparent;
             border: none;
@@ -207,11 +172,9 @@
             cursor: pointer;
             padding: 5px;
         }
-
         .search-box button:hover {
             color: #1e5a91;
         }
-
         .no-search-results {
             grid-column: 1 / -1;
             text-align: center;
@@ -219,11 +182,9 @@
             color: #718096;
             font-size: 18px;
         }
-
         /* =========================
            CART COUNT
         ========================= */
-
         .cart-count {
             position: absolute;
             top: -8px;
@@ -239,11 +200,9 @@
             align-items: center;
             justify-content: center;
         }
-
         /* =========================
            POPULAR
         ========================= */
-
         .popular-badge {
             display: inline-block;
             width: fit-content;
@@ -255,7 +214,6 @@
             font-weight: bold;
             margin-bottom: 8px;
         }
-
         /* =========================
            MOBILE
         ========================= */
@@ -265,38 +223,25 @@
             .products {
                 grid-template-columns: repeat(2, 1fr);
             }
-
         }
-
         @media (max-width: 600px) {
-
             .products {
                 grid-template-columns: 1fr;
             }
-
             .container {
                 margin: 25px auto;
                 padding: 0 15px;
             }
-
             .section-title {
                 font-size: 20px;
             }
-
         }
-
     </style>
-
 </head>
-
-
 <body>
-
-
 <!-- =========================
      HEADER
 ========================= -->
-
 <header class="header"> <!--الشريط-->
     <div class="logo-area">
         <div class="logo-circle">
@@ -328,30 +273,19 @@
     <input
         type="text"
         id="searchInput"
-        placeholder="ابحث عن منتجاتك المفضلة..."
-    >
-
+        placeholder="ابحث عن منتجاتك المفضلة...">
     <button id="searchButton" type="button">
         <i class="fa-solid fa-magnifying-glass"></i>
     </button>
 </div>
 </header>
-
-
-
 <!-- =========================
      MAIN
 ========================= -->
-
 <main class="container">
-
-
     <h2 class="section-title">
-
        جرّب أو اقتنِ | استكشف منتجاتنا
-
     </h2>
-
     <!-- شريط تصفية المنتجات -->
     <div class="filter-tabs" style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
         <button type="button" class="filter-btn active" onclick="filterProducts('all', this)" style="padding: 8px 18px; border: 1px solid #0b1c3f; background: #0b1c3f; color: white; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer;">الكل</button>
@@ -359,344 +293,209 @@
         <button type="button" class="filter-btn" onclick="filterProducts('buy', this)" style="padding: 8px 18px; border: 1px solid #cbd5e1; background: white; color: #64748b; border-radius: 20px; font-size: 13px; cursor: pointer;">متاح للبيع</button>
         <button type="button" class="filter-btn" onclick="filterProducts('popular', this)" style="padding: 8px 18px; border: 1px solid #cbd5e1; background: white; color: #64748b; border-radius: 20px; font-size: 13px; cursor: pointer;">الأكثر مبيعاً</button>
     </div>
-
-
     <div
         class="products"
-        id="productsContainer"
-    >
-
-
+        id="productsContainer">
         <!-- =========================
              PRODUCT 1
         ========================== -->
-
         <div
             class="product-card"
             data-type="buy"
             data-name="لابتوب أبل آي باد ماك"
             data-price="2000"
-            data-image="macbook.jpg"
-        >
-
+            data-image="macbook.jpg">
             <div class="product-img-container">
-
                 <span class="badge">
                     خصم 10%
                 </span>
-
-
                 <button
                     class="wishlist-btn"
                     type="button"
-                    onclick="addToFavorites(this)"
-                >
-
+                    onclick="addToFavorites(this)" >
                     <i class="fa-regular fa-heart"></i>
-
                 </button>
-
-
                 <img
                     src="macbook.jpg"
-                    alt="لابتوب أبل آي باد ماك"
-                >
-
+                    alt="لابتوب أبل آي باد ماك" >
             </div>
-
-
             <div class="product-info">
-
                 <div class="product-category">
                     الإلكترونيات
                 </div>
-
                 <div class="product-name">
                     لابتوب أبل آي باد / ماك
                 </div>
-
                 <div class="product-price">
                     2000 ر.س
                 </div>
-
                 <button class="cart-btn" type="button">
                     أضف إلى السلة
                     <i class="fa-solid fa-cart-shopping"></i>
                 </button>
-
             </div>
-
         </div>
-
-
-
         <!-- PRODUCT 2 -->
-
         <div
             class="product-card"
             data-type="buy"
             data-name="نظارة شمسية إطار ذهبي"
             data-price="399"
-            data-image="brown glasses.jpg"
-        >
-
+            data-image="brown glasses.jpg">
             <div class="product-img-container">
-
                 <button
                     class="wishlist-btn"
                     type="button"
-                    onclick="addToFavorites(this)"
-                >
-
+                    onclick="addToFavorites(this)" >
                     <i class="fa-regular fa-heart"></i>
-
                 </button>
-
-
                 <img
                     src="brown glasses.jpg"
-                    alt="نظارة شمسية إطار ذهبي"
-                >
-
+                    alt="نظارة شمسية إطار ذهبي" >
             </div>
-
-
             <div class="product-info">
-
                 <div class="product-category">
                     الإكسسوارات
                 </div>
-
                 <div class="product-name">
                     نظارة شمسية إطار ذهبي
                 </div>
-
                 <div class="product-price">
                     399 ر.س
                 </div>
-
                 <button class="cart-btn" type="button">
                     أضف إلى السلة
                     <i class="fa-solid fa-cart-shopping"></i>
                 </button>
-
             </div>
-
         </div>
-
-
-
         <!-- PRODUCT 3 -->
-
         <div
             class="product-card"
              data-type="buy"
             data-name="شنطة شانيل"
             data-price="699"
-            data-image="bag.jpg"
-        >
-
+            data-image="bag.jpg">
             <div class="product-img-container">
-
                 <button
                     class="wishlist-btn"
                     type="button"
-                    onclick="addToFavorites(this)"
-                >
-
+                    onclick="addToFavorites(this)">
                     <i class="fa-regular fa-heart"></i>
-
                 </button>
-
-
                 <img
                     src="bag.jpg"
-                    alt="شنطة شانيل"
-                >
-
+                    alt="شنطة شانيل">
             </div>
-
-
             <div class="product-info">
-
                 <div class="product-category">
                     الحقائب
                 </div>
-
                 <div class="product-name">
                     شنطة شانيل
                 </div>
-
-
                 <div class="popular-badge">
                     الأكثر مبيعًا
                 </div>
-
-
                 <div class="product-price">
                     699 ر.س
                 </div>
-
-
                 <button class="cart-btn" type="button">
                     أضف إلى السلة
                     <i class="fa-solid fa-cart-shopping"></i>
                 </button>
-
             </div>
-
         </div>
-
-
-
         <!-- PRODUCT 4 -->
-
         <div
             class="product-card"
             data-type="buy"
             data-name="طابعة كانون متعددة الوظائف"
             data-price="700"
-            data-image="printer.jpg"
-        >
-
+            data-image="printer.jpg" >
             <div class="product-img-container">
-
                 <button
                     class="wishlist-btn"
                     type="button"
-                    onclick="addToFavorites(this)"
-                >
-
+                    onclick="addToFavorites(this)">
                     <i class="fa-regular fa-heart"></i>
-
                 </button>
-
-
                 <img
                     src="printer.jpg"
-                    alt="طابعة كانون متعددة الوظائف"
-                >
-
+                    alt="طابعة كانون متعددة الوظائف" >
             </div>
-
-
             <div class="product-info">
-
                 <div class="product-category">
                     أجهزة المكتب
                 </div>
-
                 <div class="product-name">
                     طابعة كانون متعددة الوظائف
                 </div>
-
                 <div class="product-price">
                     700 ر.س
                 </div>
-
                 <button class="cart-btn" type="button">
                     أضف إلى السلة
                     <i class="fa-solid fa-cart-shopping"></i>
                 </button>
-
             </div>
-
         </div>
-
-
-
         <!-- PRODUCT 5 -->
-
         <div
             class="product-card"
             data-type="buy"
             data-name="فستان سهرة كحلي مطرز"
             data-price="650"
-            data-image="dress.jpg"
-        >
-
+            data-image="dress.jpg">
             <div class="product-img-container">
-
                 <button
                     class="wishlist-btn"
                     type="button"
-                    onclick="addToFavorites(this)"
-                >
-
+                    onclick="addToFavorites(this)">
                     <i class="fa-regular fa-heart"></i>
-
                 </button>
-
-
                 <img
                     src="dress.jpg"
-                    alt="فستان سهرة كحلي مطرز"
-                >
-
+                    alt="فستان سهرة كحلي مطرز" >
             </div>
-
-
             <div class="product-info">
-
                 <div class="product-category">
                     الملابس النسائية
                 </div>
-
                 <div class="product-name">
                     فستان سهرة كحلي مطرز
                 </div>
-
                 <div class="product-price">
                     650 ر.س
                 </div>
-
                 <button class="cart-btn" type="button">
                     أضف إلى السلة
                     <i class="fa-solid fa-cart-shopping"></i>
                 </button>
-
             </div>
-
         </div>
-
-
-
         <!-- PRODUCT 6 -->
-
         <div
             class="product-card"
             data-type="buy"
             data-name="كاميرا فوجي فيلم كلاسيك"
             data-price="900"
-            data-image="cam.jpg"
-        >
-
+            data-image="cam.jpg">
             <div class="product-img-container">
-
                 <span class="badge">
                     خصم 15%
                 </span>
-
-
                 <button
                     class="wishlist-btn"
                     type="button"
-                    onclick="addToFavorites(this)"
-                >
-
+                    onclick="addToFavorites(this)" >
                     <i class="fa-regular fa-heart"></i>
-
                 </button>
-
-
                 <img
                     src="cam.jpg"
-                    alt="كاميرا فوجي فيلم كلاسيك"
-                >
+                    alt="كاميرا فوجي فيلم كلاسيك">
 
             </div>
-
-
             <div class="product-info">
 
                 <div class="product-category">
@@ -1165,19 +964,13 @@
                     class="cart-btn" 
                     type="button" 
                     onclick="addRentItemToCart(this, 'كشك تصوير فوري (شاشة لمس وطباعة حرارية)', 250, 'photobooth.jpg', 400)"
-                    style="background-color: #0b1c3f;"
-                >
+                    style="background-color: #0b1c3f;">
                     استئجار وإضافة للسلة
                     <i class="fa-solid fa-cart-shopping"></i>
                 </button>
-
             </div>
-
         </div>
-
-
     </div>
-
 </main>
 
 
@@ -1210,114 +1003,68 @@
         </div>
 
     </div>
-
-
     <p>
         أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان
     </p>
-
-
     <a href="Qs.html">
         الأسئلة الشائعة
     </a>
-
-
     <p>
         جميع الحقوق محفوظة منصة أجرني (AJRNI)
         ©️ 2026 - RENT • BUY • REUSE
     </p>
-
-
     <div class="social">
-
         <a href="#">
             <i class="fa-brands fa-instagram"></i>
         </a>
-
         <a href="#">
             <i class="fa-brands fa-x-twitter"></i>
         </a>
-
         <a href="#">
             <i class="fa-brands fa-snapchat"></i>
         </a>
-
     </div>
-
 </footer>
-
-
-
 <script>
-
 /* =====================================================
    البحث
 ===================================================== */
-
 document.addEventListener("DOMContentLoaded", function () {
-
-
     const searchInput =
         document.getElementById("searchInput");
-
-
     const searchButton =
         document.getElementById("searchButton");
-
-
     const productsContainer =
         document.getElementById("productsContainer");
-
-
     const products =
         document.querySelectorAll(
             "#productsContainer .product-card"
         );
-
-
     function searchProducts() {
-
-
         const searchText =
             searchInput.value
                 .trim()
                 .toLowerCase();
-
-
         let found = false;
-
-
         products.forEach(function (product) {
-
-
             const dataName =
                 product.dataset.name || "";
-
-
             const productNameElement =
                 product.querySelector(
                     ".product-name"
                 );
-
-
             const categoryElement =
                 product.querySelector(
                     ".product-category"
                 );
-
-
             const productName =
                 productNameElement
                     ? productNameElement.textContent
                     : "";
-
-
             const category =
                 categoryElement
                     ? categoryElement.textContent
                     : "";
-
-
             const searchData =
                 (
                     dataName +
@@ -1326,28 +1073,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     " " +
                     category
                 ).toLowerCase();
-
-
             if (
                 searchText === "" ||
                 searchData.includes(searchText)
             ) {
-
                 product.style.display =
                     "flex";
 
                 found = true;
 
             } else {
-
                 product.style.display =
                     "none";
-
             }
-
         });
-
-
         const oldMessage =
             document.querySelector(
                 ".no-search-results"
@@ -1476,206 +1215,118 @@ document.addEventListener("DOMContentLoaded", function () {
                     quantity: 1
 
                 };
-
-
                 let cart =
                     JSON.parse(
                         localStorage.getItem("cart")
                     ) || [];
-
-
                 const existingProduct =
                     cart.find(function (item) {
 
                         return item.name === product.name;
 
                     });
-
-
                 if (existingProduct) {
-
                     existingProduct.quantity += 1;
-
                 } else {
 
                     cart.push(product);
 
                 }
-
-
                 localStorage.setItem(
                     "cart",
                     JSON.stringify(cart)
                 );
-
-
                 const oldText =
                     button.innerHTML;
-
-
                 button.innerHTML =
                     "✓ تمت الإضافة";
-
-
                 button.style.backgroundColor =
                     "#27ae60";
-
-
                 setTimeout(function () {
 
                     button.innerHTML =
                         oldText;
-
                     button.style.backgroundColor =
                         "";
-
                 }, 1200);
-
-
                 updateCartCount();
-
             }
         );
-
     });
-
-
     updateCartCount();
-
-
     /* =================================================
        تحميل المفضلة
     ================================================= */
-
     loadFavorites();
-
 });
-
-
-
 /* =====================================================
    عدد السلة
-===================================================== */
-
+==================================================== */
 function updateCartCount() {
-
-
     const cart =
         JSON.parse(
             localStorage.getItem("cart")
         ) || [];
-
-
     const count =
         cart.reduce(
             function (total, item) {
 
                 return total +
                     Number(item.quantity || 0);
-
             },
             0
         );
-
-
     const cartIcon =
         document.querySelector(
             ".header-actions .fa-cart-shopping"
         );
-
-
     if (!cartIcon) return;
-
-
     const oldBadge =
         document.querySelector(
             ".cart-count"
         );
-
-
     if (oldBadge) {
-
         oldBadge.remove();
-
     }
-
-
     if (count > 0) {
-
-
         const badge =
             document.createElement("span");
-
-
         badge.className =
             "cart-count";
-
-
         badge.textContent =
             count;
-
-
         const parent =
             cartIcon.parentElement;
-
-
         parent.style.position =
             "relative";
-
-
         parent.appendChild(
             badge
         );
-
     }
-
 }
-
-
-
 /* =====================================================
    المفضلة
-===================================================== */
-
+==================================================== */
 function addToFavorites(button) {
-
-
     const product =
         button.closest(".product-card");
-
-
     if (!product) return;
-
-
     const name =
         product.dataset.name;
-
-
     const price =
         product.dataset.price;
-
-
     const image =
         product.dataset.image;
-
-
     let favorites =
         JSON.parse(
             localStorage.getItem("favorites")
         ) || [];
-
-
     const exists =
         favorites.some(function (item) {
 
             return item.name === name;
-
         });
-
-
     if (exists) {
-
-
         favorites =
             favorites.filter(function (item) {
 
@@ -1683,150 +1334,86 @@ function addToFavorites(button) {
 
             });
 
-
         setFavoriteHeart(
             button,
             false
         );
-
-
     } else {
-
-
         favorites.push({
-
             name: name,
-
             price: price,
-
             image: image
-
         });
-
-
         setFavoriteHeart(
             button,
             true
         );
-
     }
-
-
     localStorage.setItem(
         "favorites",
         JSON.stringify(favorites)
     );
-
 }
-
-
-
 /* =====================================================
    شكل القلب
 ===================================================== */
-
 function setFavoriteHeart(
     button,
     isFavorite
 ) {
-
-
     const heart =
         button.querySelector("i");
-
-
     if (!heart) return;
-
-
     if (isFavorite) {
-
-
         heart.classList.remove(
             "fa-regular"
         );
-
-
         heart.classList.add(
             "fa-solid"
         );
-
-
         heart.style.color =
             "red";
-
-
     } else {
-
-
         heart.classList.remove(
             "fa-solid"
         );
-
-
         heart.classList.add(
             "fa-regular"
         );
-
-
         heart.style.color =
             "";
-
     }
-
 }
-
-
-
 /* =====================================================
    تحميل المفضلة
 ===================================================== */
-
 function loadFavorites() {
-
-
     const favorites =
         JSON.parse(
             localStorage.getItem("favorites")
         ) || [];
-
-
     const products =
         document.querySelectorAll(
             ".product-card"
         );
-
-
     products.forEach(function (product) {
-
-
         const name =
             product.dataset.name;
-
-
         const button =
             product.querySelector(
                 ".wishlist-btn"
             );
-
-
         if (!button) return;
-
-
         const isFavorite =
             favorites.some(function (item) {
 
                 return item.name === name;
-
             });
-
-
         setFavoriteHeart(
             button,
             isFavorite
         );
-
     });
-
 }
 /* =====================================================
    نافذة تنبيه مخصصة (Toast)
@@ -1901,7 +1488,6 @@ function filterProducts(filterType, buttonElement) {
         }
     });
 }
-
 /* =====================================================
    حساب مدة وقيمة الإيجار
 ===================================================== */
@@ -1910,13 +1496,11 @@ function updateRentCalc(inputElement, pricePerDay, deposit) {
     const startVal = box.querySelector('.start-date').value;
     const endVal = box.querySelector('.end-date').value;
     const calcInfo = box.querySelector('.rent-calc-info');
-
     if (startVal && endVal) {
         const start = new Date(startVal);
         const end = new Date(endVal);
         const diffTime = end - start;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
         if (diffDays > 0) {
             const total = (diffDays * pricePerDay) + deposit;
             box.querySelector('.days-val').textContent = diffDays;
@@ -1929,7 +1513,6 @@ function updateRentCalc(inputElement, pricePerDay, deposit) {
         }
     }
 }
-
 /* =====================================================
    إضافة عقد الإيجار إلى السلة
 ===================================================== */
@@ -1943,14 +1526,11 @@ function addRentItemToCart(buttonElement, name, pricePerDay, image, deposit) {
         showCustomToast('يرجى تحديد فترة الإيجار (من تاريخ وإلى تاريخ) أولاً.');
         return;
     }
-
     const days = parseInt(box.querySelector('.days-val').textContent);
     const total = parseFloat(box.querySelector('.total-val').textContent);
-
     // سطر جديد: يقرأ التصنيف (مثل "الإلكترونيات والترفيه") من كارد المنتج مباشرة
     const categoryElement = card.querySelector('.product-category');
     const category = categoryElement ? categoryElement.textContent.trim() : 'عام';
-
     const rentItem = {
         id: 'rent_' + Date.now(),
         type: 'إيجار',
@@ -1982,7 +1562,6 @@ function addRentItemToCart(buttonElement, name, pricePerDay, image, deposit) {
 
     updateCartCount();
 }
-
 /* =====================================================
    سلايدر محتويات حقيبة التخييم
 ===================================================== */
@@ -2001,11 +1580,9 @@ function changeCampingSlide(direction) {
     } else if (currentCampingIndex >= campingGearItems.length) {
         currentCampingIndex = 0;
     }
-
     const imgElement = document.getElementById("campingSliderImg");
     const titleElement = document.getElementById("campingItemTitle");
     const numElement = document.getElementById("campingSlideNum");
-
     if (imgElement) {
         imgElement.style.opacity = "0.3";
         setTimeout(function () {
@@ -2013,7 +1590,6 @@ function changeCampingSlide(direction) {
             imgElement.style.opacity = "1";
         }, 150);
     }
-
     if (titleElement) {
         titleElement.textContent = campingGearItems[currentCampingIndex].title;
     }

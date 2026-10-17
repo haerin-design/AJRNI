@@ -264,81 +264,86 @@
             <i class="fa-brands fa-snapchat"></i>
         </a>
     </div>
-</footer>
-    <script>
-        let selectedAccount = "customer";/* المسؤول عن الضغط على مستاجر وموجر*/
-        function selectAccount(type) {
-            selectedAccount = type;
-            const customer =
-                document.getElementById("customerOption");
-            const seller =
-                document.getElementById("sellerOption");
-            if (type === "customer") {
-                customer.classList.add("selected");
-                seller.classList.remove("selected");
-            } else {
-                seller.classList.add("selected");
-                customer.classList.remove("selected");
-            }
-        }
-/* يخلي زر العين يغير كلمة المرور من مخفية إلى ظاهره والعكس*/
-        function togglePassword(inputId, button) {
-            const input =
-                document.getElementById(inputId);
-            if (input.type === "password") {
-                input.type = "text";
-            } else {
-                input.type = "password";
-            }
-        }
-/* التحقق من تطابق كلمه المرور ونوع الحساب ورساله خطااو نجاح*/
-        document
-            .getElementById("registerForm")
-            .addEventListener("submit", function(event) {
-                event.preventDefault();
-                const name =
-                    document.getElementById("fullName").value.trim();
-                const email =
-                    document.getElementById("email").value.trim();
-                const password =
-                    document.getElementById("password").value;
-                const confirmPassword =
-                    document.getElementById("confirmPassword").value;
-                const message =
-                    document.getElementById("formMessage");
+</footer><script>
+    let selectedAccount = "customer"; /* المسؤول عن الضغط على مستأجر ومؤجر */
 
-                if (password !== confirmPassword) {
-                    message.textContent =
-                        ".الرمز السري غير متطابق";
-                    message.className =
-                        "message error";
-                    return;
-                }
+    function selectAccount(type) {
+        selectedAccount = type;
+        const customer = document.getElementById("customerOption");
+        const seller = document.getElementById("sellerOption");
 
-                if (password.length < 6) {
-                    message.textContent =
-                        ".يجب ان يكون الرمز السري يحوي على6 خانات";
-                    message.className =
-                        "message error";
-                    return;
-                }
-/* رساله لنجاح التسجيل*/
-                const accountText =
-                    selectedAccount === "customer"
-                        ? "كعميل"
-                        : "كبائع";
-               
-                message.textContent =
-                    `اكتمل تسجيلك بنجاح ${accountText}.`;
-                message.className =
-                    "message success";
-                console.log({
-                    name: name,
-                    email: email,
-                    accountType: selectedAccount
-                });
-                
-            });
-    </script>
+        if (type === "customer") {
+            customer.classList.add("selected");
+            seller.classList.remove("selected");
+        } else {
+            seller.classList.add("selected");
+            customer.classList.remove("selected");
+        }
+    }
+
+    /* تغيير حالة إظهار وإخفاء كلمة المرور */
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
+
+    /* إرسال بيانات التسجيل إلى السيرفر والقاعدة */
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const message = document.getElementById("formMessage");
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        // 1. التحقق المحلي من كلمة المرور
+        if (password !== confirmPassword) {
+            message.textContent = "الرمز السري غير متطابق.";
+            message.className = "message error";
+            return;
+        }
+
+        if (password.length < 6) {
+            message.textContent = "يجب أن يكون الرمز السري 6 خانات على الأقل.";
+            message.className = "message error";
+            return;
+        }
+
+        // 2. تجهيز البيانات لإرسالها
+        const payload = {
+            fullName: document.getElementById("fullName").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            password: password,
+            confirmPassword: confirmPassword,
+            role: selectedAccount
+        };
+
+        // 3. إرسال الطلب إلى api/register.php
+        fetch('api/register.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                message.textContent = data.message;
+                message.className = "message success";
+                setTimeout(() => { window.location.href = "login.html"; }, 1500);
+            } else {
+                message.textContent = data.message;
+                message.className = "message error";
+            }
+        })
+        .catch(() => {
+            message.textContent = "حدث خطأ في الاتصال بالخادم.";
+            message.className = "message error";
+        });
+    });
+</script>
 </body>
 </html>

@@ -239,116 +239,40 @@
             }
 
         }
-
-
-
         /* =====================================
            LOGIN
         ===================================== */
+       document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("loginMessage");
 
-        document
-            .getElementById("loginForm")
-            .addEventListener("submit", function(event) {
-
-                event.preventDefault();
-
-
-                const email =
-                    document
-                    .getElementById("email")
-                    .value
-                    .trim();
-
-
-                const password =
-                    document
-                    .getElementById("password")
-                    .value;
-
-
-                const remember =
-                    document
-                    .getElementById("remember")
-                    .checked;
-
-
-                const message =
-                    document
-                    .getElementById("loginMessage");
-
-
-
-                /*
-                   التحقق الأساسي
-                */
-
-                if (!email || !password) {
-
-                    message.textContent =
-                        "Please enter your email and password.";
-
-                    message.className =
-                        "message error";
-
-                    return;
-
-                }
-
-
-
-                /*
-                   هنا تسجيل دخول تجريبي.
-
-                   لاحقًا إذا عندكم Backend
-                   نربطه بقاعدة البيانات.
-                */
-
-
-                if (remember) {
-
-                    localStorage.setItem(
-                        "userEmail",
-                        email
-                    );
-
-                }
-
-
-                /*
-                   تخزين حالة تسجيل الدخول
-                */
-
-                localStorage.setItem(
-                    "isLoggedIn",
-                    "true"
-                );
-
-
-                localStorage.setItem(
-                    "loggedInEmail",
-                    email
-                );
-
-
-                message.textContent =
-                    "Login successful! Redirecting...";
-
-                message.className =
-                    "message success";
-
-
-                /*
-                   بعد ثانيتين يرجع للرئيسية
-                */
-
-                setTimeout(function() {
-
-                    window.location.href =
-                        "index.html";
-
-                }, 1500);
-
-            });
+    fetch('api/login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userEmail", data.user.email);
+            localStorage.setItem("userName", data.user.full_name);
+            
+            message.textContent = data.message;
+            message.className = "message success";
+            setTimeout(() => { window.location.href = "index.html"; }, 1500);
+        } else {
+            message.textContent = data.message;
+            message.className = "message error";
+        }
+    })
+    .catch(() => {
+        message.textContent = "تعذر الاتصال بالخادم.";
+        message.className = "message error";
+    });
+});
 
 
 
