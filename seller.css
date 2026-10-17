@@ -1,0 +1,281 @@
+/* ==========================================
+   إعدادات الألوان والخطوط الأساسية
+========================================== */
+:root {
+    --navy: #0b1c3f;
+    --navy-light: #1e3a8a;
+    --gray-bg: #f8fafc;
+    --gray-border: #e2e8f0;
+    --gray-text: #64748b;
+    --white: #ffffff;
+    --green: #10b981;
+    --red: #ef4444;
+}
+
+body {
+    background-color: var(--gray-bg);
+    margin: 0;
+    padding: 0;
+    font-family: 'Cairo', sans-serif;
+    color: #1e293b;
+}
+
+/* ==========================================
+   الهيدر وشريط التنقل العلوي
+========================================== */
+.main-header {
+    background: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 40px;
+    border-bottom: 1px solid var(--gray-border);
+}
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.brand-circle {
+    width: 40px;
+    height: 40px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.brand-text h1 {
+    font-size: 20px;
+    color: var(--navy);
+    margin: 0;
+    line-height: 1;
+}
+
+.brand-text span {
+    font-size: 9px;
+    color: #94a3b8;
+    font-weight: 700;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.nav-links a.active {
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 4px;
+}
+
+.header-tools {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-btn {
+    color: var(--navy);
+    font-size: 18px;
+    text-decoration: none;
+}
+
+/* ==========================================
+   الحاوية والترحيب
+========================================== */
+.dashboard-container {
+    max-width: 1100px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.welcome-card {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: var(--white);
+    padding: 20px 25px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.welcome-card h2 {
+    margin: 0 0 5px 0;
+    font-size: 20px;
+}
+
+.welcome-card p {
+    margin: 0;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+/* ==========================================
+   كروت الإحصائيات الأربعة
+========================================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: var(--white);
+    padding: 18px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--gray-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-card span {
+    font-size: 12px;
+    color: var(--gray-text);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.stat-card strong {
+    font-size: 20px;
+    color: var(--navy);
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+/* ==========================================
+   أزرار التبويبات والمحتوى
+========================================== */
+.tabs-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tab-btn {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-text);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.tab-btn.active {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+}
+
+.tab-content {
+    display: none;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    padding: 22px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ==========================================
+   الجداول
+========================================== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: right;
+}
+
+.data-table th {
+    background: #f8fafc;
+    padding: 12px;
+    font-size: 13px;
+    color: var(--gray-text);
+    border-bottom: 1px solid var(--gray-border);
+}
+
+.data-table td {
+    padding: 14px 12px;
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--gray-border);
+}
+
+.tag {
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.tag-rent { background: #e0f2fe; color: #0284c7; }
+.tag-buy { background: #fef3c7; color: #d97706; }
+.tag-ok { background: #dcfce7; color: #16a34a; }
+
+/* ==========================================
+   نموذج إضافة منتج
+========================================== */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.input-group input, 
+.input-group select, 
+.input-group textarea {
+    padding: 9px 12px;
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+    outline: none;
+    font-size: 13px;
+}
+
+.btn-primary {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    padding: 11px 22px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}

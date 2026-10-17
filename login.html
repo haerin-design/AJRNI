@@ -253,12 +253,15 @@
            LOGIN
         ===================================== */
 
+       /* =====================================
+           تسجيل الدخول وتوجيه الحساب maram updates
+        ===================================== */
+
         document
             .getElementById("loginForm")
             .addEventListener("submit", function(event) {
 
                 event.preventDefault();
-
 
                 const email =
                     document
@@ -266,98 +269,50 @@
                     .value
                     .trim();
 
-
                 const password =
                     document
                     .getElementById("password")
                     .value;
-
 
                 const remember =
                     document
                     .getElementById("remember")
                     .checked;
 
-
                 const message =
                     document
                     .getElementById("loginMessage");
 
-
-
-                /*
-                   التحقق الأساسي
-                */
-
+                /* التحقق من تعبئة الحقول */
                 if (!email || !password) {
-
-                    message.textContent =
-                        "Please enter your email and password.";
-
-                    message.className =
-                        "message error";
-
+                    message.textContent = "يرجى إدخال البريد الإلكتروني وكلمة المرور.";
+                    message.className = "message error";
                     return;
-
                 }
-
-
-
-                /*
-                   هنا تسجيل دخول تجريبي.
-
-                   لاحقًا إذا عندكم Backend
-                   نربطه بقاعدة البيانات.
-                */
-
 
                 if (remember) {
-
-                    localStorage.setItem(
-                        "userEmail",
-                        email
-                    );
-
+                    localStorage.setItem("userEmail", email);
                 }
 
+                /* حفظ حالة الدخول والبريد */
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("loggedInEmail", email);
 
-                /*
-                   تخزين حالة تسجيل الدخول
-                */
+                message.textContent = "تم تسجيل الدخول بنجاح! جاري تحويلك...";
+                message.className = "message success";
 
-                localStorage.setItem(
-                    "isLoggedIn",
-                    "true"
-                );
-
-
-                localStorage.setItem(
-                    "loggedInEmail",
-                    email
-                );
-
-
-                message.textContent =
-                    "Login successful! Redirecting...";
-
-                message.className =
-                    "message success";
-
-
-                /*
-                   بعد ثانيتين يرجع للرئيسية
-                */
+                /* التحقق من نوع الحساب المسجل به وتوجيهه */
+                const savedRole = localStorage.getItem("userRole");
 
                 setTimeout(function() {
-
-                    window.location.href =
-                        "index.html";
-
-                }, 1500);
+                    if (savedRole === "seller") {
+                        window.location.href = "seller_dashboard.php";
+                    } else {
+                        window.location.href = "prodcuts.html";
+                    }
+                }, 1200);
 
             });
-
-
 
         /* =====================================
            SEARCH

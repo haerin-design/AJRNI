@@ -298,11 +298,12 @@
                 input.type = "password";
             }
         }
-/* التحقق من تطابق كلمه المرور ونوع الحساب ورساله خطااو نجاح*/
+/*  maram updates التحقق من تطابق كلمه المرور ونوع الحساب ورساله خطا او نجاح والتوجيه */
         document
             .getElementById("registerForm")
             .addEventListener("submit", function(event) {
                 event.preventDefault();
+
                 const name =
                     document.getElementById("fullName").value.trim();
                 const email =
@@ -315,38 +316,41 @@
                     document.getElementById("formMessage");
 
                 if (password !== confirmPassword) {
-                    message.textContent =
-                        ".الرمز السري غير متطابق";
-                    message.className =
-                        "message error";
+                    message.textContent = ".الرمز السري غير متطابق";
+                    message.className = "message error";
                     return;
                 }
 
                 if (password.length < 6) {
-                    message.textContent =
-                        ".يجب ان يكون الرمز السري يحوي على8 خانات";
-                    message.className =
-                        "message error";
+                    message.textContent = ".يجب ان يكون الرمز السري يحوي على 6 خانات على الأقل";
+                    message.className = "message error";
                     return;
                 }
-/* رساله لنجاح التسجيل*/
+
+                // 1. حفظ بيانات الحساب ونوعه في ذاكرة المتصفح
+                localStorage.setItem("userRole", selectedAccount);
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("userName", name);
+
+                // 2. إظهار رسالة النجاح
                 const accountText =
                     selectedAccount === "customer"
                         ? "كعميل"
                         : "كبائع";
-               
-                message.textContent =
-                    `اكتمل تسجيلك بنجاح ${accountText}.`;
-                message.className =
-                    "message success";
-                console.log({
-                    name: name,
-                    email: email,
-                    accountType: selectedAccount
-                });
+
+                message.textContent = `اكتمل تسجيلك بنجاح ${accountText}. جاري تحويلك...`;
+                message.className = "message success";
+
+                // 3. التوجيه التلقائي المباشر لصفحة المؤجر إذا كان بائعاً
+                setTimeout(function() {
+                    if (selectedAccount === "seller") {
+                        window.location.href = "seller_dashboard.php";
+                    } else {
+                        window.location.href = "prodcuts.html";
+                    }
+                }, 1000);
                 
             });
-
 document.addEventListener("DOMContentLoaded", function () {
 
     const addButtons = document.querySelectorAll(".cart-btn");
