@@ -407,11 +407,35 @@
             renderCart();
         }
 
-        function completeCheckout() {
-            alert("تم استلام طلبك بنجاح! شكراً لتسوقك عبر منصة أجرني (AJRNI).");
+       function completeCheckout() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) return;
+
+    let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    const payload = {
+        userEmail: localStorage.getItem("userEmail") || "",
+        cart: cart,
+        subtotal: subtotal,
+        shippingFee: 35,
+        shippingMethod: "توصيل سريع",
+        paymentMethod: "بطاقة مدى / ائتمانية"
+    };
+
+    fetch('api/checkout.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.status === 'success') {
             localStorage.removeItem("cart");
             window.location.href = "index.html";
         }
+    });
+}
     </script>
 
 <!--FOOTER-->

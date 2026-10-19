@@ -1,0 +1,225 @@
+[1mdiff --git a/prodcuts.html b/prodcuts.html[m
+[1mindex aeb4eb3..cd3c394 100644[m
+[1m--- a/prodcuts.html[m
+[1m+++ b/prodcuts.html[m
+[36m@@ -265,9 +265,18 @@[m
+         <a href="favorite.html">[m
+             <i class="fa-regular fa-heart"></i>[m
+         </a>[m
+[32m+[m[32m<<<<<<< HEAD[m
+[32m+[m
+[32m+[m
+[32m+[m[32m        <button type="button" onclick="toggleUserSidebar()" title="حسابي ولوحة التحكم" style="background: transparent; border: none; font-size: 18px; color: var(--navy); cursor: pointer; padding: 5px;">[m
+[32m+[m[32m    <i class="fa-regular fa-user"></i>[m
+[32m+[m[32m</button>[m
+[32m+[m
+[32m+[m[32m=======[m
+         <a href="signin.html"><!--ايقونة صفحه التسجيل-->[m
+             <i class="fa-regular fa-user"></i>[m
+         </a>[m
+[32m+[m[32m>>>>>>> eece6ececee8b152fe02b571146ae0ce104b1b98[m
+     </div>[m
+     <div class="search-box">[m
+     <input[m
+[36m@@ -1025,6 +1034,144 @@[m
+         </a>[m
+     </div>[m
+ </footer>[m
+[32m+[m
+[32m+[m[32m<!-- خلفية معتمة عند الفتح -->[m
+[32m+[m[32m<div id="sidebarOverlay" onclick="toggleUserSidebar()" style="position: fixed; inset: 0; background: rgba(11, 28, 63, 0.45); backdrop-filter: blur(2px); z-index: 9998; display: none; opacity: 0; transition: opacity 0.3s ease;"></div>[m
+[32m+[m
+[32m+[m[32m<!-- هيكل الشريط الجانبي -->[m
+[32m+[m[32m<aside id="userDrawer" style="position: fixed; top: 0; left: -380px; width: 360px; max-width: 90vw; height: 100vh; background: #ffffff; z-index: 9999; box-shadow: 4px 0 25px rgba(11, 28, 63, 0.15); transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; overflow-y: auto;">[m
+[32m+[m[41m    [m
+[32m+[m[32m    <!-- ترويسة الحساب -->[m
+[32m+[m[32m    <div style="padding: 22px 20px; background: #0b1c3f; color: #ffffff; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e3a8a;">[m
+[32m+[m[32m        <div style="display: flex; align-items: center; gap: 12px;">[m
+[32m+[m[32m            <div style="width: 44px; height: 44px; border-radius: 50%; background: #eef5fb; color: #0b1c3f; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 2px solid #93c5fd;">[m
+[32m+[m[32m                <i class="fa-solid fa-user-check"></i>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m            <div>[m
+[32m+[m[32m                <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px;">[m
+[32m+[m[32m                    أهلاً بك، مرام[m
+[32m+[m[32m                    <i class="fa-solid fa-circle-check" style="color: #60a5fa; font-size: 13px;"></i>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m                <div style="font-size: 11px; color: #cbd5e1; margin-top: 2px;">[m
+[32m+[m[32m                    <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i> حساب عميل موثّق (مستأجر / مشتري)[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m        <button type="button" onclick="toggleUserSidebar()" style="background: rgba(255,255,255,0.1); border: none; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer;">[m
+[32m+[m[32m            <i class="fa-solid fa-xmark"></i>[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m    </div>[m
+[32m+[m
+[32m+[m[32m    <!-- بطاقات الإحصائيات -->[m
+[32m+[m[32m    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">[m
+[32m+[m[32m        <div style="background: #ffffff; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: right;">[m
+[32m+[m[32m            <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #64748b; margin-bottom: 4px;">[m
+[32m+[m[32m                <i class="fa-solid fa-box-open" style="color: #0b1c3f;"></i>[m
+[32m+[m[32m                <span>إيجارات نشطة</span>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m            <strong style="font-size: 18px; color: #0b1c3f;">2</strong>[m
+[32m+[m[32m        </div>[m
+[32m+[m[41m        [m
+[32m+[m[32m        <div style="background: #ffffff; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: right;">[m
+[32m+[m[32m            <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #64748b; margin-bottom: 4px;">[m
+[32m+[m[32m                <i class="fa-solid fa-shield-halved" style="color: #16a34a;"></i>[m
+[32m+[m[32m                <span>تأمين بالضمان</span>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m            <strong style="font-size: 18px; color: #16a34a;">450 <span style="font-size: 12px; font-weight: normal;">ر.س</span></strong>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m
+[32m+[m[32m    <!-- أزرار التبويبات -->[m
+[32m+[m[32m    <div style="display: flex; border-bottom: 1px solid #e2e8f0; background: #ffffff;">[m
+[32m+[m[32m        <button type="button" class="side-tab-btn active" onclick="switchSideTab('rentals', this)" style="flex: 1; padding: 12px 5px; border: none; background: transparent; font-weight: 700; font-size: 13px; color: #0b1c3f; border-bottom: 2px solid #0b1c3f; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">[m
+[32m+[m[32m            <i class="fa-solid fa-clock-rotate-left"></i> إيجاراتي[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m        <button type="button" class="side-tab-btn" onclick="switchSideTab('orders', this)" style="flex: 1; padding: 12px 5px; border: none; background: transparent; font-size: 13px; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">[m
+[32m+[m[32m            <i class="fa-solid fa-bag-shopping"></i> مشترياتي[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m        <button type="button" class="side-tab-btn" onclick="switchSideTab('alerts', this)" style="flex: 1; padding: 12px 5px; border: none; background: transparent; font-size: 13px; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">[m
+[32m+[m[32m            <i class="fa-regular fa-bell"></i> التنبيهات[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m    </div>[m
+[32m+[m
+[32m+[m[32m    <!-- محتوى التبويبات -->[m
+[32m+[m[32m    <div style="padding: 15px; flex: 1; overflow-y: auto;">[m
+[32m+[m[41m        [m
+[32m+[m[32m        <!-- تبويب الإيجارات -->[m
+[32m+[m[32m        <div id="sideTab-rentals" class="side-panel-content">[m
+[32m+[m[32m            <div style="font-size: 12px; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">[m
+[32m+[m[32m                <i class="fa-solid fa-file-contract" style="color: #0b1c3f;"></i>[m
+[32m+[m[32m                عقود الإيجار المباشرة ومواعيد الإرجاع:[m
+[32m+[m[32m            </div>[m
+[32m+[m[41m            [m
+[32m+[m[32m            <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 12px; background: #ffffff;">[m
+[32m+[m[32m                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">[m
+[32m+[m[32m                    <strong style="font-size: 13px; color: #0b1c3f;">طائرة درون DJI Mini</strong>[m
+[32m+[m[32m                    <span style="font-size: 10px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 12px; font-weight: bold;">نشط</span>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m                <div style="font-size: 11px; color: #64748b; line-height: 1.8;">[m
+[32m+[m[32m                    <div><i class="fa-regular fa-calendar-days" style="width: 14px;"></i> المدة: 10 أكتوبر إلى 12 أكتوبر 2026</div>[m
+[32m+[m[32m                    <div style="color: #16a34a; font-weight: 600;">[m
+[32m+[m[32m                        <i class="fa-solid fa-shield-halved" style="width: 14px;"></i> التأمين: 300 ر.س (مسترد بالكامل عند الفحص)[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                    <div style="color: #b45309; font-weight: 600; background: #fffbeb; padding: 4px 8px; border-radius: 6px; margin-top: 5px;">[m
+[32m+[m[32m                        <i class="fa-solid fa-hourglass-half"></i> متبقي يوم واحد على موعد التسليم[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m            </div>[m
+[32m+[m
+[32m+[m[32m            <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 12px; background: #ffffff;">[m
+[32m+[m[32m                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">[m
+[32m+[m[32m                    <strong style="font-size: 13px; color: #0b1c3f;">بلايستيشن 5</strong>[m
+[32m+[m[32m                    <span style="font-size: 10px; background: #fef9c3; color: #854d0e; padding: 2px 8px; border-radius: 12px; font-weight: bold;">بانتظار التسليم</span>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m                <div style="font-size: 11px; color: #64748b; line-height: 1.8;">[m
+[32m+[m[32m                    <div><i class="fa-regular fa-calendar-days" style="width: 14px;"></i> المدة: 18 أكتوبر إلى 20 أكتوبر 2026</div>[m
+[32m+[m[32m                    <div style="color: #16a34a; font-weight: 600;">[m
+[32m+[m[32m                        <i class="fa-solid fa-shield-halved" style="width: 14px;"></i> التأمين: 150 ر.س[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m        </div>[m
+[32m+[m
+[32m+[m[32m        <!-- تبويب المشتريات -->[m
+[32m+[m[32m        <div id="sideTab-orders" class="side-panel-content" style="display: none;">[m
+[32m+[m[32m            <div style="font-size: 12px; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">[m
+[32m+[m[32m                <i class="fa-solid fa-receipt" style="color: #0b1c3f;"></i>[m
+[32m+[m[32m                المنتجات المشتراة ملكية دائمة:[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m            <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 10px; background: #ffffff;">[m
+[32m+[m[32m                <strong style="font-size: 13px; color: #0b1c3f;">نظارة شمسية إطار ذهبي</strong>[m
+[32m+[m[32m                <div style="font-size: 11px; color: #64748b; margin-top: 5px;">رقم الطلب: #ORD-3391 | 399 ر.س</div>[m
+[32m+[m[32m                <span style="display: inline-block; margin-top: 6px; font-size: 10px; background: #e0e7ff; color: #3730a3; padding: 3px 10px; border-radius: 12px; font-weight: bold;">[m
+[32m+[m[32m                    تم التوصيل والاستلام[m
+[32m+[m[32m                </span>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m        </div>[m
+[32m+[m
+[32m+[m[32m        <!-- تبويب التنبيهات -->[m
+[32m+[m[32m        <div id="sideTab-alerts" class="side-panel-content" style="display: none;">[m
+[32m+[m[32m            <div style="background: #fffbeb; border: 1px solid #fef3c7; color: #92400e; padding: 12px; border-radius: 10px; font-size: 12px; margin-bottom: 10px; line-height: 1.6;">[m
+[32m+[m[32m                <strong>تذكير بموعد التسليم:</strong>[m
+[32m+[m[32m                <div>غداً موعد تسليم طائرة درون DJI Mini لتأكيد استرداد مبلغ التأمين.</div>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m            <div style="background: #f0fdf4; border: 1px solid #dcfce7; color: #166534; padding: 12px; border-radius: 10px; font-size: 12px; line-height: 1.6;">[m
+[32m+[m[32m                <strong>اكتمال الفحص واسترداد التأمين:</strong>[m
+[32m+[m[32m                <div>تم اعتماد فحص جهازك السابق واسترجاع التأمين لحسابك بنجاح.</div>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m        </div>[m
+[32m+[m
+[32m+[m[32m    </div>[m
+[32m+[m
+[32m+[m[32m    <!-- أسفل الشريط -->[m
+[32m+[m[32m    <div style="padding: 15px; border-top: 1px solid #e2e8f0; background: #f8fafc;">[m
+[32m+[m[32m        <button type="button" onclick="logoutUser()" style="width: 100%; padding: 10px; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">[m
+[32m+[m[32m            <i class="fa-solid fa-arrow-right-from-bracket"></i>[m
+[32m+[m[32m            تسجيل الخروج[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m</aside>[m
+[32m+[m
+ <script>[m
+ /* =====================================================[m
+    البحث[m
+[36m@@ -1597,6 +1744,56 @@[m [mfunction changeCampingSlide(direction) {[m
+         numElement.textContent = currentCampingIndex + 1;[m
+     }[m
+ }[m
+[32m+[m
+[32m+[m[32m/* فتح واغلاق الشريط الجانبي */[m
+[32m+[m[32mfunction toggleUserSidebar() {[m
+[32m+[m[32m    const drawer = document.getElementById("userDrawer");[m
+[32m+[m[32m    const overlay = document.getElementById("sidebarOverlay");[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (!drawer || !overlay) return;[m
+[32m+[m
+[32m+[m[32m    if (drawer.style.left === "0px") {[m
+[32m+[m[32m        drawer.style.left = "-380px";[m
+[32m+[m[32m        overlay.style.opacity = "0";[m
+[32m+[m[32m        setTimeout(() => overlay.style.display = "none", 300);[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m        overlay.style.display = "block";[m
+[32m+[m[32m        setTimeout(() => overlay.style.opacity = "1", 10);[m
+[32m+[m[32m        drawer.style.left = "0px";[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* التبديل بين التبويبات الداخلية */[m
+[32m+[m[32mfunction switchSideTab(tabName, btnElement) {[m
+[32m+[m[32m    document.querySelectorAll(".side-panel-content").forEach(panel => {[m
+[32m+[m[32m        panel.style.display = "none";[m
+[32m+[m[32m    });[m
+[32m+[m[41m    [m
+[32m+[m[32m    document.querySelectorAll(".side-tab-btn").forEach(btn => {[m
+[32m+[m[32m        btn.style.color = "#64748b";[m
+[32m+[m[32m        btn.style.fontWeight = "normal";[m
+[32m+[m[32m        btn.style.borderBottom = "none";[m
+[32m+[m[32m    });[m
+[32m+[m[41m    [m
+[32m+[m[32m    const targetPanel = document.getElementById("sideTab-" + tabName);[m
+[32m+[m[32m    if (targetPanel) {[m
+[32m+[m[32m        targetPanel.style.display = "block";[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (btnElement) {[m
+[32m+[m[32m        btnElement.style.color = "#0b1c3f";[m
+[32m+[m[32m        btnElement.style.fontWeight = "700";[m
+[32m+[m[32m        btnElement.style.borderBottom = "2px solid #0b1c3f";[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* تسجيل الخروج */[m
+[32m+[m[32mfunction logoutUser() {[m
+[32m+[m[32m    localStorage.removeItem("isLoggedIn");[m
+[32m+[m[32m    localStorage.removeItem("userRole");[m
+[32m+[m[32m    window.location.href = "signin.html";[m
+[32m+[m[32m}[m
+[32m+[m
+ </script>[m
+ [m
+ [m

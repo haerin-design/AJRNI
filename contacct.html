@@ -197,6 +197,28 @@
 
 </footer>
 <script>
+    document.querySelector(".contact-form form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const payload = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        subject: document.getElementById("subject").value,
+        message: document.getElementById("message").value
+    };
+
+    fetch('api/contact.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.status === 'success') {
+            this.reset();
+        }
+    });
+});
     
 document.addEventListener("DOMContentLoaded", function () {
 

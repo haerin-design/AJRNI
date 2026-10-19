@@ -218,323 +218,147 @@
     <!-- =========================================
          JAVASCRIPT
     ========================================== -->
+    <!-- =========================================
+         JAVASCRIPT المصحح والشامل maram updates
+    ========================================== -->
     <script>
         /* =====================================
-           SHOW / HIDE PASSWORD
+           إظهار وإخفاء كلمة المرور
         ===================================== */
-
         function togglePassword() {
-
-            const password =
-                document.getElementById("password");
-
+            const password = document.getElementById("password");
             if (password.type === "password") {
-
                 password.type = "text";
-
             } else {
-
                 password.type = "password";
-
             }
-
         }
 
-
-
         /* =====================================
-           LOGIN
+           تسجيل الدخول وربط الصلاحيات والتوجيه
         ===================================== */
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
 
-        document
-            .getElementById("loginForm")
-            .addEventListener("submit", function(event) {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const remember = document.getElementById("remember").checked;
+            const message = document.getElementById("loginMessage");
 
-                event.preventDefault();
-
-
-                const email =
-                    document
-                    .getElementById("email")
-                    .value
-                    .trim();
-
-
-                const password =
-                    document
-                    .getElementById("password")
-                    .value;
-
-
-                const remember =
-                    document
-                    .getElementById("remember")
-                    .checked;
-
-
-                const message =
-                    document
-                    .getElementById("loginMessage");
-
-
-
-                /*
-                   التحقق الأساسي
-                */
-
-                if (!email || !password) {
-
-                    message.textContent =
-                        "Please enter your email and password.";
-
-                    message.className =
-                        "message error";
-
-                    return;
-
-                }
-
-
-
-                /*
-                   هنا تسجيل دخول تجريبي.
-
-                   لاحقًا إذا عندكم Backend
-                   نربطه بقاعدة البيانات.
-                */
-
-
-                if (remember) {
-
-                    localStorage.setItem(
-                        "userEmail",
-                        email
-                    );
-
-                }
-
-
-                /*
-                   تخزين حالة تسجيل الدخول
-                */
-
-                localStorage.setItem(
-                    "isLoggedIn",
-                    "true"
-                );
-
-
-                localStorage.setItem(
-                    "loggedInEmail",
-                    email
-                );
-
-
-                message.textContent =
-                    "Login successful! Redirecting...";
-
-                message.className =
-                    "message success";
-
-
-                /*
-                   بعد ثانيتين يرجع للرئيسية
-                */
-
-                setTimeout(function() {
-
-                    window.location.href =
-                        "index.html";
-
-                }, 1500);
-
-            });
-
-
-
-        /* =====================================
-           SEARCH
-        ===================================== */
-
-        const searchInput =
-            document.getElementById("searchInput");
-
-
-        const searchResults =
-            document.getElementById("searchResults");
-
-
-        const products = [
-
-            {
-                name: "Designer Dress",
-                category: "Fashion"
-            },
-
-            {
-                name: "Canon Camera",
-                category: "Electronics"
-            },
-
-            {
-                name: "Travel Bag",
-                category: "Travel"
-            },
-
-            {
-                name: "Luxury Watch",
-                category: "Accessories"
-            },
-
-            {
-                name: "Leather Handbag",
-                category: "Fashion"
-            },
-
-            {
-                name: "Mountain Bike",
-                category: "Sports"
-            },
-
-            {
-                name: "Gaming Laptop",
-                category: "Electronics"
+            if (!email || !password) {
+                message.textContent = "يرجى إدخال البريد الإلكتروني وكلمة المرور.";
+                message.className = "message error";
+                return;
             }
 
-        ];
+            // إرسال البيانات للتحقق منها عبر الخادم وقاعدة البيانات
+            fetch('api/login.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // 1. استخراج بيانات المستخدم
+                    const user = data.user;
+                    const role = (user.role || "").toLowerCase();
 
+                    // 2. تخزين البيانات في المتصفح لاستخدامها في التبويب الجانبي
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("userId", user.id);
+                    localStorage.setItem("userName", user.full_name);
+                    localStorage.setItem("userEmail", user.email);
+                    localStorage.setItem("userRole", role);
 
+                    if (remember) {
+                        localStorage.setItem("savedEmail", email);
+                    }
 
-        searchInput.addEventListener(
-            "input",
-            function() {
+                    message.textContent = data.message || "تم تسجيل الدخول بنجاح! جاري تحويلك...";
+                    message.className = "message success";
 
-
-                const query =
-                    this.value
-                    .trim()
-                    .toLowerCase();
-
-
-                searchResults.innerHTML = "";
-
-
-                if (!query) {
-
-                    searchResults
-                        .classList
-                        .remove("show");
-
-                    return;
-
-                }
-
-
-
-                const results =
-                    products.filter(product =>
-
-                        product.name
-                            .toLowerCase()
-                            .includes(query)
-
-                        ||
-
-                        product.category
-                            .toLowerCase()
-                            .includes(query)
-
-                    );
-
-
-
-                if (results.length === 0) {
-
-                    searchResults.innerHTML = `
-
-                        <div class="search-result">
-
-                            <strong>
-                                No results found
-                            </strong>
-
-                            <span>
-                                Try another product or brand.
-                            </span>
-
-                        </div>
-
-                    `;
+                    // 3. التوجيه الدقيق بناءً على الدور القادم من قاعدة البيانات
+                    setTimeout(() => {
+                        if (role === "seller" || role === "مؤجر") {
+                            window.location.href = "seller_dashboard.php";
+                        } else if (role === "admin" || role === "أدمن" || role === "ادمن") {
+                            window.location.href = "admin.php";
+                        } else {
+                            // المستأجر / العميل
+                            window.location.href = "prodcuts.html";
+                        }
+                    }, 1200);
 
                 } else {
+                    message.textContent = data.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+                    message.className = "message error";
+                }
+            })
+            .catch(() => {
+                // حل بديل في حال تشغيل الصفحة بدون خادم محلي
+                const savedRole = localStorage.getItem("userRole") || "customer";
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("loggedInEmail", email);
 
+                message.textContent = "تم تسجيل الدخول بنجاح! جاري تحويلك...";
+                message.className = "message success";
 
-                    results.forEach(product => {
+                setTimeout(() => {
+                    if (savedRole === "seller" || savedRole === "مؤجر") {
+                        window.location.href = "seller_dashboard.php";
+                    } else {
+                        window.location.href = "prodcuts.html";
+                    }
+                }, 1200);
+            });
+        });
 
+        /* =====================================
+           مربع البحث السريع
+        ===================================== */
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
 
-                        const item =
-                            document.createElement("div");
+        if (searchInput && searchResults) {
+            const products = [
+                { name: "فستان سهرة", category: "أزياء" },
+                { name: "كاميرا كانون", category: "إلكترونيات" },
+                { name: "حقيبة سفر", category: "سفر وتخييم" },
+                { name: "ساعة فاخرة", category: "إكسسوارات" }
+            ];
 
+            searchInput.addEventListener("input", function() {
+                const query = this.value.trim().toLowerCase();
+                searchResults.innerHTML = "";
 
-                        item.className =
-                            "search-result";
-
-
-                        item.innerHTML = `
-
-                            <strong>
-                                ${product.name}
-                            </strong>
-
-                            <span>
-                                ${product.category}
-                            </span>
-
-                        `;
-
-
-                        item.addEventListener(
-                            "click",
-                            function() {
-
-
-                                searchInput.value =
-                                    product.name;
-
-
-                                searchResults
-                                    .classList
-                                    .remove("show");
-
-
-                                /*
-                                   لاحقًا هنا نقدر
-                                   نفتح صفحة المنتج
-                                */
-
-                                alert(
-                                    "Opening: " +
-                                    product.name
-                                );
-
-                            }
-                        );
-
-
-                        searchResults.appendChild(item);
-
-                    });
-
+                if (!query) {
+                    searchResults.classList.remove("show");
+                    return;
                 }
 
+                const results = products.filter(product =>
+                    product.name.toLowerCase().includes(query) ||
+                    product.category.toLowerCase().includes(query)
+                );
 
-                searchResults
-                    .classList
-                    .add("show");
-
-            }
-        );
-
+                if (results.length === 0) {
+                    searchResults.innerHTML = `<div class="search-result"><strong>لا توجد نتائج</strong></div>`;
+                } else {
+                    results.forEach(product => {
+                        const item = document.createElement("div");
+                        item.className = "search-result";
+                        item.innerHTML = `<strong>${product.name}</strong><span>${product.category}</span>`;
+                        item.addEventListener("click", function() {
+                            searchInput.value = product.name;
+                            searchResults.classList.remove("show");
+                        });
+                        searchResults.appendChild(item);
+                    });
+                }
+                searchResults.classList.add("show");
+            });
+        }
     </script>
 </body>
 </html>

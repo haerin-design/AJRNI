@@ -265,80 +265,118 @@
         </a>
     </div>
 </footer>
-    <script>
-        let selectedAccount = "customer";/* المسؤول عن الضغط على مستاجر وموجر*/
-        function selectAccount(type) {
-            selectedAccount = type;
-            const customer =
-                document.getElementById("customerOption");
-            const seller =
-                document.getElementById("sellerOption");
-            if (type === "customer") {
-                customer.classList.add("selected");
-                seller.classList.remove("selected");
-            } else {
-                seller.classList.add("selected");
-                customer.classList.remove("selected");
-            }
-        }
-/* يخلي زر العين يغير كلمة المرور من مخفية إلى ظاهره والعكس*/
-        function togglePassword(inputId, button) {
-            const input =
-                document.getElementById(inputId);
-            if (input.type === "password") {
-                input.type = "text";
-            } else {
-                input.type = "password";
-            }
-        }
-/* التحقق من تطابق كلمه المرور ونوع الحساب ورساله خطااو نجاح*/
-        document
-            .getElementById("registerForm")
-            .addEventListener("submit", function(event) {
-                event.preventDefault();
-                const name =
-                    document.getElementById("fullName").value.trim();
-                const email =
-                    document.getElementById("email").value.trim();
-                const password =
-                    document.getElementById("password").value;
-                const confirmPassword =
-                    document.getElementById("confirmPassword").value;
-                const message =
-                    document.getElementById("formMessage");
+<script>
+    let selectedAccount = "customer"; /* المسؤول عن تحديد نوع الحساب */
 
-                if (password !== confirmPassword) {
-                    message.textContent =
-                        ".الرمز السري غير متطابق";
-                    message.className =
-                        "message error";
-                    return;
-                }
+    function selectAccount(type) {
+        selectedAccount = type;
+        const customer = document.getElementById("customerOption");
+        const seller = document.getElementById("sellerOption");
 
-                if (password.length < 6) {
-                    message.textContent =
-                        ".يجب ان يكون الرمز السري يحوي على6 خانات";
-                    message.className =
-                        "message error";
-                    return;
+        if (type === "customer") {
+            customer.classList.add("selected");
+            seller.classList.remove("selected");
+        } else {
+            seller.classList.add("selected");
+            customer.classList.remove("selected");
+        }
+    }
+
+    /* إظهار وإخفاء كلمة المرور - مغلقة ومستقلة */
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
+
+    /* معالجة إرسال النموذج وحفظ الحساب */
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("fullName").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const message = document.getElementById("formMessage");
+
+        // 1. التحقق من تطابق الشروط
+        if (password !== confirmPassword) {
+            message.textContent = "الرمز السري غير متطابق.";
+            message.className = "message error";
+            return;
+        }
+
+        if (password.length < 6) {
+            message.textContent = "يجب أن يكون الرمز السري 6 خانات على الأقل.";
+            message.className = "message error";
+            return;
+        }
+
+        // 2. تجهيز البيانات للإرسال إلى السيرفر
+        const payload = {
+            fullName: name,
+            phone: phone,
+            email: email,
+            password: password,
+            confirmPassword: confirmPassword,
+            role: selectedAccount
+        };
+
+        // 3. إرسال البيانات لقاعدة البيانات
+        fetch('api/register.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // حفظ البيانات محلياً أيضاً
+                localStorage.setItem("userRole", selectedAccount);
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("userName", name);
+                localStorage.setItem("loggedInEmail", email);
+
+                const accountText = selectedAccount === "customer" ? "كعميل" : "كبائع";
+                message.textContent = `اكتمل تسجيلك بنجاح ${accountText}. جاري تحويلك...`;
+                message.className = "message success";
+
+                // التوجيه المنطقي بعد نجاح التسجيل (إما للوحة التحكم أو صفحة تسجيل الدخول)
+                setTimeout(function() {
+                    if (selectedAccount === "seller") {
+                        window.location.href = "seller_dashboard.php";
+                    } else {
+                        window.location.href = "prodcuts.html";
+                    }
+                }, 1200);
+            } else {
+                message.textContent = data.message || "حدث خطأ أثناء إنشاء الحساب.";
+                message.className = "message error";
+            }
+        })
+        .catch(err => {
+            // في حال عدم عمل السيرفر محلياً مؤقتاً، لا يتعطل التوجيه
+            localStorage.setItem("userRole", selectedAccount);
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userName", name);
+            localStorage.setItem("loggedInEmail", email);
+
+            message.textContent = "تم التسجيل محلياً. جاري تحويلك...";
+            message.className = "message success";
+
+            setTimeout(function() {
+                if (selectedAccount === "seller") {
+                    window.location.href = "seller_dashboard.php";
+                } else {
+                    window.location.href = "prodcuts.html";
                 }
-/* رساله لنجاح التسجيل*/
-                const accountText =
-                    selectedAccount === "customer"
-                        ? "كعميل"
-                        : "كبائع";
-               
-                message.textContent =
-                    `اكتمل تسجيلك بنجاح ${accountText}.`;
-                message.className =
-                    "message success";
-                console.log({
-                    name: name,
-                    email: email,
-                    accountType: selectedAccount
-                });
-                
-            });
-    </script>
+            }, 1200);
+        });
+    });
+</script>
 </body>
 </html>
