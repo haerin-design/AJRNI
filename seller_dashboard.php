@@ -328,7 +328,7 @@ $products_list = $conn->query($query_products);
                         <th>إجراء التأمين عند الإرجاع</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="contracts-tbody">
                     <tr>
                         <td><span class="contract-id">AGR-2026-081</span></td>
                         <td>سارة العتيبي</td>
@@ -446,6 +446,85 @@ $products_list = $conn->query($query_products);
             localStorage.clear();
             window.location.href = "login.html";
         }
+        document.addEventListener("DOMContentLoaded", function () {
+    loadCustomerContracts();
+});
+
+function loadCustomerContracts() {
+    fetch('get_customer_orders.php')
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success || !data.orders || data.orders.length === 0) return;
+
+            const tbody = document.getElementById('contracts-tbody');
+            if (!tbody) return;
+
+            data.orders.forEach(order => {
+                // توليد رقم العقد بنفس نمط AGR
+                const contractNo = 'AGR-2026-' + String(order.id).padStart(3, '0');
+                const rentDuration = '3 أيام';
+                const depositVal = Math.round(order.subtotal * 0.2) || 79; // تأمين تقديري من قيمة الطلب
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="contract-id">${contractNo}</span></td>
+                    <td>${order.customer_name || 'مستأجر مسجل'}</td>
+                    <td><strong>طلب تأجير #${order.id}</strong></td>
+                    <td>${rentDuration}</td>
+                    <td>
+                        <span class="deposit-tag">
+                            <i class="fa-solid fa-lock"></i>
+                            <span>${depositVal} ر.س بالضمان</span>
+                        </span>
+                    </td>
+                    <td><span class="tag tag-rent">${order.status || 'ساري'}</span></td>
+                    <td>
+                       <button type="button" class="btn-action btn-release" onclick="handleDepositAction(${order.id}, 'release')">
+                            <i class="fa-solid fa-check"></i> إفراج التأمين
+                        </button>
+                        <button type="button" class="btn-action btn-claim" onclick="handleDepositAction(${order.id}, 'damage')">
+                            <i class="fa-solid fa-triangle-exclamation"></i> إثبات ضرر
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(err => console.error("خطأ في جلب العقود:", err));
+}
+function handleDepositAction(orderId, actionType) {
+    const confirmMsg = actionType === 'release' 
+        ? 'هل أنت متأكد من فحص المنتج وإفراج التأمين للمستأجر؟' 
+        : 'هل أنت متأكد من تسجيل إثبات ضرر واقتطاع القيمة من التأمين؟';
+    
+    if (!confirm(confirmMsg)) return;
+
+    fetch('api/update_contract_status.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, action: actionType })
+    })
+    .then(async res => {
+        const text = await res.text();
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            throw new Error("رد السيرفر غير صالح:\n" + text.replace(/<[^>]*>/g, ' '));
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.error || 'حدث خطأ أثناء تنفيذ الإجراء');
+        }
+    })
+    .catch(err => {
+        alert(err.message);
+    });
+}
     </script>
+
 </body>
 </html>

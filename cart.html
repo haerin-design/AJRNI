@@ -315,13 +315,29 @@
             let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             let shippingFee = 35; // رسوم توصيل ثابتة تجريبية
 
-            let itemsHTML = cart.map((item, index) => `
+            let itemsHTML = cart.map((item, index) => {
+                // التحقق هل السلعة مستأجرة مع تواريخ
+                const isRent = item.type === 'rent' || (item.startDate && item.endDate);
+
+                return `
                 <div class="cart-item">
                     <img src="${item.image}" alt="${item.name}" class="cart-item-img">
                     <div class="cart-item-details">
-                        <div class="cart-item-category">${item.category}</div>
+                        <div class="cart-item-category">${item.category || (isRent ? 'إيجار' : 'منتج')}</div>
                         <div class="cart-item-title">${item.name}</div>
                         <div class="cart-item-price">${item.price} ر.س</div>
+
+                        ${isRent ? `
+                            <div style="margin-top: 6px; font-size: 12px; color: #334155; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 6px 10px; display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <span>📅 <strong>من:</strong> ${item.startDate} <strong>إلى:</strong> ${item.endDate}</span>
+                                <span style="color: #94a3b8;">|</span>
+                                <span>⏳ <strong>المدة:</strong> ${item.days || 1} يوم</span>
+                                ${item.deposit ? `
+                                    <span style="color: #94a3b8;">|</span>
+                                    <span style="color: #16a34a; font-weight: 600;">(تأمين مسترد: ${item.deposit} ر.س)</span>
+                                ` : ''}
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="cart-item-actions">
                         <div class="quantity-controls">
@@ -332,7 +348,8 @@
                         <button class="remove-btn" onclick="removeItem(${index})"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
 
             container.innerHTML = `
                 <div class="cart-layout">

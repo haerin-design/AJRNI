@@ -24,5 +24,18 @@ if ($result) {
         $products[] = $row;
     }
 }
+// جلب آخر التنبيهات مع استجابة المنتجات
+$notifRes = $conn->query("SELECT * FROM messages ORDER BY id DESC LIMIT 5");
+$notifications = [];
+if ($notifRes) {
+    while($n = $notifRes->fetch_assoc()) {
+        $notifications[] = $n;
+    }
+}
 
+// دمجها في الـ JSON النهائي
+echo json_encode([
+    'products' => $products, // مصفوفتك الحالية
+    'notifications' => $notifications
+]);
 echo json_encode(['success' => true, 'products' => $products]);

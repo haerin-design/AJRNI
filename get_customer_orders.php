@@ -14,7 +14,10 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8mb4");
 
-$sql = "SELECT id, user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status, created_at FROM orders ORDER BY id DESC";
+$sql = "SELECT o.*, COALESCE(u.full_name, 'مستأجر مسجل') AS customer_name 
+        FROM orders o 
+        LEFT JOIN users u ON o.user_id = u.id 
+        ORDER BY o.id DESC";
 $result = $conn->query($sql);
 
 $orders = [];

@@ -29,12 +29,13 @@ if (!empty($userEmail)) {
     }
 }
 
-// إنشاء الطلب
-$orderStmt = $conn->prepare("INSERT INTO orders (user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method) VALUES (?, ?, ?, ?, ?, ?)");
-$orderStmt->bind_param("idddss", $userId, $subtotal, $shippingFee, $total, $shippingMethod, $paymentMethod);
+$status = 'نشط';
+$orderStmt = $conn->prepare("INSERT INTO orders (user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$orderStmt->bind_param("idddsss", $userId, $subtotal, $shippingFee, $total, $shippingMethod, $paymentMethod, $status);
 
 if ($orderStmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "تم إستلام طلبك بنجاح! شكراً لتسوقك عبر منصة أجرني."]);
+    $contractId = $conn->insert_id;
+echo json_encode(["status" => "success", "message" => "تم إستلام طلبك بنجاح! رقم العقد: #" . $contractId]);
 } else {
     echo json_encode(["status" => "error", "message" => "حدث خطأ أثناء حفظ الطلب."]);
 }
