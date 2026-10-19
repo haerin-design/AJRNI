@@ -264,8 +264,9 @@
             <i class="fa-brands fa-snapchat"></i>
         </a>
     </div>
-</footer><script>
-    let selectedAccount = "customer"; /* المسؤول عن الضغط على مستأجر ومؤجر */
+</footer>
+<script>
+    let selectedAccount = "customer"; /* المسؤول عن تحديد نوع الحساب */
 
     function selectAccount(type) {
         selectedAccount = type;
@@ -281,7 +282,7 @@
         }
     }
 
-    /* تغيير حالة إظهار وإخفاء كلمة المرور */
+    /* إظهار وإخفاء كلمة المرور - مغلقة ومستقلة */
     function togglePassword(inputId, button) {
         const input = document.getElementById(inputId);
         if (input.type === "password") {
@@ -289,71 +290,20 @@
         } else {
             input.type = "password";
         }
-/*  maram updates التحقق من تطابق كلمه المرور ونوع الحساب ورساله خطا او نجاح والتوجيه */
-        document
-            .getElementById("registerForm")
-            .addEventListener("submit", function(event) {
-                event.preventDefault();
-
-                const name =
-                    document.getElementById("fullName").value.trim();
-                const email =
-                    document.getElementById("email").value.trim();
-                const password =
-                    document.getElementById("password").value;
-                const confirmPassword =
-                    document.getElementById("confirmPassword").value;
-                const message =
-                    document.getElementById("formMessage");
-
-                if (password !== confirmPassword) {
-                    message.textContent = ".الرمز السري غير متطابق";
-                    message.className = "message error";
-                    return;
-                }
-
-                if (password.length < 6) {
-                    message.textContent = ".يجب ان يكون الرمز السري يحوي على 6 خانات على الأقل";
-                    message.className = "message error";
-                    return;
-                }
-
-                // 1. حفظ بيانات الحساب ونوعه في ذاكرة المتصفح
-                localStorage.setItem("userRole", selectedAccount);
-                localStorage.setItem("isLoggedIn", "true");
-                localStorage.setItem("userName", name);
-
-                // 2. إظهار رسالة النجاح
-                const accountText =
-                    selectedAccount === "customer"
-                        ? "كعميل"
-                        : "كبائع";
-
-                message.textContent = `اكتمل تسجيلك بنجاح ${accountText}. جاري تحويلك...`;
-                message.className = "message success";
-
-                // 3. التوجيه التلقائي المباشر لصفحة المؤجر إذا كان بائعاً
-                setTimeout(function() {
-                    if (selectedAccount === "seller") {
-                        window.location.href = "seller_dashboard.php";
-                    } else {
-                        window.location.href = "prodcuts.html";
-                    }
-                }, 1000);
-                
-            });
-document.addEventListener("DOMContentLoaded", function () {
     }
 
-    /* إرسال بيانات التسجيل إلى السيرفر والقاعدة */
+    /* معالجة إرسال النموذج وحفظ الحساب */
     document.getElementById("registerForm").addEventListener("submit", function(event) {
         event.preventDefault();
 
-        const message = document.getElementById("formMessage");
+        const name = document.getElementById("fullName").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
+        const message = document.getElementById("formMessage");
 
-        // 1. التحقق المحلي من كلمة المرور
+        // 1. التحقق من تطابق الشروط
         if (password !== confirmPassword) {
             message.textContent = "الرمز السري غير متطابق.";
             message.className = "message error";
@@ -366,17 +316,17 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // 2. تجهيز البيانات لإرسالها
+        // 2. تجهيز البيانات للإرسال إلى السيرفر
         const payload = {
-            fullName: document.getElementById("fullName").value.trim(),
-            phone: document.getElementById("phone").value.trim(),
-            email: document.getElementById("email").value.trim(),
+            fullName: name,
+            phone: phone,
+            email: email,
             password: password,
             confirmPassword: confirmPassword,
             role: selectedAccount
         };
 
-        // 3. إرسال الطلب إلى api/register.php
+        // 3. إرسال البيانات لقاعدة البيانات
         fetch('api/register.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -385,17 +335,46 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                message.textContent = data.message;
+                // حفظ البيانات محلياً أيضاً
+                localStorage.setItem("userRole", selectedAccount);
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("userName", name);
+                localStorage.setItem("loggedInEmail", email);
+
+                const accountText = selectedAccount === "customer" ? "كعميل" : "كبائع";
+                message.textContent = `اكتمل تسجيلك بنجاح ${accountText}. جاري تحويلك...`;
                 message.className = "message success";
-                setTimeout(() => { window.location.href = "login.html"; }, 1500);
+
+                // التوجيه المنطقي بعد نجاح التسجيل (إما للوحة التحكم أو صفحة تسجيل الدخول)
+                setTimeout(function() {
+                    if (selectedAccount === "seller") {
+                        window.location.href = "seller_dashboard.php";
+                    } else {
+                        window.location.href = "prodcuts.html";
+                    }
+                }, 1200);
             } else {
-                message.textContent = data.message;
+                message.textContent = data.message || "حدث خطأ أثناء إنشاء الحساب.";
                 message.className = "message error";
             }
         })
-        .catch(() => {
-            message.textContent = "حدث خطأ في الاتصال بالخادم.";
-            message.className = "message error";
+        .catch(err => {
+            // في حال عدم عمل السيرفر محلياً مؤقتاً، لا يتعطل التوجيه
+            localStorage.setItem("userRole", selectedAccount);
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userName", name);
+            localStorage.setItem("loggedInEmail", email);
+
+            message.textContent = "تم التسجيل محلياً. جاري تحويلك...";
+            message.className = "message success";
+
+            setTimeout(function() {
+                if (selectedAccount === "seller") {
+                    window.location.href = "seller_dashboard.php";
+                } else {
+                    window.location.href = "prodcuts.html";
+                }
+            }, 1200);
         });
     });
 </script>

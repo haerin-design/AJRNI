@@ -3,21 +3,35 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// أخذ اسم المستخدم المسجل، أو وضع اسم افتراضي
-$seller_name = $_SESSION['user_name'] ?? 'شريكنا العزيز';
-// إعدادات الاتصال بقاعدة بيانات أجرني
-$db_host = "localhost";
-$db_user = "root";
-$db_pass = "";
-$db_name = "ajrni_db";
-
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
-
-if ($conn->connect_error) {
-    die("Database Connection Error: " . $conn->connect_error);
+// 1. استخدام ملف الاتصال المركزي المعتمد بالمشروع
+if (file_exists('db.php')) {
+    require_once 'db.php';
+} else {
+    $conn = new mysqli("localhost", "root", "", "ajrni_db");
+    if ($conn->connect_error) {
+        die("خطأ في الاتصال بقاعدة البيانات: " . $conn->connect_error);
+    }
 }
+// 1. إجمالي السلع المسجلة
+$resP = $conn->query("SELECT COUNT(*) AS total FROM products");
+$realProductsCount = ($resP) ? $resP->fetch_assoc()['total'] : 0;
+
+// 2. العقود السارية (من جدول orders)
+$resR = $conn->query("SELECT COUNT(*) AS total FROM orders WHERE status = 'قيد الانتظار' OR status = 'active'");
+$realActiveRentals = ($resR) ? $resR->fetch_assoc()['total'] : 0;
+
+// 3. إجمالي الأرباح والمبيعات
+$resProf = $conn->query("SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders");
+$realEarnings = ($resProf) ? $resProf->fetch_assoc()['total'] : 0;
+
+// 4. التأمين المحتجز
+$resDep = $conn->query("SELECT COALESCE(SUM(subtotal), 0) AS total FROM orders WHERE status = 'قيد الانتظار'");
+$realDeposits = ($resDep) ? $resDep->fetch_assoc()['total'] : 0;
 
 $conn->set_charset("utf8mb4");
+
+// 2. تعيين اسم المؤجر
+$seller_name = $_SESSION['user_name'] ?? 'المؤجر';
 
 $alert_text = "";
 $alert_type = "";
@@ -42,7 +56,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
 }
 
 // ==========================================
-// 3. معالجة نموذج إضافة سلعة جديدة
+// 2. معالجة نموذج إضافة سلعة جديدة
 // ==========================================
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btn_add_product'])) {
     $item_name     = trim($_POST['item_name'] ?? '');
@@ -71,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btn_add_product'])) {
     }
 }
 
-// جلب المنتجات من القاعدة
+// 3. جلب قائمة المنتجات الحالية من القاعدة
 $query_products = "SELECT id, name, category, price, description FROM products ORDER BY id DESC";
 $products_list = $conn->query($query_products);
 ?>
@@ -168,7 +182,9 @@ $products_list = $conn->query($query_products);
 
         <div class="header-tools">
             <a href="cart.html" class="icon-btn" title="السلة"><i class="fa-solid fa-cart-shopping"></i></a>
-            <a href="signin.html" class="icon-btn" title="حسابي"><i class="fa-regular fa-user"></i></a>
+            <button type="button" onclick="logoutSeller()" class="icon-btn" title="تسجيل الخروج" style="background: transparent; border: none; cursor: pointer; color: #ef4444; font-size: 16px;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </button>
         </div>
     </header>
 
@@ -181,17 +197,13 @@ $products_list = $conn->query($query_products);
             </div>
         <?php endif; ?>
 
-        <!-- ========================================================
-             بطاقة الترحيب المخصصة للمؤجر مع شارة التوثيق
-             ======================================================== -->
+        <!-- بطاقة الترحيب المخصصة للمؤجر مع شارة التوثيق -->
         <div class="welcome-card">
             <div>
-                <!-- عرض اسم المؤجر المسجل ديناميكياً -->
-                <h2>مرحباً بك، <?php echo htmlspecialchars($seller_name); ?> 👋🏻</h2>
+                <h2>مرحباً بك، <span id="sellerDisplayName"><?php echo htmlspecialchars($seller_name); ?></span> 👋🏻</h2>
                 <p>يسعدنا وجودك في منصة أجرني • إدارة سلعك، متابعة العقود الرقمية، ومحفظة التأمين والضمان.</p>
             </div>
             <div>
-                <!-- شارة توثيق حساب المؤجر -->
                 <span class="deposit-tag" style="background: rgba(255,255,255,0.25); color: #ffffff;">
                     <i class="fa-solid fa-circle-check"></i>
                     <span>حساب مؤجر موثّق</span>
@@ -213,7 +225,7 @@ $products_list = $conn->query($query_products);
             <div class="stat-card">
                 <div>
                     <span>العقود السارية</span>
-                    <strong>3</strong>
+                    <strong><?php echo $realActiveRentals; ?></strong>
                 </div>
                 <div class="stat-icon" style="background-color: #f0fdf4; color: #15803d;">
                     <i class="fa-solid fa-file-contract"></i>
@@ -223,7 +235,7 @@ $products_list = $conn->query($query_products);
             <div class="stat-card">
                 <div>
                     <span>إجمالي الأرباح</span>
-                    <strong>4,899 ر.س</strong>
+                    <strong><?php echo number_format($realEarnings, 2); ?> ر.س</strong>
                 </div>
                 <div class="stat-icon" style="background-color: #fefce8; color: #ca8a04;">
                     <i class="fa-solid fa-wallet"></i>
@@ -233,7 +245,7 @@ $products_list = $conn->query($query_products);
             <div class="stat-card">
                 <div>
                     <span>التأمين المحتجز</span>
-                    <strong style="color: #059669;">950 ر.س</strong>
+                    <strong style="color: #059669;"><?php echo number_format($realDeposits, 2); ?> ر.س</strong>
                 </div>
                 <div class="stat-icon" style="background-color: #ecfdf5; color: #059669;">
                     <i class="fa-solid fa-vault"></i>
@@ -256,7 +268,7 @@ $products_list = $conn->query($query_products);
             </button>
         </div>
 
-        <!-- تبويب المنتجات من قاعدة البيانات مع أزرار الحذف والتعديل -->
+        <!-- تبويب المنتجات من قاعدة البيانات -->
         <div id="tab-products" class="tab-content active">
             <table class="data-table">
                 <thead>
@@ -281,7 +293,6 @@ $products_list = $conn->query($query_products);
                                 <td style="font-size: 12px; color: #64748b;"><?php echo nl2br(htmlspecialchars($item['description'])); ?></td>
                                 <td><span class="tag tag-ok">متاح</span></td>
                                 <td>
-                                    <!-- زر الحذف المباشر -->
                                     <a href="seller_dashboard.php?action=delete&id=<?php echo $item['id']; ?>" 
                                        onclick="return confirm('هل أنتِ متأكدة من حذف هذه السلعة نهائياً من قاعدة البيانات؟');" 
                                        class="btn-action btn-claim" 
@@ -399,6 +410,25 @@ $products_list = $conn->query($query_products);
     </main>
 
     <script>
+        // التحقق من الصلاحيات وتحديث الاسم المسجل فوراً
+        document.addEventListener("DOMContentLoaded", function () {
+            const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+            const userRole = (localStorage.getItem("userRole") || "").toLowerCase();
+            const userName = localStorage.getItem("userName");
+
+            // حماية البوابة: إذا لم يكن مسجلاً، يُعاد إلى صفحة الدخول
+            if (!isLoggedIn) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // عرض اسم المؤجر الفعلي القادم من المتصفح
+            if (userName) {
+                const nameDisplay = document.getElementById("sellerDisplayName");
+                if (nameDisplay) nameDisplay.textContent = userName;
+            }
+        });
+
         function showDashboardTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(function(el) {
                 el.classList.remove('active');
@@ -410,6 +440,11 @@ $products_list = $conn->query($query_products);
             const activeTab = document.getElementById(tabId);
             if (activeTab) activeTab.classList.add('active');
             if (btn) btn.classList.add('active');
+        }
+
+        function logoutSeller() {
+            localStorage.clear();
+            window.location.href = "login.html";
         }
     </script>
 </body>
