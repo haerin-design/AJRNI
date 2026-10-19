@@ -381,3 +381,365 @@ footer p {
         font-size: 29px;
     }
 }
+
+/* منع تجاوز المحتوى لعرض الشاشة */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    overflow-x: clip;
+}
+
+body {
+    width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+input,
+textarea,
+button,
+select {
+    max-width: 100%;
+    font: inherit;
+}
+
+/* =========================================
+   صفحة التواصل
+========================================= */
+
+.page-title {
+    width: 100%;
+    padding: clamp(30px, 5vw, 55px) 20px 30px;
+}
+
+.page-title h2 {
+    font-size: clamp(27px, 4vw, 42px);
+    line-height: 1.5;
+}
+
+.page-title p {
+    line-height: 1.9;
+}
+
+.contact-card {
+    width: calc(100% - 40px);
+    max-width: 1050px;
+    margin: 0 auto 60px;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+}
+
+.contact-form,
+.contact-details,
+.details-content {
+    min-width: 0;
+}
+
+.contact-form {
+    padding: clamp(22px, 4vw, 45px);
+}
+
+.contact-form h2 {
+    font-size: clamp(23px, 3vw, 31px);
+    line-height: 1.5;
+}
+
+.contact-form input,
+.contact-form textarea {
+    min-width: 0;
+}
+
+.contact-form textarea {
+    max-width: 100%;
+}
+
+.contact-details {
+    min-height: 100%;
+}
+
+.details-content {
+    padding: clamp(25px, 4vw, 55px);
+}
+
+.details-content h2 {
+    font-size: clamp(25px, 3vw, 34px);
+    overflow-wrap: anywhere;
+}
+
+.details-description {
+    max-width: 100%;
+}
+
+.detail-item {
+    min-width: 0;
+    align-items: flex-start;
+}
+
+.detail-item > div:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   الهيدر
+========================================= */
+
+.header {
+    max-width: 100%;
+    min-width: 0;
+}
+
+.logo-area,
+.logo-text,
+.navbar,
+.header-actions,
+.search-box {
+    min-width: 0;
+}
+
+.navbar a {
+    white-space: nowrap;
+}
+
+.search-box input {
+    min-width: 0;
+    width: 100%;
+}
+
+/* =========================================
+   الفوتر
+========================================= */
+
+footer {
+    min-width: 0;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+footer p {
+    line-height: 1.9;
+}
+
+.footer-logo {
+    min-width: 0;
+}
+
+.social {
+    flex-shrink: 0;
+}
+
+/* =========================================
+   الشاشات المتوسطة - التابلت
+========================================= */
+
+@media (max-width: 900px) {
+
+    .header {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 18px;
+        padding: 20px;
+    }
+
+    .logo-area {
+        justify-content: center;
+    }
+
+    .navbar {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px 20px;
+    }
+
+    .header-actions {
+        justify-content: center;
+    }
+
+    .search-box {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .contact-card {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 650px;
+    }
+
+    .contact-details {
+        min-height: 0;
+    }
+
+    .details-content {
+        padding: 35px;
+    }
+
+    .small-title {
+        margin-bottom: 30px;
+        font-size: 24px;
+        letter-spacing: 3px;
+    }
+
+    footer {
+        justify-content: center;
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .footer-logo {
+        justify-content: center;
+    }
+
+    .social {
+        justify-content: center;
+    }
+}
+
+/* =========================================
+   الجوال
+========================================= */
+
+@media (max-width: 600px) {
+
+    .page-title {
+        padding: 30px 15px 25px;
+    }
+
+    .page-title h2 {
+        font-size: 28px;
+    }
+
+    .page-title p {
+        font-size: 14px;
+    }
+
+    .contact-card {
+        width: calc(100% - 24px);
+        margin: 0 auto 35px;
+        border-radius: 14px;
+    }
+
+    .contact-form {
+        padding: 25px 18px;
+    }
+
+    .contact-form h2 {
+        font-size: 24px;
+    }
+
+    .description {
+        font-size: 13px;
+        margin-bottom: 22px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input {
+        height: 46px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .contact-form button {
+        height: 49px;
+        font-size: 15px;
+    }
+
+    .checkbox {
+        font-size: 12px;
+    }
+
+    .details-content {
+        padding: 30px 20px;
+    }
+
+    .small-title {
+        font-size: 21px;
+        margin-bottom: 25px;
+    }
+
+    .details-content h2 {
+        font-size: 26px;
+    }
+
+    .details-description {
+        font-size: 13px;
+    }
+
+    .detail-item {
+        gap: 10px;
+        margin-bottom: 22px;
+    }
+
+    .detail-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    footer {
+        padding: 25px 15px;
+        gap: 18px;
+    }
+
+    footer p {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .footer-logo h2 {
+        font-size: 21px;
+    }
+
+    .social a {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* =========================================
+   الجوال الصغير جدًا
+========================================= */
+
+@media (max-width: 360px) {
+
+    .contact-card {
+        width: calc(100% - 16px);
+    }
+
+    .contact-form {
+        padding: 20px 12px;
+    }
+
+    .details-content {
+        padding: 25px 15px;
+    }
+
+    .navbar {
+        gap: 10px;
+    }
+
+    .navbar a {
+        font-size: 12px;
+    }
+
+    .detail-item {
+        gap: 8px;
+    }
+}

@@ -285,6 +285,157 @@
 
         }
 
+        /* =====================================
+   RESPONSIVE FIXES - PRODUCTS PAGE
+===================================== */
+
+.container,
+.products,
+.product-card,
+.product-info {
+    min-width: 0;
+}
+
+.products {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.product-name {
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+}
+
+.product-img-container {
+    min-width: 0;
+}
+
+.product-img-container img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product-info {
+    padding: clamp(10px, 2vw, 20px);
+}
+
+.rent-details-box {
+    min-width: 0;
+}
+
+.rent-details-box input {
+    width: 100%;
+    min-width: 0;
+    font-size: 16px !important;
+}
+
+.filter-tabs {
+    align-items: center;
+}
+
+.filter-btn {
+    max-width: 100%;
+    white-space: normal;
+}
+
+@media (max-width: 900px) {
+    .products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .container {
+        margin-block: 25px;
+    }
+
+    .product-img-container {
+        height: 190px;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding-inline: 12px;
+        margin-block: 20px;
+    }
+
+    .products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .product-img-container {
+        height: auto;
+        aspect-ratio: 1 / 1;
+        padding: 8px;
+    }
+
+    .product-info {
+        padding: 10px;
+    }
+
+    .product-name {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .product-category {
+        font-size: 11px;
+    }
+
+    .product-price {
+        font-size: 15px;
+        overflow-wrap: anywhere;
+    }
+
+    .cart-btn {
+        padding: 10px 5px;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .wishlist-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 15px;
+    }
+
+    .badge {
+        max-width: calc(100% - 60px);
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+
+    .rent-details-box > div:first-child {
+        gap: 6px !important;
+    }
+
+    .rent-details-box label {
+        font-size: 10px !important;
+    }
+
+    .rent-details-box input {
+        padding-inline: 3px !important;
+    }
+
+    .section-title {
+        font-size: clamp(18px, 5vw, 22px);
+        line-height: 1.7;
+    }
+}
+
+@media (max-width: 340px) {
+    .products {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .product-img-container {
+        aspect-ratio: 1.2 / 1;
+    }
+}
+
     </style>
 
 </head>
