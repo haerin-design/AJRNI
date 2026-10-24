@@ -1427,3 +1427,173 @@ button {
         margin-inline: auto;
     }
 }
+
+
+
+
+/* ================================
+   DISCOUNT BANNER - AJRNI
+================================ */
+
+.discount-banner {
+    position: fixed;
+    top: 50%;
+    left: 18px;
+    right: auto;
+    transform: translateY(-50%);
+
+    width: 300px;
+    padding: 50px 20px 18px;
+    box-sizing: border-box;
+
+    background: #ffffff;
+    color: #062b52;
+    font-family: "Cairo", sans-serif;
+    text-align: center;
+
+    border: 1px solid #e2e8ef;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(6, 43, 82, 0.12);
+
+    z-index: 999;
+}
+
+/* زر إغلاق البنر */
+.discount-banner .discount-close {
+    position: absolute;
+    top: 8px;
+    left: 9px;
+
+    width: 28px;
+    height: 28px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eef5fb;
+    color: #062b52;
+
+    border-radius: 50%;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.discount-banner .discount-close:hover {
+    background: #e2eaf3;
+}
+
+/* أيقونة الخصم */
+.discount-banner .discount-icon {
+    width: 100px;
+    height: 50px;
+    margin: 0 auto 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eef5fb;
+    color: #062b52;
+
+    border-radius: 14px;
+    font-size: 23px;
+}
+
+/* النص الصغير */
+.discount-banner .discount-label {
+    display: block;
+    margin-bottom: 5px;
+
+    color: #718096;
+    font-size: 12px;
+}
+
+/* عنوان البنر */
+.discount-banner h2 {
+    margin: 30px 0 9px;
+
+    color: #062b52;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+/* وصف الخصم */
+.discount-banner .discount-description {
+    margin: 0 0 15px;
+
+    color: #718096;
+    font-size: 12px;
+    line-height: 1.9;
+}
+
+/* مربع كود الخصم */
+.discount-banner .discount-code-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    width: 100%;
+    min-width: 0;
+    padding: 8px;
+
+    box-sizing: border-box;
+
+    background: #f5f8fb;
+    border: 1px dashed #062b52;
+    border-radius: 9px;
+}
+
+/* نص كود الخصم */
+.discount-banner .discount-code-box span {
+    color: #062b52;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* زر نسخ الكود */
+.discount-banner .discount-code-box button {
+    flex-shrink: 0;
+    padding: 7px 10px;
+
+    background: #062b52;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 6px;
+
+    font-family: "Cairo", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.discount-banner .discount-code-box button:hover {
+    background: #041f3b;
+}
+
+/* رسالة تم النسخ */
+.discount-banner .discount-note {
+    min-height: 20px;
+    margin: 10px 0 0;
+
+    color: #718096;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+/* إخفاء البنر على الجوال والأجهزة اللوحية */
+@media (max-width: 900px) {
+    .discount-banner {
+        display: none;
+    }
+}

@@ -57,6 +57,46 @@
         <i class="fa-solid fa-magnifying-glass"></i>
     </button>
 </div>
+
+<!-- AJRNI: Side Discount Banner -->
+<aside class="discount-banner" id="discountBanner" aria-label="عرض كود الخصم">
+
+    <button
+        class="discount-close"
+        id="closeDiscountBanner"
+        type="button"
+        aria-label="إغلاق البنر">
+        &times;
+    </button>
+
+    <div class="discount-icon">
+        <i class="fa-solid fa-ticket"></i>
+    </div>
+
+    <span class="discount-label">عرض خاص من أجرني</span>
+
+    <h2>وفّر مع أجرني!</h2>
+
+    <p class="discount-description">
+        استخدم كود الخصم واستمتع بتجربة تسوق مميزة.
+    </p>
+
+    <div class="discount-code-box">
+        <span id="discountCode">AJRNI15</span>
+
+        <button id="copyDiscountCode" type="button">
+            <i class="fa-regular fa-copy"></i>
+            نسخ
+        </button>
+    </div>
+
+    <p class="discount-note" id="discountMessage">
+        كودك جاهز للاستخدام
+    </p>
+
+</aside>
+<!-- End Discount Banner -->
+
 </header>
 
 <main>
@@ -634,6 +674,50 @@ if (homeSearchInput && homeSearchButton) {
         }
     });
 }
+
+/* نسخ كود الخصم */
+const copyDiscountButton =
+    document.getElementById("copyDiscountCode");
+
+const discountCodeElement =
+    document.getElementById("discountCode");
+
+const discountMessage =
+    document.getElementById("discountMessage");
+
+if (copyDiscountButton && discountCodeElement && discountMessage) {
+    copyDiscountButton.addEventListener("click", async function () {
+        const code = discountCodeElement.textContent.trim();
+
+        try {
+            await navigator.clipboard.writeText(code);
+            discountMessage.textContent = "تم نسخ الكود بنجاح ✓";
+        } catch (error) {
+            const tempInput = document.createElement("textarea");
+            tempInput.value = code;
+            tempInput.style.position = "fixed";
+            tempInput.style.opacity = "0";
+
+            document.body.appendChild(tempInput);
+            tempInput.select();
+
+            let copied = false;
+
+            try {
+                copied = document.execCommand("copy");
+            } catch (fallbackError) {
+                copied = false;
+            }
+
+            tempInput.remove();
+
+            discountMessage.textContent = copied
+                ? "تم نسخ الكود بنجاح ✓"
+                : "تعذر النسخ، انسخ الكود يدويًا";
+        }
+    });
+}
+
 
 </script>
 </body>
