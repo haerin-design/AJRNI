@@ -647,6 +647,32 @@ function updateCartCount() {
         cartButton.parentElement.appendChild(badge);
     }
 }
+/* البحث من الصفحة الرئيسية */
+const homeSearchInput = document.getElementById("searchInput");
+const homeSearchButton = document.getElementById("searchButton");
+
+function searchFromHome() {
+    const query = homeSearchInput.value.trim();
+
+    if (!query) {
+        homeSearchInput.focus();
+        return;
+    }
+
+    window.location.href =
+        "prodcuts.html?search=" + encodeURIComponent(query);
+}
+
+if (homeSearchInput && homeSearchButton) {
+    homeSearchButton.addEventListener("click", searchFromHome);
+
+    homeSearchInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            searchFromHome();
+        }
+    });
+}
 
 /* نسخ كود الخصم */
 const copyDiscountButton =
@@ -690,32 +716,6 @@ if (copyDiscountButton && discountCodeElement && discountMessage) {
         }
     });
 }
-//البحث
-document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("searchInput");
-    const searchButton = document.getElementById("searchButton");
-
-    function handleSearch() {
-        const searchText = searchInput.value.trim();
-        if (searchText !== "") {
-            // تحويل المستخدم إلى صفحة المنتجات حاملاً كلمة البحث معه في الرابط
-            window.location.href = `prodcuts.html?search=${encodeURIComponent(searchText)}`;
-        }
-    }
-
-    if (searchButton) {
-        searchButton.addEventListener("click", handleSearch);
-    }
-
-    if (searchInput) {
-        searchInput.addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                handleSearch();
-            }
-        });
-    }
-});
 
 </script>
 </body>
