@@ -4,7 +4,18 @@ $conn = new mysqli("localhost", "root", "", "ajrni_db");
 
 // التأكد من نجاح الاتصال
 if ($conn->connect_error) {
-    die("فشل الاتصال بقاعدة البيانات: " . $conn->connect_error);
+   die("فشل الاتصال بقاعدة البيانات: " . $conn->connect_error);
+}
+// معالجة تحديث حالة منتجات المؤجرين
+if (isset($_POST['update_product_status'])) {
+    $product_id = $_POST['product_id'];
+    $new_status = $_POST['status']; 
+    $stmt = $conn->prepare("UPDATE products SET status = ? WHERE id = ?");
+    $stmt->bind_param("si", $new_status, $product_id);
+    $stmt->execute();
+    $stmt->close();
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -246,10 +257,39 @@ if ($conn->connect_error) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="5" class="empty-row">لا توجد منتجات مضافة حالياً. اضغط على "إضافة منتج جديد" للبدء.</td>
-                    </tr>
-                </tbody>
+    <?php
+    $sql = "SELECT * FROM products ORDER BY id DESC";
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . $row['id'] . "</td>";
+            echo "<td>" . (isset($row['name']) ? $row['name'] : '-') . "</td>";
+            echo "<td>" . (isset($row['price']) ? $row['price'] : '0') . " ريال</td>";
+            echo "<td>" . (isset($row['status']) ? $row['status'] : 'معلق') . "</td>";
+            
+            // أزرار الموافقة والرفض
+            echo "<td>
+                    <form method='POST' style='display:inline-block;'>
+                        <input type='hidden' name='product_id' value='" . $row['id'] . "'>
+                        <input type='hidden' name='status' value='مقبول'>
+                        <button type='submit' name='update_product_status' style='background-color: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 5px;'>موافقة</button>
+                    </form>
+                    
+                    <form method='POST' style='display:inline-block;'>
+                        <input type='hidden' name='product_id' value='" . $row['id'] . "'>
+                        <input type='hidden' name='status' value='مرفوض'>
+                        <button type='submit' name='update_product_status' style='background-color: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;'>رفض</button>
+                    </form>
+                  </td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='5' class='empty-row' style='text-align:center;'>لا توجد منتجات مضافة حالياً.</td></tr>";
+    }
+    ?>
+</tbody>
             </table>
         </div>
 
@@ -281,7 +321,7 @@ if ($result && $result->num_rows > 0) {
         echo "<td>" . (isset($row['product_name']) ? $row['product_name'] : '-') . "</td>";
         echo "<td>" . (isset($row['total_price']) ? $row['total_price'] : (isset($row['price']) ? $row['price'] : '0')) . " ريال</td>";
         echo "<td>" . (isset($row['status']) ? $row['status'] : 'معلق') . "</td>";
-        echo "</tr>";
+       echo "</tr>";
     }
 } else {
     echo "<tr><td colspan='5' class='empty-row' style='text-align:center;'>لا توجد طلبات جديدة حتى الآن.</td></tr>";
