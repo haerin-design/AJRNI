@@ -370,7 +370,8 @@
     </div>
 
 </footer>
-<script src="search.js">
+<script src="search.js"></script>
+<script>
 const slides = [
     {
         image: "clothes.jpg",
@@ -646,33 +647,6 @@ function updateCartCount() {
         cartButton.parentElement.appendChild(badge);
     }
 }
-/* البحث من الصفحة الرئيسية */
-const homeSearchInput = document.getElementById("searchInput");
-const homeSearchButton = document.getElementById("searchButton");
-
-function searchFromHome() {
-    const query = homeSearchInput.value.trim();
-
-    if (!query) {
-        homeSearchInput.focus();
-        return;
-    }
-
-    window.location.href =
-        "prodcuts.html?search=" + encodeURIComponent(query);
-}
-
-if (homeSearchInput && homeSearchButton) {
-    homeSearchButton.addEventListener("click", searchFromHome);
-
-    homeSearchInput.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            searchFromHome();
-        }
-    });
-}
-
 /* نسخ كود الخصم */
 const copyDiscountButton =
     document.getElementById("copyDiscountCode");
