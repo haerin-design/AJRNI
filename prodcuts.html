@@ -1352,6 +1352,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "#productsContainer .product-card"
         );
     function searchProducts() {
+        const products = document.querySelectorAll("#productsContainer .product-card");
         const searchText =
             searchInput.value
                 .trim()
@@ -1470,6 +1471,11 @@ document.addEventListener("DOMContentLoaded", function () {
         "click",
         searchProducts
     );
+        const urlSearch = new URLSearchParams(window.location.search).get("search");
+    if (urlSearch) {
+        searchInput.value = urlSearch;
+        searchProducts();
+    }
 
 
     /* =================================================
@@ -2156,6 +2162,8 @@ function loadDynamicProducts() {
                 `;
 
                 container.prepend(card);
+                            const si = document.getElementById('searchInput');
+            if (si && si.value.trim() !== '') si.dispatchEvent(new Event('input'));
             });
         })
         .catch(err => console.error('خطأ في جلب المنتجات:', err));
