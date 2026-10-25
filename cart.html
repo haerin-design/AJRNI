@@ -456,6 +456,11 @@
        function completeCheckout() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     if (cart.length === 0) return;
+        if (!localStorage.getItem("userEmail")) {
+        alert("لازم تسجّل دخول أو تنشئ حساب أولاً قبل إتمام الطلب.");
+        window.location.href = "signin.html";
+        return;
+    }
 
     let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -480,6 +485,9 @@
             localStorage.removeItem("cart");
             window.location.href = "index.html";
         }
+    })
+    .catch(err => {
+        alert("تعذر الاتصال بالسيرفر: " + err);
     });
 }
     </script>

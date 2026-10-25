@@ -11,6 +11,7 @@ $paymentMethod = $data['paymentMethod'] ?? 'بطاقة مدى / ائتمانية
 $subtotal = floatval($data['subtotal'] ?? 0);
 $shippingFee = floatval($data['shippingFee'] ?? 35);
 $total = $subtotal + $shippingFee;
+    $conn->set_charset("utf8mb4"); // مهم للنص العربي
 
 if (empty($cart)) {
     echo json_encode(["status" => "error", "message" => "السلة فارغة."]);
