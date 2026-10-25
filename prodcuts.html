@@ -1313,6 +1313,79 @@
 </aside>
 
 <script>
+//ربط البحث في الصفحات الثانيه 
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+    const productsContainer = document.getElementById("productsContainer");
+
+    // دالة الفلترة الأساسية
+    function searchProducts() {
+        const products = document.querySelectorAll("#productsContainer .product-card");
+        const searchText = searchInput ? searchInput.value.trim().toLowerCase() : "";
+        let found = false;
+
+        products.forEach(function (product) {
+            const dataName = product.dataset.name || "";
+            const productNameElement = product.querySelector(".product-name");
+            const categoryElement = product.querySelector(".product-category");
+            
+            const productName = productNameElement ? productNameElement.textContent : "";
+            const category = categoryElement ? categoryElement.textContent : "";
+            
+            const searchData = (dataName + " " + productName + " " + category).toLowerCase();
+
+            if (searchText === "" || searchData.includes(searchText)) {
+                product.style.display = "flex";
+                found = true;
+            } else {
+                product.style.display = "none";
+            }
+        });
+
+        // رسالة عدم وجود نتائج
+        const oldMessage = document.querySelector(".no-search-results");
+        if (oldMessage) oldMessage.remove();
+
+        if (!found && searchText !== "") {
+            const message = document.createElement("div");
+            message.className = "no-search-results";
+            message.style.textAlign = "center";
+            message.style.padding = "20px";
+            message.style.width = "100%";
+            message.textContent = "لم يتم العثور على منتج مطابق للبحث.";
+            productsContainer.appendChild(message);
+        }
+    }
+
+    // ربط الأحداث (الكتابة والضغط على الزر)
+    if (searchInput) {
+        searchInput.addEventListener("input", searchProducts);
+        searchInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchProducts();
+            }
+        });
+    }
+
+    if (searchButton) {
+        searchButton.addEventListener("click", searchProducts);
+    }
+
+    // --- قراءة الكلمة المكتوبة في الرابط القادمة من الصفحة الرئيسية وتطبيق الفلترة فوراً ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search');
+
+    if (searchQuery && searchInput) {
+        searchInput.value = searchQuery;
+        
+        // استخدام مهلة زمنية قصيرة (100ms) للتأكد من أن جميع المنتجات حُمّلت في الـ DOM قبل التصفية
+        setTimeout(function() {
+            searchProducts();
+        }, 100);
+    }
+});//
 /* =====================================================
    البحث
 ===================================================== */

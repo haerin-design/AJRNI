@@ -294,7 +294,20 @@
                     message.textContent = data.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
                     message.className = "message error";
                 }
-            })
+            })//مسح بيانات الشخص السابق وتحديثها بالشخص الجديد
+            .then(data => {
+    if (data.status === 'success') {
+        // مسح بيانات الشخص السابق وتحديثها بالشخص الجديد
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        message.textContent = "تم تسجيل الدخول بنجاح!";
+        message.className = "message success";
+        setTimeout(() => { window.location.href = "index.html"; }, 1000);
+    } else {
+        message.textContent = data.message;
+        message.className = "message error";
+    }
+})
             .catch(() => {
                 // حل بديل في حال تشغيل الصفحة بدون خادم محلي
                 const savedRole = localStorage.getItem("userRole") || "customer";
