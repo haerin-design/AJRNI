@@ -460,19 +460,18 @@ let appliedCode = localStorage.getItem("discountCode") || "";
                             </div>
 
                             <div class="option-group-title"><i class="fa-solid fa-credit-card"></i> اختر طريقة الدفع:</div>
-                            <div class="options-list">
-                                <label class="option-label">
-                                    <input type="radio" name="payment" checked> بطاقة مدى / ائتمانية (Visa / Mastercard)
-                                </label>
-                                <label class="option-label">
-                                    <input type="radio" name="payment"> أبل باي (Apple Pay)
-                                </label>
-                                <label class="option-label">
-                                    <input type="radio" name="payment"> تقسيط مريح (عبر تابي أو تمارا بدون فوائد)
-                                </label>
-                                <label class="option-label">
-                                    <input type="radio" name="payment"> الدفع عند الاستلام
-                                </label>
+                            <div class="options-list"><label class="option-label">
+    <input type="radio" name="payment" value="بطاقة مدى / ائتمانية" checked> بطاقة مدى / ائتمانية (Visa / Mastercard)
+</label>
+<label class="option-label">
+    <input type="radio" name="payment" value="أبل باي"> أبل باي (Apple Pay)
+</label>
+<label class="option-label">
+    <input type="radio" name="payment" value="تقسيط (تابي / تمارا)"> تقسيط مريح (عبر تابي أو تمارا بدون فوائد)
+</label>
+<label class="option-label">
+    <input type="radio" name="payment" value="الدفع عند الاستلام"> الدفع عند الاستلام
+</label>
                             </div>
                         </div>
 
@@ -543,5 +542,6 @@ let appliedCode = localStorage.getItem("discountCode") || "";
     });
 }
     </script>
+    <script src="user-drawer.js"></script>
 </body>
 </html>

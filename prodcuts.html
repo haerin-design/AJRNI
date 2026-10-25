@@ -806,91 +806,62 @@
 
         </div>
 
-
-<!-- Product  -->
-    <div class="product-card" data-name="Canon EOS R7" data-price="1500" data-image="canon.jpg">
-
-        <div class="product-image">
-
-            <span class="favorite" onclick="addToFavorites(this)">
-                <i class="fa-regular fa-heart"></i>
-            </span>
-
-            <img src="canon.jpg">
-
+        <!-- Canon EOS R7 -->
+        <div class="product-card" data-type="buy" data-name="Canon EOS R7" data-price="1500" data-image="canon.jpg">
+            <div class="product-img-container">
+                <button class="wishlist-btn" type="button" onclick="addToFavorites(this)">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+                <img src="canon.jpg" alt="Canon EOS R7">
+            </div>
+            <div class="product-info">
+                <div class="product-category">أجهزة التصوير</div>
+                <div class="product-name">Canon EOS R7</div>
+                <div class="product-price">1500 ر.س</div>
+                <button class="cart-btn" type="button">
+                    أضف إلى السلة
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </button>
+            </div>
         </div>
 
-        <h3>Canon EOS R7</h3>
-
-        <div class="price">
-            <strong>1500</strong>
-            <span>ر.س</span>
+        <!-- نظارة شمسية كلاسيك -->
+        <div class="product-card" data-type="buy" data-name="نظارة شمسية كلاسيك" data-price="250" data-image="sunglasses.jpg">
+            <div class="product-img-container">
+                <button class="wishlist-btn" type="button" onclick="addToFavorites(this)">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+                <img src="sunglasses.jpg" alt="نظارة شمسية كلاسيك">
+            </div>
+            <div class="product-info">
+                <div class="product-category">الإكسسوارات</div>
+                <div class="product-name">نظارة شمسية كلاسيك</div>
+                <div class="product-price">250 ر.س</div>
+                <button class="cart-btn" type="button">
+                    أضف إلى السلة
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </button>
+            </div>
         </div>
 
-        <button class="cart-btn">
-            أضف إلى السلة
-            <i class="fa-solid fa-cart-shopping"></i>
-        </button>
-
-    </div>
-
-    <!-- Product  -->
-    <div class="product-card" data-name="نظارة شمسية كلاسيك" data-price="250" data-image="sunglasses.jpg">
-
-        <div class="product-image">
-
-            <span class="favorite" onclick="addToFavorites(this)">
-                <i class="fa-regular fa-heart"></i>
-            </span>
-
-            <img src="sunglasses.jpg">
-
+        <!-- ساعة رجالية روليكس -->
+        <div class="product-card" data-type="buy" data-name="ساعة رجالية روليكس" data-price="300" data-image="rolex.jpg">
+            <div class="product-img-container">
+                <button class="wishlist-btn" type="button" onclick="addToFavorites(this)">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+                <img src="rolex.jpg" alt="ساعة رجالية روليكس">
+            </div>
+            <div class="product-info">
+                <div class="product-category">الساعات</div>
+                <div class="product-name">ساعة رجالية روليكس</div>
+                <div class="product-price">300 ر.س</div>
+                <button class="cart-btn" type="button">
+                    أضف إلى السلة
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </button>
+            </div>
         </div>
-
-        <h3>نظارة شمسية كلاسيك</h3>
-
-        <div class="price">
-            <strong>250</strong>
-            <span>ر.س</span>
-        </div>
-
-        <button class="cart-btn">
-            أضف إلى السلة
-            <i class="fa-solid fa-cart-shopping"></i>
-        </button>
-
-    </div>
-
-    <!-- Product  -->
-    <div class="product-card" data-name="ساعة رجالية روليكس" data-price="300" data-image="rolex.jpg">
-
-        <div class="product-image">
-
-            <span class="favorite" onclick="addToFavorites(this)">
-                <i class="fa-regular fa-heart"></i>
-            </span>
-
-            <img src="rolex.jpg">
-
-        </div>
-
-        <h3>ساعة رجالية روليكس</h3>
-
-        <div class="price">
-            <strong>300</strong>
-            <span>ر.س</span>
-        </div>
-
-        <button class="cart-btn">
-            أضف إلى السلة
-            <i class="fa-solid fa-cart-shopping"></i>
-        </button>
-
-    </div>
-
-</div>
-
-
         <!-- PRODUCT 9 (إيجار: بلايستيشن 5) -->
         <div
             class="product-card"
@@ -2043,11 +2014,12 @@ function switchSideTab(tabName, btnElement) {
 
 /* تسجيل الخروج */
 function logoutUser() {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userRole");
-    window.location.href = "signin.html";
+    fetch('api/logout.php').finally(function () {
+        ["isLoggedIn","userName","userRole","userEmail","userId","user","loggedInEmail"]
+            .forEach(function (k) { localStorage.removeItem(k); });
+        window.location.href = "login.html";
+    });
 }
-
 /* =====================================================
    تهيئة التبويب الجانبي وبيانات المؤجر / العميل
 ===================================================== */

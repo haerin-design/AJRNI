@@ -252,14 +252,14 @@ body {
         <a href="signin.html"><!--ايقونة صفحه التسجيل-->
             <i class="fa-regular fa-user"></i>
         </a>
-    </div>
-    <div class="search-box"> <!-- البحث -->
-        <input type="text"
-               placeholder="ابحث عن منتجاتك المفضلة...">
-        <i class="fa-solid fa-magnifying-glass"></i>
+    </div>    
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="ابحث عن منتجاتك المفضلة...">
+        <button id="searchButton" type="button" style="background:transparent;border:none;cursor:pointer;color:inherit;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
     </div>
 </header>
-<body>
 <main>
 <section class="page-title"><h2>الأسئلة الشائعة</h2><p>إليك إجابات عن أكثر الأسئلة شيوعًا حول منصة أجرني.</p></section>
 <section class="faq-section">
@@ -408,5 +408,6 @@ function updateCartCount() {
     }
 }
 </script>
+<script src="user-drawer.js"></script>
 </body>
 </html>

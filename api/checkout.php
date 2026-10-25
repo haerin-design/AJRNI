@@ -1,52 +1,47 @@
 <?php
+session_start();
 header('Content-Type: application/json; charset=utf-8');
 require_once '../db.php';
-
-mysqli_report(MYSQLI_REPORT_OFF); // نعالج الأخطاء بأنفسنا ونرجعها JSON
+mysqli_report(MYSQLI_REPORT_OFF);
 
 try {
-    $conn->set_charset("utf8mb4"); // مهم للنص العربي
+    $conn->set_charset("utf8mb4");
+
+    // السيرفر يعرف المستخدم من الجلسة، مو من المتصفح
+    $userId = intval($_SESSION['user_id'] ?? 0);
+    if ($userId === 0) {
+        echo json_encode(["status" => "error", "code" => "auth", "message" => "لازم تسجّل دخول أو تنشئ حساب أولاً."]);
+        exit();
+    }
 
     $data = json_decode(file_get_contents('php://input'), true);
-
-    $userEmail = $data['userEmail'] ?? '';
     $cart = $data['cart'] ?? [];
-    $shippingMethod = $data['shippingMethod'] ?? 'توصيل سريع';
-    $paymentMethod = $data['paymentMethod'] ?? 'بطاقة مدى / ائتمانية';
-    $subtotal = floatval($data['subtotal'] ?? 0);
-    $shippingFee = floatval($data['shippingFee'] ?? 35);
-    $discountCode = strtoupper(trim($data['discountCode'] ?? ''));
-    $validCodes = ["AJRNI15" => 15];
-    $discountPercent = $validCodes[$discountCode] ?? 0;
-    // المبلغ القابل للخصم = السعر بدون مبلغ التأمين المسترد
-    $discountBase = 0;
-    foreach ($cart as $item) {
-        $itemPrice = floatval($item['price'] ?? 0);
-        $itemDeposit = floatval($item['deposit'] ?? 0);
-        $itemQty = intval($item['quantity'] ?? 1);
-        $discountBase += max(0, $itemPrice - $itemDeposit) * $itemQty;
-    }
-    $discountAmount = round($discountBase * $discountPercent / 100, 2);    $total = $subtotal - $discountAmount + $shippingFee;
-    if (empty($cart)) {
+
+    if (empty($cart) || !is_array($cart)) {
         echo json_encode(["status" => "error", "message" => "السلة فارغة."]);
         exit();
     }
-    // لازم يكون المستخدم مسجل
-    if (empty($userEmail)) {
-        echo json_encode(["status" => "error", "message" => "لازم تسجّل دخول أو تنشئ حساب أولاً."]);
-        exit();
+
+    $shippingMethod = trim($data['shippingMethod'] ?? 'توصيل سريع');
+    $paymentMethod  = trim($data['paymentMethod'] ?? 'بطاقة مدى / ائتمانية');
+    $shippingFee    = 35; // ثابتة من السيرفر
+
+    // نحسب المبالغ من السلة نفسها (ما نصدق المجموع الجاي من المتصفح)
+    $subtotal = 0;
+    $discountBase = 0;
+    foreach ($cart as $item) {
+        $price   = max(0, floatval($item['price'] ?? 0));
+        $deposit = max(0, floatval($item['deposit'] ?? 0));
+        $qty     = max(1, intval($item['quantity'] ?? 1));
+        $subtotal     += $price * $qty;
+        $discountBase += max(0, $price - $deposit) * $qty; // الخصم بدون التأمين المسترد
     }
 
-    $userStmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $userStmt->bind_param("s", $userEmail);
-    $userStmt->execute();
-    $res = $userStmt->get_result();
-
-    if (!$res || $res->num_rows === 0) {
-        echo json_encode(["status" => "error", "message" => "الحساب غير موجود، سجّل حساب جديد أولاً."]);
-        exit();
-    }
-    $userId = $res->fetch_assoc()['id'];
+    $discountCode    = strtoupper(trim($data['discountCode'] ?? ''));
+    $validCodes      = ["AJRNI15" => 15];
+    $discountPercent = $validCodes[$discountCode] ?? 0;
+    $discountAmount  = round($discountBase * $discountPercent / 100, 2);
+    $total           = $subtotal - $discountAmount + $shippingFee;
 
     $status = 'نشط';
     $orderStmt = $conn->prepare("INSERT INTO orders (user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
