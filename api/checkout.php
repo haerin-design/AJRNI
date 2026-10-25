@@ -15,8 +15,18 @@ try {
     $paymentMethod = $data['paymentMethod'] ?? 'بطاقة مدى / ائتمانية';
     $subtotal = floatval($data['subtotal'] ?? 0);
     $shippingFee = floatval($data['shippingFee'] ?? 35);
-    $total = $subtotal + $shippingFee;
-
+    $discountCode = strtoupper(trim($data['discountCode'] ?? ''));
+    $validCodes = ["AJRNI15" => 15];
+    $discountPercent = $validCodes[$discountCode] ?? 0;
+    // المبلغ القابل للخصم = السعر بدون مبلغ التأمين المسترد
+    $discountBase = 0;
+    foreach ($cart as $item) {
+        $itemPrice = floatval($item['price'] ?? 0);
+        $itemDeposit = floatval($item['deposit'] ?? 0);
+        $itemQty = intval($item['quantity'] ?? 1);
+        $discountBase += max(0, $itemPrice - $itemDeposit) * $itemQty;
+    }
+    $discountAmount = round($discountBase * $discountPercent / 100, 2);    $total = $subtotal - $discountAmount + $shippingFee;
     if (empty($cart)) {
         echo json_encode(["status" => "error", "message" => "السلة فارغة."]);
         exit();

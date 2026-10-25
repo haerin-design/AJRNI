@@ -326,6 +326,27 @@
         document.addEventListener("DOMContentLoaded", function () {
             renderCart();
         });
+        const DISCOUNT_CODES = { "AJRNI15": 15 }; // الكود : نسبة الخصم %
+
+function getDiscountPercent() {
+    const code = (localStorage.getItem("discountCode") || "").toUpperCase();
+    return DISCOUNT_CODES[code] || 0;
+}
+
+function applyDiscountCode() {
+    const code = document.getElementById("discountInput").value.trim().toUpperCase();
+    if (!DISCOUNT_CODES[code]) {
+        alert("كود الخصم غير صحيح.");
+        return;
+    }
+    localStorage.setItem("discountCode", code);
+    renderCart();
+}
+
+function removeDiscountCode() {
+    localStorage.removeItem("discountCode");
+    renderCart();
+}
 
         function renderCart() {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -344,6 +365,14 @@
 
             let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             let shippingFee = 35; // رسوم توصيل ثابتة تجريبية
+            let discountPercent = getDiscountPercent();
+// المبلغ القابل للخصم = السعر بدون مبلغ التأمين المسترد
+let discountBase = cart.reduce((sum, item) => {
+    const deposit = Number(item.deposit) || 0;
+    return sum + Math.max(0, item.price - deposit) * item.quantity;
+}, 0);
+let discountAmount = Math.round(discountBase * discountPercent) / 100;
+let appliedCode = localStorage.getItem("discountCode") || "";
 
             let itemsHTML = cart.map((item, index) => {
                 // التحقق هل السلعة مستأجرة مع تواريخ
@@ -399,6 +428,27 @@
                             <span>رسوم التوصيل والشحن:</span>
                             <span>${shippingFee} ر.س</span>
                         </div>
+                                                ${discountPercent > 0 ? `
+                        <div class="summary-row" style="color:#16a34a; font-weight:bold;">
+                            <span>خصم (${appliedCode}) ${discountPercent}%:</span>
+                            <span>- ${discountAmount} ر.س</span>
+                        </div>` : ''}
+
+                        <!-- خانة كود الخصم -->
+                        <div class="checkout-options-section">
+                            <div class="option-group-title"><i class="fa-solid fa-ticket"></i> كود الخصم:</div>
+                            ${discountPercent > 0 ? `
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:8px 10px; font-size:13px; color:#166534;">
+                                    <span>✓ تم تطبيق ${appliedCode}</span>
+                                    <button type="button" onclick="removeDiscountCode()" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:12px;">إزالة</button>
+                                </div>
+                            ` : `
+                                <div style="display:flex; gap:8px;">
+                                    <input type="text" id="discountInput" placeholder="أدخل الكود" style="flex:1; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit; font-size:13px;">
+                                    <button type="button" onclick="applyDiscountCode()" style="background:#0b1c3f; color:white; border:none; border-radius:6px; padding:0 16px; cursor:pointer; font-family:inherit; font-size:13px;">تطبيق</button>
+                                </div>
+                            `}
+                        </div>
 
                         <!-- خيارات التوصيل -->
                         <div class="checkout-options-section">
@@ -428,8 +478,7 @@
 
                         <div class="summary-total">
                             <span>المجموع الكلي:</span>
-                            <span style="color: #27ae60;" id="total-val">${subtotal + shippingFee} ر.س</span>
-                        </div>
+<span style="color: #27ae60;" id="total-val">${subtotal - discountAmount + shippingFee} ر.س</span>                        </div>
 
                         <button class="checkout-btn" onclick="completeCheckout()">إتمام الطلب وتأكيد الشراء</button>
                     </div>
@@ -467,6 +516,7 @@
 
     const payload = {
         userEmail: localStorage.getItem("userEmail") || "",
+        discountCode: localStorage.getItem("discountCode") || "",
         cart: cart,
         subtotal: subtotal,
         shippingFee: 35,
@@ -484,6 +534,7 @@
         alert(data.message);
         if (data.status === 'success') {
             localStorage.removeItem("cart");
+            localStorage.removeItem("discountCode");
             window.location.href = "index.html";
         }
     })
