@@ -197,7 +197,7 @@ if (isset($_POST['update_product_status'])) {
             <li><a href="#dashboard" class="active"><i class="fa-solid fa-chart-line"></i> لوحة التحكم</a></li>
             <li><a href="#products"><i class="fa-solid fa-box-open"></i> إدارة المنتجات</a></li>
             <li><a href="#orders"><i class="fa-solid fa-file-invoice"></i> الطلبات</a></li>
-            <li><a href=""><i class="fa-solid fa-store"></i> العودة للمتجر</a></li>
+            <li><a href="index.html"><i class="fa-solid fa-store"></i> العودة للمتجر</a></li>
         </ul>
     </aside>
 
