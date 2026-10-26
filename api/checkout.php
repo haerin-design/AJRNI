@@ -1,41 +1,68 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 require_once '../db.php';
 
-$data = json_decode(file_get_contents('php://input'), true);
+mysqli_report(MYSQLI_REPORT_OFF); // نعالج الأخطاء بأنفسنا ونرجعها JSON
 
-$userEmail = $data['userEmail'] ?? '';
-$cart = $data['cart'] ?? [];
-$shippingMethod = $data['shippingMethod'] ?? 'توصيل سريع';
-$paymentMethod = $data['paymentMethod'] ?? 'بطاقة مدى / ائتمانية';
-$subtotal = floatval($data['subtotal'] ?? 0);
-$shippingFee = floatval($data['shippingFee'] ?? 35);
-$total = $subtotal + $shippingFee;
+try {
+    $conn->set_charset("utf8mb4"); // مهم للنص العربي
 
-if (empty($cart)) {
-    echo json_encode(["status" => "error", "message" => "السلة فارغة."]);
-    exit();
-}
+    $data = json_decode(file_get_contents('php://input'), true);
 
-// البحث عن معرف المستخدم بالبريد الإلكتروني
-$userId = 1; // الافتراضي للزوار غير المسجلين
-if (!empty($userEmail)) {
+    $userEmail = $data['userEmail'] ?? '';
+    $cart = $data['cart'] ?? [];
+    $shippingMethod = $data['shippingMethod'] ?? 'توصيل سريع';
+    $paymentMethod = $data['paymentMethod'] ?? 'بطاقة مدى / ائتمانية';
+    $subtotal = floatval($data['subtotal'] ?? 0);
+    $shippingFee = floatval($data['shippingFee'] ?? 35);
+    $discountCode = strtoupper(trim($data['discountCode'] ?? ''));
+    $validCodes = ["AJRNI15" => 15];
+    $discountPercent = $validCodes[$discountCode] ?? 0;
+    // المبلغ القابل للخصم = السعر بدون مبلغ التأمين المسترد
+    $discountBase = 0;
+    foreach ($cart as $item) {
+        $itemPrice = floatval($item['price'] ?? 0);
+        $itemDeposit = floatval($item['deposit'] ?? 0);
+        $itemQty = intval($item['quantity'] ?? 1);
+        $discountBase += max(0, $itemPrice - $itemDeposit) * $itemQty;
+    }
+    $discountAmount = round($discountBase * $discountPercent / 100, 2);    $total = $subtotal - $discountAmount + $shippingFee;
+    if (empty($cart)) {
+        echo json_encode(["status" => "error", "message" => "السلة فارغة."]);
+        exit();
+    }
+    // لازم يكون المستخدم مسجل
+    if (empty($userEmail)) {
+        echo json_encode(["status" => "error", "message" => "لازم تسجّل دخول أو تنشئ حساب أولاً."]);
+        exit();
+    }
+
     $userStmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $userStmt->bind_param("s", $userEmail);
     $userStmt->execute();
     $res = $userStmt->get_result();
-    if ($res->num_rows > 0) {
-        $userId = $res->fetch_assoc()['id'];
+
+    if (!$res || $res->num_rows === 0) {
+        echo json_encode(["status" => "error", "message" => "الحساب غير موجود، سجّل حساب جديد أولاً."]);
+        exit();
     }
-}
+    $userId = $res->fetch_assoc()['id'];
 
-// إنشاء الطلب
-$orderStmt = $conn->prepare("INSERT INTO orders (user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method) VALUES (?, ?, ?, ?, ?, ?)");
-$orderStmt->bind_param("idddss", $userId, $subtotal, $shippingFee, $total, $shippingMethod, $paymentMethod);
+    $status = 'نشط';
+    $orderStmt = $conn->prepare("INSERT INTO orders (user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    if (!$orderStmt) {
+        echo json_encode(["status" => "error", "message" => "خطأ في الاستعلام: " . $conn->error]);
+        exit();
+    }
+    $orderStmt->bind_param("idddsss", $userId, $subtotal, $shippingFee, $total, $shippingMethod, $paymentMethod, $status);
 
-if ($orderStmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "تم إستلام طلبك بنجاح! شكراً لتسوقك عبر منصة أجرني."]);
-} else {
-    echo json_encode(["status" => "error", "message" => "حدث خطأ أثناء حفظ الطلب."]);
+    if ($orderStmt->execute()) {
+        $contractId = $conn->insert_id;
+        echo json_encode(["status" => "success", "message" => "تم إستلام طلبك بنجاح! رقم العقد: #" . $contractId]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "حدث خطأ أثناء حفظ الطلب: " . $orderStmt->error]);
+    }
+} catch (Throwable $e) {
+    echo json_encode(["status" => "error", "message" => "خطأ: " . $e->getMessage()]);
 }
 ?>

@@ -255,13 +255,13 @@
         </div>
     </div>
     <nav class="navbar"> <!-- القوائم بالشريط -->
-        <a href="index.html" class="active">الرئيسية</a>
+        <a href="index.html">الرئيسية</a>
         <a href="prodcuts.html">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
     </nav>
     <div class="header-actions"> <!-- الأيقونات -->
-        <a href="cart.html">
+        <a href="cart.html"class="active">
             <i class="fa-solid fa-cart-shopping"></i>
         </a>
         <a href="favorite.html">
@@ -292,10 +292,61 @@
             <!-- سيتم تعبئة محتويات السلة والخيارات هنا تلقائياً عبر JavaScript -->
         </div>
     </main>
+
+<!--FOOTER-->
+<footer id="contact">
+    <div class="footer-logo">
+        <div class="logo-circle">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+        <div>
+            <h2>AJRNI</h2>
+            <span>RENT • BUY • REUSE</span>
+        </div>
+    </div>
+    <p>
+        أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان
+    </p> 
+    <a href="Qs.html">الأسئلة الشائعة</a>
+    <p>جميع الحقوق محفوظة منصة أجرني (AJRNI) ©️ 2026 - RENT • BUY • REUSE</p>
+    <div class="social">
+        <a href="#">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="#">
+            <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        <a href="#">
+            <i class="fa-brands fa-snapchat"></i>
+        </a>
+    </div>
+</footer>
+<script src="search.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             renderCart();
         });
+        const DISCOUNT_CODES = { "AJRNI15": 15 }; // الكود : نسبة الخصم %
+
+function getDiscountPercent() {
+    const code = (localStorage.getItem("discountCode") || "").toUpperCase();
+    return DISCOUNT_CODES[code] || 0;
+}
+
+function applyDiscountCode() {
+    const code = document.getElementById("discountInput").value.trim().toUpperCase();
+    if (!DISCOUNT_CODES[code]) {
+        alert("كود الخصم غير صحيح.");
+        return;
+    }
+    localStorage.setItem("discountCode", code);
+    renderCart();
+}
+
+function removeDiscountCode() {
+    localStorage.removeItem("discountCode");
+    renderCart();
+}
 
         function renderCart() {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -314,14 +365,38 @@
 
             let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             let shippingFee = 35; // رسوم توصيل ثابتة تجريبية
+            let discountPercent = getDiscountPercent();
+// المبلغ القابل للخصم = السعر بدون مبلغ التأمين المسترد
+let discountBase = cart.reduce((sum, item) => {
+    const deposit = Number(item.deposit) || 0;
+    return sum + Math.max(0, item.price - deposit) * item.quantity;
+}, 0);
+let discountAmount = Math.round(discountBase * discountPercent) / 100;
+let appliedCode = localStorage.getItem("discountCode") || "";
 
-            let itemsHTML = cart.map((item, index) => `
+            let itemsHTML = cart.map((item, index) => {
+                // التحقق هل السلعة مستأجرة مع تواريخ
+                const isRent = item.type === 'rent' || (item.startDate && item.endDate);
+
+                return `
                 <div class="cart-item">
                     <img src="${item.image}" alt="${item.name}" class="cart-item-img">
                     <div class="cart-item-details">
-                        <div class="cart-item-category">${item.category}</div>
+                        <div class="cart-item-category">${item.category || (isRent ? 'إيجار' : 'منتج')}</div>
                         <div class="cart-item-title">${item.name}</div>
                         <div class="cart-item-price">${item.price} ر.س</div>
+
+                        ${isRent ? `
+                            <div style="margin-top: 6px; font-size: 12px; color: #334155; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 6px 10px; display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <span>📅 <strong>من:</strong> ${item.startDate} <strong>إلى:</strong> ${item.endDate}</span>
+                                <span style="color: #94a3b8;">|</span>
+                                <span>⏳ <strong>المدة:</strong> ${item.days || 1} يوم</span>
+                                ${item.deposit ? `
+                                    <span style="color: #94a3b8;">|</span>
+                                    <span style="color: #16a34a; font-weight: 600;">(تأمين مسترد: ${item.deposit} ر.س)</span>
+                                ` : ''}
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="cart-item-actions">
                         <div class="quantity-controls">
@@ -332,7 +407,8 @@
                         <button class="remove-btn" onclick="removeItem(${index})"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
 
             container.innerHTML = `
                 <div class="cart-layout">
@@ -351,6 +427,27 @@
                         <div class="summary-row">
                             <span>رسوم التوصيل والشحن:</span>
                             <span>${shippingFee} ر.س</span>
+                        </div>
+                                                ${discountPercent > 0 ? `
+                        <div class="summary-row" style="color:#16a34a; font-weight:bold;">
+                            <span>خصم (${appliedCode}) ${discountPercent}%:</span>
+                            <span>- ${discountAmount} ر.س</span>
+                        </div>` : ''}
+
+                        <!-- خانة كود الخصم -->
+                        <div class="checkout-options-section">
+                            <div class="option-group-title"><i class="fa-solid fa-ticket"></i> كود الخصم:</div>
+                            ${discountPercent > 0 ? `
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:8px 10px; font-size:13px; color:#166534;">
+                                    <span>✓ تم تطبيق ${appliedCode}</span>
+                                    <button type="button" onclick="removeDiscountCode()" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:12px;">إزالة</button>
+                                </div>
+                            ` : `
+                                <div style="display:flex; gap:8px;">
+                                    <input type="text" id="discountInput" placeholder="أدخل الكود" style="flex:1; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit; font-size:13px;">
+                                    <button type="button" onclick="applyDiscountCode()" style="background:#0b1c3f; color:white; border:none; border-radius:6px; padding:0 16px; cursor:pointer; font-family:inherit; font-size:13px;">تطبيق</button>
+                                </div>
+                            `}
                         </div>
 
                         <!-- خيارات التوصيل -->
@@ -381,8 +478,7 @@
 
                         <div class="summary-total">
                             <span>المجموع الكلي:</span>
-                            <span style="color: #27ae60;" id="total-val">${subtotal + shippingFee} ر.س</span>
-                        </div>
+<span style="color: #27ae60;" id="total-val">${subtotal - discountAmount + shippingFee} ر.س</span>                        </div>
 
                         <button class="checkout-btn" onclick="completeCheckout()">إتمام الطلب وتأكيد الشراء</button>
                     </div>
@@ -410,11 +506,17 @@
        function completeCheckout() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     if (cart.length === 0) return;
+        if (!localStorage.getItem("userEmail")) {
+        alert("لازم تسجّل دخول أو تنشئ حساب أولاً قبل إتمام الطلب.");
+        window.location.href = "signin.html";
+        return;
+    }
 
     let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     const payload = {
         userEmail: localStorage.getItem("userEmail") || "",
+        discountCode: localStorage.getItem("discountCode") || "",
         cart: cart,
         subtotal: subtotal,
         shippingFee: 35,
@@ -432,39 +534,14 @@
         alert(data.message);
         if (data.status === 'success') {
             localStorage.removeItem("cart");
+            localStorage.removeItem("discountCode");
             window.location.href = "index.html";
         }
+    })
+    .catch(err => {
+        alert("تعذر الاتصال بالسيرفر: " + err);
     });
 }
     </script>
-
-<!--FOOTER-->
-<footer id="contact">
-    <div class="footer-logo">
-        <div class="logo-circle">
-            <i class="fa-solid fa-box-open"></i>
-        </div>
-        <div>
-            <h2>AJRNI</h2>
-            <span>RENT • BUY • REUSE</span>
-        </div>
-    </div>
-    <p>
-        أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان
-    </p> 
-    <a href="Qs.html">الأسئلة الشائعة</a>
-    <p>جميع الحقوق محفوظة منصة أجرني (AJRNI) ©️ 2026 - RENT • BUY • REUSE</p>
-    <div class="social">
-        <a href="#">
-            <i class="fa-brands fa-instagram"></i>
-        </a>
-        <a href="#">
-            <i class="fa-brands fa-x-twitter"></i>
-        </a>
-        <a href="#">
-            <i class="fa-brands fa-snapchat"></i>
-        </a>
-    </div>
-</footer>
 </body>
 </html>

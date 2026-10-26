@@ -57,6 +57,46 @@
         <i class="fa-solid fa-magnifying-glass"></i>
     </button>
 </div>
+
+<!-- AJRNI: Side Discount Banner -->
+<aside class="discount-banner" id="discountBanner" aria-label="عرض كود الخصم">
+
+    <button
+        class="discount-close"
+        id="closeDiscountBanner"
+        type="button"
+        aria-label="إغلاق البنر">
+        &times;
+    </button>
+
+    <div class="discount-icon">
+        <i class="fa-solid fa-ticket"></i>
+    </div>
+
+    <span class="discount-label">عرض خاص من أجرني</span>
+
+    <h2>وفّر مع أجرني!</h2>
+
+    <p class="discount-description">
+        استخدم كود الخصم واستمتع بتجربة تسوق مميزة.
+    </p>
+
+    <div class="discount-code-box">
+        <span id="discountCode">AJRNI15</span>
+
+        <button id="copyDiscountCode" type="button">
+            <i class="fa-regular fa-copy"></i>
+            نسخ
+        </button>
+    </div>
+
+    <p class="discount-note" id="discountMessage">
+        كودك جاهز للاستخدام
+    </p>
+
+</aside>
+<!-- End Discount Banner -->
+
 </header>
 
 <main>
@@ -103,8 +143,6 @@
 
 </div>
 
-
-
  <br>
 
     <section class="features"> <!-- مربعات الخصائص-->
@@ -122,7 +160,6 @@
 
         </div>
 
-
         <div class="feature">
 
             <div class="feature-icon">
@@ -136,7 +173,6 @@
 
         </div>
 
-
         <div class="feature">
 
             <div class="feature-icon">
@@ -149,7 +185,6 @@
             </div>
 
         </div>
-
 
         <div class="feature">
 
@@ -166,7 +201,6 @@
 
     </section> <br>
 
-
         <aside class="products-sidebar"> <!--قسم المنتجات المميزه-->
 
             <div class="section-heading">
@@ -182,7 +216,6 @@
                 </h2>
 
             </div>
-
 
             <div class="products">
 
@@ -213,7 +246,6 @@
 
     </div>
 
-
     <!-- Product 2 -->
     <div class="product-card" data-name="نظارة شمسية كلاسيك" data-price="250" data-image="sunglasses.jpg">
 
@@ -240,7 +272,6 @@
         </button>
 
     </div>
-
 
     <!-- Product 3 -->
     <div class="product-card" data-name="ساعة رجالية روليكس" data-price="300" data-image="rolex.jpg">
@@ -271,9 +302,6 @@
 
 </div>
 
-
-
-
             <!-- Smart Choice Banner -->
 
             <div class="smart-banner">
@@ -300,8 +328,6 @@
 
 </main>
 
-
-
 <!--FOOTER-->
 
 <footer id="contact">
@@ -327,7 +353,6 @@
     
     <p>جميع الحقوق محفوظة منصة أجرني (AJRNI) ©️ 2026 - RENT • BUY • REUSE</p>
 
-
     <div class="social">
 
         <a href="#">
@@ -345,8 +370,8 @@
     </div>
 
 </footer>
+<script src="search.js"></script>
 <script>
-
 const slides = [
     {
         image: "clothes.jpg",
@@ -377,7 +402,6 @@ const heroTitle = document.getElementById("heroTitle");
 const heroDescription = document.getElementById("heroDescription");
 const dotsContainer = document.getElementById("dots");
 
-
 // إنشاء النقاط
 slides.forEach((slide, index) => {
 
@@ -394,7 +418,6 @@ slides.forEach((slide, index) => {
 
     dotsContainer.appendChild(dot);
 });
-
 
 function showSlide() {
 
@@ -415,7 +438,6 @@ function showSlide() {
     dots[currentSlide].classList.add("active-dot");
 }
 
-
 // السهم التالي
 document.getElementById("nextBtn").addEventListener("click", () => {
 
@@ -428,7 +450,6 @@ document.getElementById("nextBtn").addEventListener("click", () => {
     showSlide();
 
 });
-
 
 // السهم السابق
 document.getElementById("prevBtn").addEventListener("click", () => {
@@ -489,7 +510,6 @@ function addToFavorites(button) {
     }
 }
 
-
 // تغيير شكل القلب
 function setFavoriteHeart(button, isFavorite) {
 
@@ -513,7 +533,6 @@ function setFavoriteHeart(button, isFavorite) {
 
     }
 }
-
 
 // فحص المفضلة عند فتح الصفحة
 document.addEventListener("DOMContentLoaded", function () {
@@ -542,7 +561,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -596,7 +614,6 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCartCount();
 });
 
-
 // تحديث عدد المنتجات فوق أيقونة السلة
 function updateCartCount() {
 
@@ -630,34 +647,48 @@ function updateCartCount() {
         cartButton.parentElement.appendChild(badge);
     }
 }
+/* نسخ كود الخصم */
+const copyDiscountButton =
+    document.getElementById("copyDiscountCode");
 
-/* البحث من الصفحة الرئيسية */
-const homeSearchInput = document.getElementById("searchInput");
-const homeSearchButton = document.getElementById("searchButton");
+const discountCodeElement =
+    document.getElementById("discountCode");
 
-function searchFromHome() {
-    const query = homeSearchInput.value.trim();
+const discountMessage =
+    document.getElementById("discountMessage");
 
-    if (!query) {
-        homeSearchInput.focus();
-        return;
-    }
+if (copyDiscountButton && discountCodeElement && discountMessage) {
+    copyDiscountButton.addEventListener("click", async function () {
+        const code = discountCodeElement.textContent.trim();
 
-    window.location.href =
-        "prodcuts.html?search=" + encodeURIComponent(query);
-}
+        try {
+            await navigator.clipboard.writeText(code);
+            discountMessage.textContent = "تم نسخ الكود بنجاح ✓";
+        } catch (error) {
+            const tempInput = document.createElement("textarea");
+            tempInput.value = code;
+            tempInput.style.position = "fixed";
+            tempInput.style.opacity = "0";
 
-if (homeSearchInput && homeSearchButton) {
-    homeSearchButton.addEventListener("click", searchFromHome);
+            document.body.appendChild(tempInput);
+            tempInput.select();
 
-    homeSearchInput.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            searchFromHome();
+            let copied = false;
+
+            try {
+                copied = document.execCommand("copy");
+            } catch (fallbackError) {
+                copied = false;
+            }
+
+            tempInput.remove();
+
+            discountMessage.textContent = copied
+                ? "تم نسخ الكود بنجاح ✓"
+                : "تعذر النسخ، انسخ الكود يدويًا";
         }
     });
 }
-
 
 </script>
 </body>

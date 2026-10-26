@@ -3,47 +3,56 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// أخذ اسم المستخدم المسجل، أو وضع اسم افتراضي
-$seller_name = $_SESSION['user_name'] ?? 'شريكنا العزيز';
-// إعدادات الاتصال بقاعدة بيانات أجرني
-$db_host = "localhost";
-$db_user = "root";
-$db_pass = "";
-$db_name = "ajrni_db";
+// 1. الاتصال بقاعدة البيانات
+if (file_exists('db.php')) {
+    require_once 'db.php';
+} else {
+    $conn = new mysqli("localhost", "root", "", "ajrni_db");
+    if ($conn->connect_error) {
+        die("خطأ في الاتصال بقاعدة البيانات: " . $conn->connect_error);
+    }
+}
+$conn->set_charset("utf8mb4");
 
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
-
-if ($conn->connect_error) {
-    die("Database Connection Error: " . $conn->connect_error);
+// 2. التحقق من تسجيل الدخول الحقيقي
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.html");
+    exit();
 }
 
-$conn->set_charset("utf8mb4");
+$seller_id = $_SESSION['user_id'];
+
+// 3. جلب الاسم الحقيقي للمؤجر من عمود full_name في جدول users
+$seller_name = "مؤجر معتمد";
+$stmt_user = $conn->prepare("SELECT full_name FROM users WHERE id = ?");
+if ($stmt_user) {
+    $stmt_user->bind_param("i", $seller_id);
+    $stmt_user->execute();
+    $res_user = $stmt_user->get_result();
+    if ($row_user = $res_user->fetch_assoc()) {
+        $seller_name = $row_user['full_name'];
+    }
+    $stmt_user->close();
+}
 
 $alert_text = "";
 $alert_type = "";
 
-// ==========================================
-// 1. معالجة حذف المنتج
-// ==========================================
+// 4. معالجة حذف منتج خاص بالمؤجر الحالي فقط
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
     $delete_id = intval($_GET['id']);
-    $stmt_del = $conn->prepare("DELETE FROM products WHERE id = ?");
+    $stmt_del = $conn->prepare("DELETE FROM products WHERE id = ? AND seller_id = ?");
     if ($stmt_del) {
-        $stmt_del->bind_param("i", $delete_id);
+        $stmt_del->bind_param("ii", $delete_id, $seller_id);
         if ($stmt_del->execute()) {
             $alert_text = "تم حذف السلعة بنجاح من قاعدة البيانات.";
             $alert_type = "success";
-        } else {
-            $alert_text = "حدث خطأ أثناء محاولة الحذف: " . $stmt_del->error;
-            $alert_type = "error";
         }
         $stmt_del->close();
     }
 }
 
-// ==========================================
-// 3. معالجة نموذج إضافة سلعة جديدة
-// ==========================================
+// 5. معالجة إضافة سلعة جديدة للمؤجر الحالي
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btn_add_product'])) {
     $item_name     = trim($_POST['item_name'] ?? '');
     $item_category = trim($_POST['item_category'] ?? '');
@@ -56,24 +65,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btn_add_product'])) {
     $desc_text = "مبلغ التأمين: " . $item_deposit . " ر.س | الشروط: " . $item_terms;
 
     if (!empty($item_name) && $item_price > 0) {
-        $stmt = $conn->prepare("INSERT INTO products (name, category, price, image, description, is_featured) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO products (seller_id, name, category, price, image, description, is_featured) VALUES (?, ?, ?, ?, ?, ?, ?)");
         if ($stmt) {
-            $stmt->bind_param("ssdssi", $item_name, $item_category, $item_price, $item_image, $desc_text, $is_featured);
+            $stmt->bind_param("issdssi", $seller_id, $item_name, $item_category, $item_price, $item_image, $desc_text, $is_featured);
             if ($stmt->execute()) {
                 $alert_text = "تمت إضافة السلعة بنجاح وحفظها في قاعدة البيانات.";
                 $alert_type = "success";
-            } else {
-                $alert_text = "خطأ أثناء حفظ السلعة: " . $stmt->error;
-                $alert_type = "error";
             }
             $stmt->close();
         }
     }
 }
 
-// جلب المنتجات من القاعدة
-$query_products = "SELECT id, name, category, price, description FROM products ORDER BY id DESC";
-$products_list = $conn->query($query_products);
+// 6. جلب منتجات هذا المؤجر فقط من جدول products
+$stmt_list = $conn->prepare("SELECT id, name, category, price, description FROM products WHERE seller_id = ? ORDER BY id DESC");
+$stmt_list->bind_param("i", $seller_id);
+$stmt_list->execute();
+$products_list = $stmt_list->get_result();
+
+$realProductsCount = ($products_list) ? $products_list->num_rows : 0;
+$realActiveRentals = 0;
+$realEarnings      = 0.00;
+$realDeposits      = 0.00;
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -81,76 +94,13 @@ $products_list = $conn->query($query_products);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة المؤجر | AJRNI</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="seller.css">
-
-    <style>
-        .alert-box {
-            padding: 14px 20px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .alert-box.success { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-        .alert-box.error   { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-
-        .contract-id {
-            background-color: #f1f5f9;
-            color: #0b1c3f;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .deposit-tag {
-            background-color: #ecfdf5;
-            color: #059669;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-action {
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .btn-release { background-color: #dcfce7; color: #16a34a; }
-        .btn-claim   { background-color: #fee2e2; color: #dc2626; }
-
-        .policy-card {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 18px 22px;
-            margin-top: 20px;
-            line-height: 1.9;
-            font-size: 13px;
-            color: #475569;
-        }
-    </style>
 </head>
 <body>
 
     <header class="main-header">
-        <a href="index.html" class="brand-area">
+        <a href="index.html" class="brand-area" style="text-decoration:none;">
             <div class="brand-text">
                 <h1>AJRNI</h1>
                 <span>RENT • BUY • REUSE</span>
@@ -168,42 +118,39 @@ $products_list = $conn->query($query_products);
 
         <div class="header-tools">
             <a href="cart.html" class="icon-btn" title="السلة"><i class="fa-solid fa-cart-shopping"></i></a>
-            <a href="signin.html" class="icon-btn" title="حسابي"><i class="fa-regular fa-user"></i></a>
+            <button type="button" onclick="logoutSeller()" class="icon-btn" title="تسجيل الخروج" style="background: transparent; border: none; cursor: pointer; color: #ef4444; font-size: 16px;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </button>
         </div>
     </header>
 
     <main class="dashboard-container">
 
         <?php if (!empty($alert_text)): ?>
-            <div class="alert-box <?php echo $alert_type; ?>">
-                <i class="fa-solid fa-circle-check"></i>
-                <span><?php echo $alert_text; ?></span>
+            <div style="background: #dcfce7; color: #15803d; padding: 14px 20px; border-radius: 8px; margin-bottom: 24px; font-weight: bold;">
+                <i class="fa-solid fa-circle-check"></i> <?php echo $alert_text; ?>
             </div>
         <?php endif; ?>
 
-        <!-- ========================================================
-             بطاقة الترحيب المخصصة للمؤجر مع شارة التوثيق
-             ======================================================== -->
+        <!-- بطاقة الترحيب (اسم المؤجر الحقيقي من full_name) -->
         <div class="welcome-card">
             <div>
-                <!-- عرض اسم المؤجر المسجل ديناميكياً -->
-                <h2>مرحباً بك، <?php echo htmlspecialchars($seller_name); ?> 👋🏻</h2>
-                <p>يسعدنا وجودك في منصة أجرني • إدارة سلعك، متابعة العقود الرقمية، ومحفظة التأمين والضمان.</p>
+                <h2>مرحباً بك، <span id="sellerDisplayName"><?php echo htmlspecialchars($seller_name); ?></span> 👋🏻</h2>
+                <p>إدارة سلعك ومنتجاتك الخاصة ومتابعة طلباتك بكل سهولة وأمان.</p>
             </div>
             <div>
-                <!-- شارة توثيق حساب المؤجر -->
-                <span class="deposit-tag" style="background: rgba(255,255,255,0.25); color: #ffffff;">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>حساب مؤجر موثّق</span>
+                <span class="deposit-tag" style="background: rgba(255,255,255,0.25); color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                    <i class="fa-solid fa-circle-check"></i> حساب مؤجر موثّق
                 </span>
             </div>
         </div>
 
+        <!-- كروت الإحصائيات الأربعة كاملة -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div>
                     <span>المنتجات الحالية</span>
-                    <strong><?php echo ($products_list) ? $products_list->num_rows : 0; ?></strong>
+                    <strong><?php echo $realProductsCount; ?></strong>
                 </div>
                 <div class="stat-icon" style="background-color: #eff6ff; color: #1d4ed8;">
                     <i class="fa-solid fa-boxes-stacked"></i>
@@ -213,7 +160,7 @@ $products_list = $conn->query($query_products);
             <div class="stat-card">
                 <div>
                     <span>العقود السارية</span>
-                    <strong>3</strong>
+                    <strong><?php echo $realActiveRentals; ?></strong>
                 </div>
                 <div class="stat-icon" style="background-color: #f0fdf4; color: #15803d;">
                     <i class="fa-solid fa-file-contract"></i>
@@ -223,7 +170,7 @@ $products_list = $conn->query($query_products);
             <div class="stat-card">
                 <div>
                     <span>إجمالي الأرباح</span>
-                    <strong>4,899 ر.س</strong>
+                    <strong><?php echo number_format($realEarnings, 2); ?> ر.س</strong>
                 </div>
                 <div class="stat-icon" style="background-color: #fefce8; color: #ca8a04;">
                     <i class="fa-solid fa-wallet"></i>
@@ -233,7 +180,7 @@ $products_list = $conn->query($query_products);
             <div class="stat-card">
                 <div>
                     <span>التأمين المحتجز</span>
-                    <strong style="color: #059669;">950 ر.س</strong>
+                    <strong style="color: #059669;"><?php echo number_format($realDeposits, 2); ?> ر.س</strong>
                 </div>
                 <div class="stat-icon" style="background-color: #ecfdf5; color: #059669;">
                     <i class="fa-solid fa-vault"></i>
@@ -256,7 +203,7 @@ $products_list = $conn->query($query_products);
             </button>
         </div>
 
-        <!-- تبويب المنتجات من قاعدة البيانات مع أزرار الحذف والتعديل -->
+        <!-- تبويب المنتجات المسجلة -->
         <div id="tab-products" class="tab-content active">
             <table class="data-table">
                 <thead>
@@ -266,7 +213,6 @@ $products_list = $conn->query($query_products);
                         <th>التصنيف</th>
                         <th>السعر اليومي</th>
                         <th>تفاصيل التأمين والشروط</th>
-                        <th>الحالة</th>
                         <th>الإجراءات</th>
                     </tr>
                 </thead>
@@ -279,13 +225,11 @@ $products_list = $conn->query($query_products);
                                 <td><?php echo htmlspecialchars($item['category']); ?></td>
                                 <td><strong><?php echo htmlspecialchars($item['price']); ?> ر.س</strong></td>
                                 <td style="font-size: 12px; color: #64748b;"><?php echo nl2br(htmlspecialchars($item['description'])); ?></td>
-                                <td><span class="tag tag-ok">متاح</span></td>
                                 <td>
-                                    <!-- زر الحذف المباشر -->
                                     <a href="seller_dashboard.php?action=delete&id=<?php echo $item['id']; ?>" 
-                                       onclick="return confirm('هل أنتِ متأكدة من حذف هذه السلعة نهائياً من قاعدة البيانات؟');" 
+                                       onclick="return confirm('هل أنتِ متأكدة من حذف هذه السلعة نهائياً؟');" 
                                        class="btn-action btn-claim" 
-                                       style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;">
+                                       style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: #fee2e2; color: #dc2626; border-radius: 6px; font-weight: bold;">
                                         <i class="fa-solid fa-trash"></i>
                                         <span>حذف</span>
                                     </a>
@@ -294,8 +238,8 @@ $products_list = $conn->query($query_products);
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" style="text-align: center; color: #94a3b8; padding: 25px;">
-                                لا توجد منتجات مسجلة حالياً في قاعدة البيانات.
+                            <td colspan="6" style="text-align: center; color: #94a3b8; padding: 25px;">
+                                لا توجد منتجات مسجلة حالياً باسمك في قاعدة البيانات.
                             </td>
                         </tr>
                     <?php endif; ?>
@@ -303,7 +247,7 @@ $products_list = $conn->query($query_products);
             </table>
         </div>
 
-        <!-- تبويب العقود والضمان -->
+        <!-- تبويب العقود والضمانات -->
         <div id="tab-contracts" class="tab-content">
             <table class="data-table">
                 <thead>
@@ -314,40 +258,14 @@ $products_list = $conn->query($query_products);
                         <th>المدة</th>
                         <th>قيمة التأمين</th>
                         <th>حالة العقد</th>
-                        <th>إجراء التأمين عند الإرجاع</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><span class="contract-id">AGR-2026-081</span></td>
-                        <td>سارة العتيبي</td>
-                        <td><strong>كاميرا كانون EOS R6</strong></td>
-                        <td>3 أيام</td>
-                        <td>
-                            <span class="deposit-tag">
-                                <i class="fa-solid fa-lock"></i>
-                                <span>500 ر.س بالضمان</span>
-                            </span>
-                        </td>
-                        <td><span class="tag tag-rent">ساري</span></td>
-                        <td>
-                            <button type="button" class="btn-action btn-release" onclick="alert('تم فحص السلعة وإرجاع التأمين للمستأجر بنجاح.')">
-                                <i class="fa-solid fa-check"></i> إفراج التأمين
-                            </button>
-                            <button type="button" class="btn-action btn-claim" onclick="alert('تم تسجيل إثبات ضرر واقتطاع القيمة من التأمين.')">
-                                <i class="fa-solid fa-triangle-exclamation"></i> إثبات ضرر
-                            </button>
-                        </td>
+                        <td colspan="6" style="text-align: center; color: #94a3b8; padding: 25px;">لا توجد عقود سارية حالياً.</td>
                     </tr>
                 </tbody>
             </table>
-
-            <div class="policy-card">
-                <strong><i class="fa-solid fa-scale-balanced"></i> سياسة الضمان والعقود المعتمدة في منصة أجرني:</strong>
-                <p>
-                    يتم حجز قيمة التأمين مباشرة من حساب المستأجر كوديعة ضمان آمنة. لا يتم تحويل المبلغ للمستأجر إلا بعد تأكيد فحص السلعة وسلامتها من قبل المؤجر عند الاسترجاع لضمان حقوق الطرفين.
-                </p>
-            </div>
         </div>
 
         <!-- تبويب إضافة سلعة -->
@@ -410,6 +328,12 @@ $products_list = $conn->query($query_products);
             const activeTab = document.getElementById(tabId);
             if (activeTab) activeTab.classList.add('active');
             if (btn) btn.classList.add('active');
+        }
+
+        function logoutSeller() {
+            if (confirm("هل أنتِ متأكدة من تسجيل الخروج؟")) {
+                window.location.href = "logout.php";
+            }
         }
     </script>
 </body>

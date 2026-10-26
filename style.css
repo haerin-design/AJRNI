@@ -1006,3 +1006,594 @@ footer a {
     align-items: center;
     justify-content: center;
 }
+
+/* منع تجاوز عرض الشاشة */
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+img,
+video,
+iframe {
+    max-width: 100%;
+}
+
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* السماح للشبكات بالتقلص */
+.top-section,
+.content-grid,
+.features,
+.store-categories,
+.products,
+.favorites-grid {
+    min-width: 0;
+}
+
+.top-section > *,
+.content-grid > *,
+.features > *,
+.store-categories > *,
+.products > *,
+.favorites-grid > * {
+    min-width: 0;
+}
+
+/* منع الصور من تمديد البطاقات */
+.hero img,
+.store-category img,
+.product-image img,
+.bottom-banner img {
+    max-width: 100%;
+}
+
+/* =========================================
+   TABLETS
+========================================= */
+@media (max-width: 900px) {
+
+    .header {
+        height: auto;
+        min-width: 0;
+        flex-wrap: wrap;
+        padding: 15px 20px;
+    }
+
+    .logo-area {
+        min-width: 0;
+    }
+
+    .navbar {
+        max-width: 100%;
+        min-width: 0;
+        gap: 20px;
+    }
+
+    .search-box {
+        min-width: 0;
+    }
+
+    .top-section {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px;
+    }
+
+    .content-grid {
+        grid-template-columns: minmax(0, 1fr);
+        padding-inline: 20px;
+    }
+
+    .hero {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .favorites-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        padding: 20px !important;
+        gap: 16px !important;
+    }
+
+    .favorites-grid .product-image {
+        height: auto !important;
+        aspect-ratio: 1 / 1;
+    }
+
+    footer {
+        flex-wrap: wrap;
+        gap: 24px;
+        padding: 30px 24px;
+    }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+@media (max-width: 600px) {
+
+    .header {
+        gap: 12px;
+        padding: 12px 15px;
+    }
+
+    .logo-circle {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        font-size: 20px;
+    }
+
+    .logo-text h1 {
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+    .logo-text span {
+        font-size: 9px;
+        letter-spacing: 1px;
+    }
+
+    .search-box {
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .navbar {
+        order: 3;
+        flex: 1 1 100%;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        justify-content: flex-start;
+        gap: 20px;
+        scrollbar-width: thin;
+    }
+
+    .navbar a {
+        flex-shrink: 0;
+    }
+
+    .top-section {
+        padding: 12px;
+        gap: 14px;
+    }
+
+    .hero {
+        height: clamp(260px, 75vw, 360px);
+        border-radius: 14px;
+    }
+
+    .hero-content {
+        top: 24px;
+        right: 18px;
+        width: calc(100% - 36px);
+        max-width: 380px;
+    }
+
+    .hero-content h2 {
+        font-size: clamp(20px, 5.5vw, 27px);
+        overflow-wrap: anywhere;
+    }
+
+    .hero-content p {
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .main-btn {
+        padding: 10px 18px;
+    }
+
+    .slider-arrow {
+        width: 32px;
+        height: 32px;
+    }
+
+    .features {
+        margin: 5px 12px 15px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .feature {
+        min-width: 0;
+        gap: 8px;
+        padding: 12px 6px;
+        border-left: 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .feature-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .feature h3 {
+        font-size: 13px;
+        overflow-wrap: anywhere;
+    }
+
+    .feature p {
+        font-size: 10px;
+        line-height: 1.6;
+    }
+
+    .content-grid {
+        padding: 0 12px 20px;
+        gap: 18px;
+    }
+
+    .section-heading {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .section-heading h2 {
+        font-size: 19px;
+    }
+
+    .section-heading a {
+        font-size: 12px;
+    }
+
+    .store-categories {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .store-category {
+        height: clamp(120px, 38vw, 175px);
+    }
+
+    .category-overlay {
+        right: 10px;
+        bottom: 10px;
+        left: 8px;
+    }
+
+    .category-overlay h3 {
+        font-size: 16px;
+        overflow-wrap: anywhere;
+    }
+
+    .category-overlay span {
+        font-size: 10px;
+    }
+
+    .bottom-banner {
+        height: 140px;
+    }
+
+    .banner-text {
+        top: 18px;
+        right: 16px;
+        left: 12px;
+    }
+
+    .banner-text h2 {
+        font-size: 19px;
+    }
+
+    .banner-text p {
+        font-size: 11px;
+        line-height: 1.6;
+    }
+
+    .products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .product-card {
+        min-width: 0;
+        padding: 6px;
+    }
+
+    .product-image {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .product-card h3 {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.6;
+    }
+
+    .price {
+        flex-wrap: wrap;
+    }
+
+    .price strong {
+        font-size: 13px;
+    }
+
+    .cart-btn {
+        font-size: 11px;
+        overflow-wrap: anywhere;
+    }
+
+    .favorites-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        padding: 12px !important;
+        gap: 10px !important;
+    }
+
+    .favorites-grid .product-image {
+        height: auto !important;
+        aspect-ratio: 1 / 1;
+    }
+
+    .smart-banner {
+        gap: 12px;
+        padding: 18px 12px;
+        flex-wrap: wrap;
+    }
+
+    .smart-text {
+        padding-right: 12px;
+    }
+
+    .smart-text h2 {
+        font-size: 16px;
+    }
+
+    .smart-text p {
+        font-size: 11px;
+        line-height: 1.7;
+    }
+
+    footer {
+        padding: 25px 15px;
+        flex-direction: column;
+        text-align: center;
+        gap: 18px;
+    }
+
+    .footer-logo {
+        justify-content: center;
+        max-width: 100%;
+    }
+
+    .footer-logo h2 {
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+    .social {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .header-actions {
+        display: none;
+    }
+}
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+@media (max-width: 360px) {
+
+    .logo-text h1 {
+        font-size: 17px;
+    }
+
+    .store-categories {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .favorites-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .hero-content h2 {
+        font-size: 20px;
+    }
+
+    .smart-logo strong {
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+}
+
+/* =========================================
+   LARGE SCREENS
+========================================= */
+@media (min-width: 1400px) {
+
+    .top-section,
+    .content-grid {
+        max-width: 1800px;
+        margin-inline: auto;
+    }
+}
+
+
+
+
+/* ================================
+   DISCOUNT BANNER - AJRNI
+================================ */
+
+.discount-banner {
+    position: fixed;
+    top: 50%;
+    left: 18px;
+    right: auto;
+    transform: translateY(-50%);
+
+    width: 300px;
+    padding: 50px 20px 18px;
+    box-sizing: border-box;
+
+    background: #ffffff;
+    color: #062b52;
+    font-family: "Cairo", sans-serif;
+    text-align: center;
+
+    border: 1px solid #e2e8ef;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(6, 43, 82, 0.12);
+
+    z-index: 999;
+}
+
+/* زر إغلاق البنر */
+.discount-banner .discount-close {
+    position: absolute;
+    top: 8px;
+    left: 9px;
+
+    width: 28px;
+    height: 28px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eef5fb;
+    color: #062b52;
+
+    border-radius: 50%;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.discount-banner .discount-close:hover {
+    background: #e2eaf3;
+}
+
+/* أيقونة الخصم */
+.discount-banner .discount-icon {
+    width: 100px;
+    height: 50px;
+    margin: 0 auto 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eef5fb;
+    color: #062b52;
+
+    border-radius: 14px;
+    font-size: 23px;
+}
+
+/* النص الصغير */
+.discount-banner .discount-label {
+    display: block;
+    margin-bottom: 5px;
+
+    color: #718096;
+    font-size: 12px;
+}
+
+/* عنوان البنر */
+.discount-banner h2 {
+    margin: 30px 0 9px;
+
+    color: #062b52;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+/* وصف الخصم */
+.discount-banner .discount-description {
+    margin: 0 0 15px;
+
+    color: #718096;
+    font-size: 12px;
+    line-height: 1.9;
+}
+
+/* مربع كود الخصم */
+.discount-banner .discount-code-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    width: 100%;
+    min-width: 0;
+    padding: 8px;
+
+    box-sizing: border-box;
+
+    background: #f5f8fb;
+    border: 1px dashed #062b52;
+    border-radius: 9px;
+}
+
+/* نص كود الخصم */
+.discount-banner .discount-code-box span {
+    color: #062b52;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* زر نسخ الكود */
+.discount-banner .discount-code-box button {
+    flex-shrink: 0;
+    padding: 7px 10px;
+
+    background: #062b52;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 6px;
+
+    font-family: "Cairo", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.discount-banner .discount-code-box button:hover {
+    background: #041f3b;
+}
+
+/* رسالة تم النسخ */
+.discount-banner .discount-note {
+    min-height: 20px;
+    margin: 10px 0 0;
+
+    color: #718096;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+/* إخفاء البنر على الجوال والأجهزة اللوحية */
+@media (max-width: 900px) {
+    .discount-banner {
+        display: none;
+    }
+}
