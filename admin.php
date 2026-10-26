@@ -244,7 +244,6 @@ if (isset($_POST['update_product_status'])) {
         <div class="section-box" id="products">
             <div class="section-header">
                 <h3 style="color: var(--navy);">قائمة المنتجات والعروض</h3>
-                <button class="btn-add"><i class="fa-solid fa-plus"></i> إضافة منتج جديد</button>
             </div>
             <table>
                 <thead>
