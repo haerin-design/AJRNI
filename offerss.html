@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>العروض - AJRNI</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #062b52;
+            --dark-navy: #041f3b;
+            --light-blue: #eef5fb;
+            --border: #e2e8ef;
+            --text: #15283b;
+            --gray: #718096;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: "Cairo", sans-serif;
+            background: #ffffff;
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #0b1c3f;
+            margin-bottom: 25px;
+            border-right: 4px solid #4a90e2;
+            padding-right: 10px;
+        }
+
+        /* =========================
+           PRODUCTS
+        ========================= */
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img-container {
+            position: relative;
+            height: 220px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .product-img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: 0.2s;
+            z-index: 2;
+        }
+
+        .wishlist-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .product-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-category {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            color: #0b1c3f;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .product-price {
+            font-size: 18px;
+            color: #27ae60;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .cart-btn {
+            width: 100%;
+            background-color: #0b1c3f;
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: auto;
+            transition: 0.3s;
+        }
+
+        .cart-btn:hover {
+            background-color: #1e3a8a;
+        }
+
+        /* =========================
+           SEARCH
+        ========================= */
+
+        .search-box button {
+            background: transparent;
+            border: none;
+            color: var(--navy);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .search-box button:hover {
+            color: #1e5a91;
+        }
+
+        .no-search-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: #718096;
+            font-size: 18px;
+        }
+
+        /* =========================
+           CART COUNT
+        ========================= */
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =========================
+           POPULAR
+        ========================= */
+
+        .popular-badge {
+            display: inline-block;
+            width: fit-content;
+            background-color: #53e18e;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 25px auto;
+                padding: 0 15px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header"> <!--الشريط-->
+    <div class="logo-area">
+        <div class="logo-circle">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+        <div class="logo-text">
+            <a href="index.html"><h1>AJRNI</h1></a>
+            <span>RENT • BUY • REUSE</span>
+        </div>
+    </div>
+    <nav class="navbar"> <!-- القوائم بالشريط -->
+        <a href="index.html">الرئيسية</a>
+        <a href="prodcuts.html" >المنتجات</a>
+        <a href="offers.html"class="active" >العروض</a>
+        <a href="contacct.html">تواصل معنا</a>
+    </nav>
+    <div class="header-actions"> <!-- الأيقونات -->
+        <a href="cart.html">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+        <a href="favorite.html">
+            <i class="fa-regular fa-heart"></i>
+        </a>
+        <a href="signin.html"><!--ايقونة صفحه التسجيل-->
+            <i class="fa-regular fa-user"></i>
+        </a>
+    </div>
+    <div class="search-box">
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="ابحث عن منتجاتك المفضلة..."
+    >
+
+    <button id="searchButton" type="button">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+</div>
+</header>
+
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="container">
+
+
+    <h2 class="section-title">
+
+      العروض
+    </h2>
+
+
+    <div
+        class="products"
+        id="productsContainer"
+    >
+
+
+        <!-- =========================
+             PRODUCT 1
+        ========================== -->
+
+        <div
+            class="product-card"
+            data-type="buy"
+            data-name="لابتوب أبل آي باد ماك"
+            data-price="2000"
+            data-image="macbook.jpg"
+        >
+
+            <div class="product-img-container">
+
+                <span class="badge">
+                    خصم 10%
+                </span>
+
+
+                <button
+                    class="wishlist-btn"
+                    type="button"
+                    onclick="addToFavorites(this)"
+                >
+
+                    <i class="fa-regular fa-heart"></i>
+
+                </button>
+
+
+                <img
+                    src="macbook.jpg"
+                    alt="لابتوب أبل آي باد ماك"
+                >
+
+            </div>
+
+
+            <div class="product-info">
+
+                <div class="product-category">
+                    الإلكترونيات
+                </div>
+
+                <div class="product-name">
+                    لابتوب أبل آي باد / ماك
+                </div>
+
+                <div class="product-price">
+                    2000 ر.س
+                </div>
+
+                <button class="cart-btn" type="button">
+                    أضف إلى السلة
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- PRODUCT 2 -->
+
+        <div
+            class="product-card"
+            data-type="buy"
+            data-name="كاميرا فوجي فيلم كلاسيك"
+            data-price="900"
+            data-image="cam.jpg"
+        >
+
+            <div class="product-img-container">
+
+                <span class="badge">
+                    خصم 15%
+                </span>
+
+
+                <button
+                    class="wishlist-btn"
+                    type="button"
+                    onclick="addToFavorites(this)"
+                >
+
+                    <i class="fa-regular fa-heart"></i>
+
+                </button>
+
+
+                <img
+                    src="cam.jpg"
+                    alt="كاميرا فوجي فيلم كلاسيك"
+                >
+
+            </div>
+
+
+            <div class="product-info">
+
+                <div class="product-category">
+                    أجهزة التصوير
+                </div>
+
+                <div class="product-name">
+                    كاميرا فوجي فيلم كلاسيك
+                </div>
+
+
+                <div class="popular-badge">
+                    الأكثر مبيعًا
+                </div>
+
+
+                <div class="product-price">
+                    900 ر.س
+                </div>
+
+
+                <button class="cart-btn" type="button">
+                    أضف إلى السلة
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+</main>
+
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer id="contact">
+
+    <div class="footer-logo">
+
+        <div class="logo-circle">
+
+            <i class="fa-solid fa-box-open"></i>
+
+        </div>
+
+
+        <div>
+
+            <h2>
+                AJRNI
+            </h2>
+
+            <span>
+                RENT • BUY • REUSE
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <p>
+        أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان
+    </p>
+
+
+    <a href="Qs.html">
+        الأسئلة الشائعة
+    </a>
+
+
+    <p>
+        جميع الحقوق محفوظة منصة أجرني (AJRNI)
+        ©️ 2026 - RENT • BUY • REUSE
+    </p>
+
+
+    <div class="social">
+
+        <a href="#">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-brands fa-x-twitter"></i>
+        </a>
+
+        <a href="#">
+            <i class="fa-brands fa-snapchat"></i>
+        </a>
+
+    </div>
+
+</footer>
+
+
+
+<script>
+
+/* =====================================================
+   البحث
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+
+    const searchButton =
+        document.getElementById("searchButton");
+
+
+    const productsContainer =
+        document.getElementById("productsContainer");
+
+
+    const products =
+        document.querySelectorAll(
+            "#productsContainer .product-card"
+        );
+
+
+    function searchProducts() {
+
+
+        const searchText =
+            searchInput.value
+                .trim()
+                .toLowerCase();
+
+
+        let found = false;
+
+
+        products.forEach(function (product) {
+
+
+            const dataName =
+                product.dataset.name || "";
+
+
+            const productNameElement =
+                product.querySelector(
+                    ".product-name"
+                );
+
+
+            const categoryElement =
+                product.querySelector(
+                    ".product-category"
+                );
+
+
+            const productName =
+                productNameElement
+                    ? productNameElement.textContent
+                    : "";
+
+
+            const category =
+                categoryElement
+                    ? categoryElement.textContent
+                    : "";
+
+
+            const searchData =
+                (
+                    dataName +
+                    " " +
+                    productName +
+                    " " +
+                    category
+                ).toLowerCase();
+
+
+            if (
+                searchText === "" ||
+                searchData.includes(searchText)
+            ) {
+
+                product.style.display =
+                    "flex";
+
+                found = true;
+
+            } else {
+
+                product.style.display =
+                    "none";
+
+            }
+
+        });
+
+
+        const oldMessage =
+            document.querySelector(
+                ".no-search-results"
+            );
+
+
+        if (oldMessage) {
+
+            oldMessage.remove();
+
+        }
+
+
+        if (
+            !found &&
+            searchText !== ""
+        ) {
+
+
+            const message =
+                document.createElement("div");
+
+
+            message.className =
+                "no-search-results";
+
+
+            message.textContent =
+                "لم يتم العثور على منتج مطابق للبحث.";
+
+
+            productsContainer.appendChild(
+                message
+            );
+
+        }
+
+    }
+
+
+    /* البحث أثناء الكتابة */
+
+    searchInput.addEventListener(
+        "input",
+        searchProducts
+    );
+
+
+    /* Enter */
+
+    searchInput.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                searchProducts();
+
+            }
+
+        }
+    );
+
+
+    /* زر العدسة */
+
+    searchButton.addEventListener(
+        "click",
+        searchProducts
+    );
+
+
+    /* =================================================
+       السلة
+    ================================================= */
+
+    const addButtons =
+        document.querySelectorAll(".cart-btn");
+
+
+    addButtons.forEach(function (button) {
+
+
+        button.addEventListener(
+            "click",
+            function () {
+
+
+                const productCard =
+                    button.closest(".product-card");
+
+
+                if (!productCard) return;
+                
+// إذا كان المنتج للإيجار، نتجاهله هنا لأن له دالة خاصة تفحص التواريخ
+            if (productCard.dataset.type === "rent") {
+                return;
+            }
+
+                const categoryElement =
+                    productCard.querySelector(
+                        ".product-category"
+                    );
+
+
+                const product = {
+
+                    name:
+                        productCard.dataset.name,
+
+                    price:
+                        Number(
+                            productCard.dataset.price
+                        ),
+
+                    image:
+                        productCard.dataset.image,
+
+                    category:
+                        categoryElement
+                            ? categoryElement.textContent.trim()
+                            : "",
+
+                    quantity: 1
+
+                };
+
+
+                let cart =
+                    JSON.parse(
+                        localStorage.getItem("cart")
+                    ) || [];
+
+
+                const existingProduct =
+                    cart.find(function (item) {
+
+                        return item.name === product.name;
+
+                    });
+
+
+                if (existingProduct) {
+
+                    existingProduct.quantity += 1;
+
+                } else {
+
+                    cart.push(product);
+
+                }
+
+
+                localStorage.setItem(
+                    "cart",
+                    JSON.stringify(cart)
+                );
+
+
+                const oldText =
+                    button.innerHTML;
+
+
+                button.innerHTML =
+                    "✓ تمت الإضافة";
+
+
+                button.style.backgroundColor =
+                    "#27ae60";
+
+
+                setTimeout(function () {
+
+                    button.innerHTML =
+                        oldText;
+
+                    button.style.backgroundColor =
+                        "";
+
+                }, 1200);
+
+
+                updateCartCount();
+
+            }
+        );
+
+    });
+
+
+    updateCartCount();
+
+
+    /* =================================================
+       تحميل المفضلة
+    ================================================= */
+
+    loadFavorites();
+
+});
+
+
+
+/* =====================================================
+   عدد السلة
+===================================================== */
+
+function updateCartCount() {
+
+
+    const cart =
+        JSON.parse(
+            localStorage.getItem("cart")
+        ) || [];
+
+
+    const count =
+        cart.reduce(
+            function (total, item) {
+
+                return total +
+                    Number(item.quantity || 0);
+
+            },
+            0
+        );
+
+
+    const cartIcon =
+        document.querySelector(
+            ".header-actions .fa-cart-shopping"
+        );
+
+
+    if (!cartIcon) return;
+
+
+    const oldBadge =
+        document.querySelector(
+            ".cart-count"
+        );
+
+
+    if (oldBadge) {
+
+        oldBadge.remove();
+
+    }
+
+
+    if (count > 0) {
+
+
+        const badge =
+            document.createElement("span");
+
+
+        badge.className =
+            "cart-count";
+
+
+        badge.textContent =
+            count;
+
+
+        const parent =
+            cartIcon.parentElement;
+
+
+        parent.style.position =
+            "relative";
+
+
+        parent.appendChild(
+            badge
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   المفضلة
+===================================================== */
+
+function addToFavorites(button) {
+
+
+    const product =
+        button.closest(".product-card");
+
+
+    if (!product) return;
+
+
+    const name =
+        product.dataset.name;
+
+
+    const price =
+        product.dataset.price;
+
+
+    const image =
+        product.dataset.image;
+
+
+    let favorites =
+        JSON.parse(
+            localStorage.getItem("favorites")
+        ) || [];
+
+
+    const exists =
+        favorites.some(function (item) {
+
+            return item.name === name;
+
+        });
+
+
+    if (exists) {
+
+
+        favorites =
+            favorites.filter(function (item) {
+
+                return item.name !== name;
+
+            });
+
+
+        setFavoriteHeart(
+            button,
+            false
+        );
+
+
+    } else {
+
+
+        favorites.push({
+
+            name: name,
+
+            price: price,
+
+            image: image
+
+        });
+
+
+        setFavoriteHeart(
+            button,
+            true
+        );
+
+    }
+
+
+    localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+    );
+
+}
+
+
+
+/* =====================================================
+   شكل القلب
+===================================================== */
+
+function setFavoriteHeart(
+    button,
+    isFavorite
+) {
+
+
+    const heart =
+        button.querySelector("i");
+
+
+    if (!heart) return;
+
+
+    if (isFavorite) {
+
+
+        heart.classList.remove(
+            "fa-regular"
+        );
+
+
+        heart.classList.add(
+            "fa-solid"
+        );
+
+
+        heart.style.color =
+            "red";
+
+
+    } else {
+
+
+        heart.classList.remove(
+            "fa-solid"
+        );
+
+
+        heart.classList.add(
+            "fa-regular"
+        );
+
+
+        heart.style.color =
+            "";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   تحميل المفضلة
+===================================================== */
+
+function loadFavorites() {
+
+
+    const favorites =
+        JSON.parse(
+            localStorage.getItem("favorites")
+        ) || [];
+
+
+    const products =
+        document.querySelectorAll(
+            ".product-card"
+        );
+
+
+    products.forEach(function (product) {
+
+
+        const name =
+            product.dataset.name;
+
+
+        const button =
+            product.querySelector(
+                ".wishlist-btn"
+            );
+
+
+        if (!button) return;
+
+
+        const isFavorite =
+            favorites.some(function (item) {
+
+                return item.name === name;
+
+            });
+
+
+        setFavoriteHeart(
+            button,
+            isFavorite
+        );
+
+    });
+
+}
+/* =====================================================
+   نافذة تنبيه مخصصة (Toast)
+===================================================== */
+function showCustomToast(message, type = 'warning') {
+    let toast = document.getElementById('custom-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'custom-toast';
+        toast.style.position = 'fixed';
+        toast.style.top = '25px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        toast.style.background = '#0b1c3f';
+        toast.style.color = '#ffffff';
+        toast.style.padding = '12px 24px';
+        toast.style.borderRadius = '30px';
+        toast.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
+        toast.style.fontSize = '14px';
+        toast.style.fontWeight = 'bold';
+        toast.style.fontFamily = 'Cairo, sans-serif';
+        toast.style.zIndex = '9999';
+        toast.style.display = 'flex';
+        toast.style.alignItems = 'center';
+        toast.style.gap = '10px';
+        toast.style.opacity = '0';
+        toast.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        document.body.appendChild(toast);
+    }
+
+    const icon = type === 'warning' ? '<i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>' : '<i class="fa-solid fa-circle-check" style="color: #10b981;"></i>';
+    toast.innerHTML = `${icon} <span>${message}</span>`;
+
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    clearTimeout(toast.timeoutId);
+    toast.timeoutId = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 2500);
+}
+/* =====================================================
+   فلترة المنتجات
+===================================================== */
+function filterProducts(filterType, buttonElement) {
+    document.querySelectorAll('.filter-btn').forEach(function (btn) {
+        btn.style.background = 'white';
+        btn.style.color = '#64748b';
+        btn.style.borderColor = '#cbd5e1';
+    });
+    buttonElement.style.background = '#0b1c3f';
+    buttonElement.style.color = 'white';
+    buttonElement.style.borderColor = '#0b1c3f';
+
+    const products = document.querySelectorAll('#productsContainer .product-card');
+
+    products.forEach(function (product) {
+        const type = product.dataset.type;
+        const isPopular = product.querySelector('.popular-badge') !== null;
+
+        if (filterType === 'all') {
+            product.style.display = 'flex';
+        } else if (filterType === 'rent' && type === 'rent') {
+            product.style.display = 'flex';
+        } else if (filterType === 'buy' && type === 'buy') {
+            product.style.display = 'flex';
+        } else if (filterType === 'popular' && isPopular) {
+            product.style.display = 'flex';
+        } else {
+            product.style.display = 'none';
+        }
+    });
+}
+
+/* =====================================================
+   حساب مدة وقيمة الإيجار
+===================================================== */
+function updateRentCalc(inputElement, pricePerDay, deposit) {
+    const box = inputElement.closest('.rent-details-box');
+    const startVal = box.querySelector('.start-date').value;
+    const endVal = box.querySelector('.end-date').value;
+    const calcInfo = box.querySelector('.rent-calc-info');
+
+    if (startVal && endVal) {
+        const start = new Date(startVal);
+        const end = new Date(endVal);
+        const diffTime = end - start;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays > 0) {
+            const total = (diffDays * pricePerDay) + deposit;
+            box.querySelector('.days-val').textContent = diffDays;
+            box.querySelector('.total-val').textContent = total;
+            calcInfo.style.display = 'block';
+        } else {
+        showCustomToast('يرجى التأكد من أن تاريخ النهاية بعد تاريخ البداية.');
+            inputElement.value = '';
+            calcInfo.style.display = 'none';
+        }
+    }
+}
+
+/* =====================================================
+   إضافة عقد الإيجار إلى السلة
+===================================================== */
+function addRentItemToCart(buttonElement, name, pricePerDay, image, deposit) {
+    const card = buttonElement.closest('.product-card');
+    const box = card.querySelector('.rent-details-box');
+    const startVal = box.querySelector('.start-date').value;
+    const endVal = box.querySelector('.end-date').value;
+
+    if (!startVal || !endVal) {
+        showCustomToast('يرجى تحديد فترة الإيجار (من تاريخ وإلى تاريخ) أولاً.');
+        return;
+    }
+
+    const days = parseInt(box.querySelector('.days-val').textContent);
+    const total = parseFloat(box.querySelector('.total-val').textContent);
+
+    // سطر جديد: يقرأ التصنيف (مثل "الإلكترونيات والترفيه") من كارد المنتج مباشرة
+    const categoryElement = card.querySelector('.product-category');
+    const category = categoryElement ? categoryElement.textContent.trim() : 'عام';
+
+    const rentItem = {
+        id: 'rent_' + Date.now(),
+        type: 'إيجار',
+        name: name,
+        category: category, // حفظ التصنيف في السلة لمنع ظهور undefined
+        price: total,
+        pricePerDay: pricePerDay,
+        startDate: startVal,
+        endDate: endVal,
+        days: days,
+        deposit: deposit,
+        image: image,
+        quantity: 1
+    };
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push(rentItem);
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    const oldText = buttonElement.innerHTML;
+    buttonElement.innerHTML = '✓ تم حجز الإيجار';
+    const oldBg = buttonElement.style.backgroundColor;
+    buttonElement.style.backgroundColor = '#27ae60';
+
+    setTimeout(function () {
+        buttonElement.innerHTML = oldText;
+        buttonElement.style.backgroundColor = oldBg;
+    }, 1200);
+
+    updateCartCount();
+}
+
+/* =====================================================
+   سلايدر محتويات حقيبة التخييم
+===================================================== */
+const campingGearItems = [
+    { src: "camping-bag.jpg", title: "الحقيبة الأساسية (65 لتر)" },
+    { src: "tent.jpg", title: "خيمة مبيت مدمجة لشخصين" },
+    { src: "tools.jpg", title: "طقم أدوات الطهي والسلامة" }
+];
+
+let currentCampingIndex = 0;
+
+function changeCampingSlide(direction) {
+    currentCampingIndex += direction;
+    if (currentCampingIndex < 0) {
+        currentCampingIndex = campingGearItems.length - 1;
+    } else if (currentCampingIndex >= campingGearItems.length) {
+        currentCampingIndex = 0;
+    }
+
+    const imgElement = document.getElementById("campingSliderImg");
+    const titleElement = document.getElementById("campingItemTitle");
+    const numElement = document.getElementById("campingSlideNum");
+
+    if (imgElement) {
+        imgElement.style.opacity = "0.3";
+        setTimeout(function () {
+            imgElement.src = campingGearItems[currentCampingIndex].src;
+            imgElement.style.opacity = "1";
+        }, 150);
+    }
+
+    if (titleElement) {
+        titleElement.textContent = campingGearItems[currentCampingIndex].title;
+    }
+    if (numElement) {
+        numElement.textContent = currentCampingIndex + 1;
+    }
+}
+</script>
+
+
+</body>
+</html>

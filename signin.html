@@ -6,17 +6,13 @@
     <title>انشاء حساب - AJRNI</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="signin-login.css">
-    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Icons -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-<header class="header"> <!--الشريط-->
+<header class="header">
     <div class="logo-area">
         <div class="logo-circle">
             <i class="fa-solid fa-box-open"></i>
@@ -26,251 +22,156 @@
             <span>RENT • BUY • REUSE</span>
         </div>
     </div>
-    <nav class="navbar"> <!-- القوائم بالشريط -->
-        <a href="index.html" >الرئيسية</a>
+    <nav class="navbar">
+        <a href="index.html">الرئيسية</a>
         <a href="prodcuts.html">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
     </nav>
-    <div class="header-actions"> <!-- الأيقونات -->
-        <a href="cart.html">
-            <i class="fa-solid fa-cart-shopping"></i>
-        </a>
-        <a href="favorite.html">
-            <i class="fa-regular fa-heart"></i>
-        </a>
-        <a href="signin.html"class="active"><!--ايقونة صفحه التسجيل-->
-            <i class="fa-regular fa-user"></i>
-        </a>
+    <div class="header-actions">
+        <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a href="favorite.html"><i class="fa-regular fa-heart"></i></a>
+        <a href="signin.html" class="active"><i class="fa-regular fa-user"></i></a>
     </div>
+<<<<<<< HEAD
         <div class="search-box">
         <input type="text" id="searchInput" placeholder="ابحث عن منتجاتك المفضلة...">
         <button id="searchButton" type="button" style="background:transparent;border:none;cursor:pointer;color:inherit;">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
+=======
+    <div class="search-box">
+        <input type="text" placeholder="ابحث عن منتجاتك المفضلة...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+>>>>>>> 0af3c53fec2d35f915cf69abd52cf6495b5c6bf9
     </div>
 </header>     
-    <main> <!--اطار التسجيل-->
-        <div class="register-card">
-            <div class="register-header">
-                <h1>إنشاء حساب</h1><!--عنوان انشاء الصفخه-->
-                <p>أنضم الى أجرني وابدأ رحلة التأجير والاستئجار.</p>
-            </div>
-            <div class="section-title">:اريد ان اكون</div>
-            <div class="account-options">
-<!-- مربع اختيار انا عميل -->
-                <div class="account-option selected"
-                    id="customerOption"
-                    onclick="selectAccount('customer')">
-                    <div class="radio"></div>
-                    <div class="account-icon">
-                        <svg viewBox="0 0 24 24">
-                            <circle cx="12" cy="7" r="3"></circle><!--رسم الشخص-->
-                            <path d="M5 21
-                                     C5.5 16.5 8 14 12 14
-                                     C16 14 18.5 16.5 19 21">
-                            </path>
-                        </svg>
-                    </div>
-                    <div class="account-content">
-                        <strong>مستأجر/ شراء منتجات</strong>
-                        <span>انا عميل</span>
-                    </div>
+
+<main>
+    <div class="register-card">
+        <div class="register-header">
+            <h1>إنشاء حساب</h1>
+            <p>أنضم الى أجرني وابدأ رحلة التأجير والاستئجار.</p>
+        </div>
+        <div class="section-title">:اريد ان اكون</div>
+        <div class="account-options">
+            <div class="account-option selected" id="customerOption" onclick="selectAccount('customer')">
+                <div class="radio"></div>
+                <div class="account-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="7" r="3"></circle>
+                        <path d="M5 21 C5.5 16.5 8 14 12 14 C16 14 18.5 16.5 19 21"></path>
+                    </svg>
                 </div>
-<!-- مربع اختيار الموجر -->
-                <div class="account-option"
-                    id="sellerOption"
-                    onclick="selectAccount('seller')">
-                    <div class="radio"></div>
-                    <div class="account-icon">
-                        <svg viewBox="0 0 24 24"><!--رسم البيت-->
-                            <path d="M4 10h16"></path>
-                            <path d="M5 10v9h14v-9"></path>
-                            <path d="M3 10l2-6h14l2 6"></path>
-                            <path d="M9 19v-5h6v5"></path>
-                        </svg>
-                    </div>
-                    <div class="account-content">
-                        <strong>مؤجر/ بيع منتجات</strong>
-                        <span>انا بائع</span>
-                    </div>
+                <div class="account-content">
+                    <strong>مستأجر/ شراء منتجات</strong>
+                    <span>انا عميل</span>
                 </div>
             </div>
-            <form id="registerForm"><!-- نموذج التسجيل-->
-                <div class="form-group"><!-- الاسم -->
-                    <label>الاسم كامل</label>
-                    <div class="input-wrapper">
-                        <svg viewBox="0 0 24 24"><!--رسم الشخص-->
-                            <circle cx="12" cy="7" r="3"></circle>
-                            <path d="M5 21
-                                     C5.5 16.5 8 14 12 14
-                                     C16 14 18.5 16.5 19 21">
-                            </path>
-                        </svg>
-                        <input type="text"
-                            id="fullName"
-                            placeholder="اكتب اسمك كاملاً"
-                            required>
-                    </div>
+
+            <div class="account-option" id="sellerOption" onclick="selectAccount('seller')">
+                <div class="radio"></div>
+                <div class="account-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 10h16"></path>
+                        <path d="M5 10v9h14v-9"></path>
+                        <path d="M3 10l2-6h14l2 6"></path>
+                        <path d="M9 19v-5h6v5"></path>
+                    </svg>
                 </div>
-                <div class="form-group">
-                    <label>
-                        رقم الهاتف
-                    </label>
-                    <div class="input-wrapper">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            width="22"
-                            height="22"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <rect x="6" y="2" width="12" height="20" rx="2"/>
-                            <line x1="10" y1="18" x2="14" y2="18"/>
-                        </svg>
-                        <input type="tel"
-                            id="phone"
-                            placeholder="05xxxxxxxx"
-                            maxlength="10"
-                            pattern="05[0-9]{8}"
-                            required>
-                    </div>
+                <div class="account-content">
+                    <strong>مؤجر/ بيع منتجات</strong>
+                    <span>انا بائع</span>
                 </div>
-                <div class="form-group"><!-- ايميل -->
-                    <label>عنوان البريد الالكتروني</label>
-                    <div class="input-wrapper">
-                        <svg viewBox="0 0 24 24"><!--رسم البريد-->
-                            <rect
-                                x="3"
-                                y="5"
-                                width="18"
-                                height="14"
-                                rx="2">
-                            </rect>
-                            <path d="M3 7l9 6 9-6"></path>
-                        </svg>
-                        <input type="email"
-                            id="email"
-                            placeholder="اكتب عنوان بريدك"
-                            autocomplete="off"
-                            required>
-                    </div>
-                </div>
-                <div class="form-group"><!-- الباسوورد -->
-                    <label>كلمة المرور</label>
-                    <div class="input-wrapper">
-                        <svg viewBox="0 0 24 24"><!--رسم القفل-->
-                            <rect
-                                x="5"
-                                y="10"
-                                width="14"
-                                height="10"
-                                rx="2">
-                            </rect>
-                            <path d="M8 10V7a4 4 0 018 0v3"></path>
-                        </svg>
-                        <input type="password"
-                            id="password"
-                            placeholder="اكتب كلمة المرور"
-                            autocomplete="new-password"
-                            required>
-                        <button type="button"
-                            class="password-toggle"
-                            onclick="togglePassword('password', this)"><!--العين الي تظهر الباس-->
-                            <svg viewBox="0 0 24 24"><!--رسمه العين-->
-                                <path d="M2 12s3.5-6 10-6
-                                         s10 6 10 6
-                                         s-3.5 6-10 6
-                                         s-10-6-10-6Z">
-                                </path>
-                                <circle cx="12" cy="12" r="2.5"></circle>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="form-group"><!-- خانه تاكيد الباس -->
-                    <label>تأكيد الرمز السري</label>
-                    <div class="input-wrapper">
-                        <svg viewBox="0 0 24 24"><!--رسم القفل-->
-                            <rect
-                                x="5"
-                                y="10"
-                                width="14"
-                                height="10"
-                                rx="2">
-                            </rect>
-                            <path d="M8 10V7a4 4 0 018 0v3"></path>
-                        </svg>
-                        <input type="password"
-                            id="confirmPassword"
-                            placeholder="اكد رمزك السري"required>
-                        <button type="button"
-                            class="password-toggle"
-                            onclick="togglePassword('confirmPassword', this)"><!--العين الي تظهر الباس-->
-                            <svg viewBox="0 0 24 24"><!--رسمه العين-->
-                                <path d="M2 12s3.5-6 10-6
-                                         s10 6 10 6
-                                         s-3.5 6-10 6
-                                         s-10-6-10-6Z">
-                                </path>
-                                <circle cx="12" cy="12" r="2.5"></circle>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-<!-- زر الارسال -->
-                <button type="submit"
-                    class="create-button">
-                    <svg viewBox="0 0 24 24"><!--رسمه السهم-->
-                        <path d="M5 12h13"></path>
-                        <path d="M13 6l6 6-6 6"></path>
-                    </svg> 
-                    انشئ الحساب
-                </button>
-<!-- رساله لتسجيل الدخول -->
-                <div id="formMessage"
-                    class="message">
-                </div>
-            </form>
-            <div class="login-area"><!-- تسجيل دخول -->
-                لديك حساب؟
-                <a href="login.html">سجل الدخول</a>
             </div>
         </div>
-    </main>
-<!--FOOTER-->
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label>الاسم كامل</label>
+                <div class="input-wrapper">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"></circle><path d="M5 21 C5.5 16.5 8 14 12 14 C16 14 18.5 16.5 19 21"></path></svg>
+                    <input type="text" id="fullName" placeholder="اكتب اسمك كاملاً" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>رقم الهاتف</label>
+                <div class="input-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+                    <input type="tel" id="phone" placeholder="05xxxxxxxx" maxlength="10" pattern="05[0-9]{8}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>عنوان البريد الالكتروني</label>
+                <div class="input-wrapper">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
+                    <input type="email" id="email" placeholder="اكتب عنوان بريدك" autocomplete="off" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <div class="input-wrapper">
+                    <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 018 0v3"></path></svg>
+                    <input type="password" id="password" placeholder="اكتب كلمة المرور" autocomplete="new-password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('password', this)">
+                        <svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 s10 6 10 6 s-3.5 6-10 6 s-10-6-10-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>تأكيد الرمز السري</label>
+                <div class="input-wrapper">
+                    <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 018 0v3"></path></svg>
+                    <input type="password" id="confirmPassword" placeholder="اكد رمزك السري" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', this)">
+                        <svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 s10 6 10 6 s-3.5 6-10 6 s-10-6-10-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="create-button">
+                <svg viewBox="0 0 24 24"><path d="M5 12h13"></path><path d="M13 6l6 6-6 6"></path></svg> 
+                انشئ الحساب
+            </button>
+
+            <div id="formMessage" class="message"></div>
+        </form>
+
+        <div class="login-area">
+            لديك حساب؟ <a href="login.html">سجل الدخول</a>
+        </div>
+    </div>
+</main>
+
 <footer id="contact">
     <div class="footer-logo">
-        <div class="logo-circle">
-            <i class="fa-solid fa-box-open"></i>
-        </div>
+        <div class="logo-circle"><i class="fa-solid fa-box-open"></i></div>
         <div>
             <h2>AJRNI</h2>
             <span>RENT • BUY • REUSE</span>
         </div>
     </div>
-    <p>
-        أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان
-    </p>
-        <a href="Qs.html">الأسئلة الشائعة</a>
+    <p>أجرني — منصة لتأجير وشراء المنتجات بسهولة وأمان</p>
+    <a href="Qs.html">الأسئلة الشائعة</a>
     <p>جميع الحقوق محفوظة منصة أجرني (AJRNI) ©️ 2026 - RENT • BUY • REUSE</p>
     <div class="social">
-        <a href="#">
-            <i class="fa-brands fa-instagram"></i>
-        </a>
-        <a href="#">
-            <i class="fa-brands fa-x-twitter"></i>
-        </a>
-        <a href="#">
-            <i class="fa-brands fa-snapchat"></i>
-        </a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-snapchat"></i></a>
     </div>
 </footer>
+
 <script src="search.js"></script>
 <script>
-    let selectedAccount = "customer"; /* المسؤول عن تحديد نوع الحساب */
+    // تصفير الذاكرة تماماً عند فتح الصفحة لمنع دخول أي حساب قديم
+    localStorage.clear();
+    sessionStorage.clear();
+
+    let selectedAccount = "customer";
 
     function selectAccount(type) {
         selectedAccount = type;
@@ -286,7 +187,6 @@
         }
     }
 
-    /* إظهار وإخفاء كلمة المرور - مغلقة ومستقلة */
     function togglePassword(inputId, button) {
         const input = document.getElementById(inputId);
         if (input.type === "password") {
@@ -296,7 +196,6 @@
         }
     }
 
-    /* معالجة إرسال النموذج وحفظ الحساب */
     document.getElementById("registerForm").addEventListener("submit", function(event) {
         event.preventDefault();
 
@@ -307,7 +206,6 @@
         const confirmPassword = document.getElementById("confirmPassword").value;
         const message = document.getElementById("formMessage");
 
-        // 1. التحقق من تطابق الشروط
         if (password !== confirmPassword) {
             message.textContent = "الرمز السري غير متطابق.";
             message.className = "message error";
@@ -320,7 +218,6 @@
             return;
         }
 
-        // 2. تجهيز البيانات للإرسال إلى السيرفر
         const payload = {
             fullName: name,
             phone: phone,
@@ -330,7 +227,6 @@
             role: selectedAccount
         };
 
-        // 3. إرسال البيانات لقاعدة البيانات
         fetch('api/register.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -339,74 +235,26 @@
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                // حفظ البيانات محلياً أيضاً
-                localStorage.setItem("userRole", selectedAccount);
-                localStorage.setItem("isLoggedIn", "true");
-                localStorage.setItem("userName", name);
-                localStorage.setItem("loggedInEmail", email);
+                localStorage.clear();
+                sessionStorage.clear();
 
-                const accountText = selectedAccount === "customer" ? "كعميل" : "كبائع";
-                message.textContent = `اكتمل تسجيلك بنجاح ${accountText}. جاري تحويلك...`;
+                message.textContent = "تم إنشاء الحساب بنجاح! جاري تحويلك لصفحة تسجيل الدخول...";
                 message.className = "message success";
 
-                // التوجيه المنطقي بعد نجاح التسجيل (إما للوحة التحكم أو صفحة تسجيل الدخول)
                 setTimeout(function() {
-                    if (selectedAccount === "seller") {
-                        window.location.href = "seller_dashboard.php";
-                    } else {
-                        window.location.href = "prodcuts.html";
-                    }
-                }, 1200);
+                    window.location.href = "login.html";
+                }, 1500);
             } else {
                 message.textContent = data.message || "حدث خطأ أثناء إنشاء الحساب.";
                 message.className = "message error";
             }
         })
-        //مسح البيانات القديمه عند تسجيل دخول جديد
-        .then(data => {
-    if (data.status === 'success') {
-        // 1. مسح بيانات المستخدم السابق من المتصفح
-        localStorage.removeItem('user');
-        localStorage.removeItem('cart'); // مسح السلة القديمة أيضاً (اختياري)
-
-        // 2. حفظ بيانات الحساب الجديد الذي تم إنشاؤه الآن
-        const currentUser = {
-            fullName: payload.fullName,
-            email: payload.email,
-            role: payload.role
-        };
-        localStorage.setItem('user', JSON.stringify(currentUser));
-
-        message.textContent = data.message;
-        message.className = "message success";
-        
-        // التحويل لصفحة تسجيل الدخول أو الرئيسية
-        setTimeout(() => { window.location.href = "login.html"; }, 1500);
-    } else {
-        message.textContent = data.message;
-        message.className = "message error";
-    }
-})
         .catch(err => {
-            // في حال عدم عمل السيرفر محلياً مؤقتاً، لا يتعطل التوجيه
-            localStorage.setItem("userRole", selectedAccount);
-            localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("userName", name);
-            localStorage.setItem("loggedInEmail", email);
-
-            message.textContent = "تم التسجيل محلياً. جاري تحويلك...";
-            message.className = "message success";
-
-            setTimeout(function() {
-                if (selectedAccount === "seller") {
-                    window.location.href = "seller_dashboard.php";
-                } else {
-                    window.location.href = "prodcuts.html";
-                }
-            }, 1200);
+            console.error('خطأ:', err);
+            message.textContent = "حدث خطأ في الاتصال بالخادم، يرجى المحاولة لاحقاً.";
+            message.className = "message error";
         });
     });
-    
 </script>
 <script src="user-drawer.js"></script>
 </body>

@@ -405,34 +405,37 @@
             <span>RENT • BUY • REUSE</span>
         </div>
     </div>
+
     <nav class="navbar"> <!-- القوائم بالشريط -->
         <a href="index.html">الرئيسية</a>
         <a href="prodcuts.html" class="active">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
     </nav>
+
     <div class="header-actions"> <!-- الأيقونات -->
-        <a href="cart.html">
+        <a href="cart.html" title="السلة">
             <i class="fa-solid fa-cart-shopping"></i>
         </a>
-        <a href="favorite.html">
+        <a href="favorite.html" title="المفضلة">
             <i class="fa-regular fa-heart"></i>
         </a>
-        <div id="userHeaderAction">
+        <div id="userHeaderAction" style="display: inline-block;">
             <button type="button" onclick="toggleUserSidebar()" title="حسابي ولوحة التحكم" style="background: transparent; border: none; font-size: 18px; color: var(--navy); cursor: pointer; padding: 5px;">
                 <i class="fa-regular fa-user"></i>
             </button>
         </div>
     </div>
+
     <div class="search-box">
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="ابحث عن منتجاتك المفضلة...">
-    <button id="searchButton" type="button">
-        <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
-</div>
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="ابحث عن منتجاتك المفضلة...">
+        <button id="searchButton" type="button">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
 </header>
 <!-- =========================
      MAIN
