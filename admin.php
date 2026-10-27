@@ -26,6 +26,7 @@ if (isset($_GET['delete_user'])) {
     header("Location: admin.php");
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
