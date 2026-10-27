@@ -17,6 +17,15 @@ if (isset($_POST['update_product_status'])) {
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
+
+// معالجة حذف المستخدم
+if (isset($_GET['delete_user'])) {
+    $user_id = intval($_GET['delete_user']);
+    $delete_query = "DELETE FROM users WHERE id = $user_id";
+    mysqli_query($conn, $delete_query);
+    header("Location: admin.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -292,6 +301,7 @@ if (isset($_POST['update_product_status'])) {
             </table>
         </div>
 
+
         <!-- جدول الطلبات -->
         <div class="section-box" id="orders">
             <div class="section-header">
@@ -330,6 +340,47 @@ if ($result && $result->num_rows > 0) {
             </table>
         </div>
 
+        <!-- جدول إدارة المستخدمين -->
+<div class="section-box" id="users">
+    <div class="section-header">
+        <h3 style="color: var(--navy);">إدارة حسابات المستخدمين والبائعين</h3>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th># ID</th>
+                <th>الاسم الكامل</th>
+                <th>البريد الإلكتروني</th>
+                <th>الجوال</th>
+                <th>نوع الحساب (Role)</th>
+                <th>الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // استعلام جلب المستخدمين من جدول users اللي شفتيه بالقاعدة
+            $users_sql = "SELECT * FROM users ORDER BY id DESC";
+            $users_result = $conn->query($users_sql);
+
+            if ($users_result && $users_result->num_rows > 0) {
+                while($user = $users_result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $user['id'] . "</td>";
+                    echo "<td>" . $user['full_name'] . "</td>";
+                    echo "<td>" . $user['email'] . "</td>";
+                    echo "<td>" . $user['phone'] . "</td>";
+                    echo "<td>" . $user['role'] . "</td>";
+                    // زر الحذف للحسابات المخالفة حسب المتطلبات
+                    echo "<td><a href='admin.php?delete_user=" . $user['id'] . "' class='btn btn-danger' onclick='return confirm(\"هل أنت متأكد من حذف هذا المستخدم؟\");'>حذف</a></td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='6'>لا يوجد مستخدمين مسجلين حالياً</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
     </main>
 
 </body>
