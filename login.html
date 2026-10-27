@@ -15,7 +15,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-<header class="header"> <!---->
+<header class="header">
     <div class="logo-area">
         <div class="logo-circle">
             <i class="fa-solid fa-box-open"></i>
@@ -25,27 +25,27 @@
             <span>RENT • BUY • REUSE</span>
         </div>
     </div>
-    <nav class="navbar"> <!-- القوائم بالشريط -->
-        <a href="index.html" >الرئيسية</a>
+    <nav class="navbar">
+        <a href="index.html">الرئيسية</a>
         <a href="prodcuts.html">المنتجات</a>
         <a href="#offers">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
     </nav>
-    <div class="header-actions"> <!-- الأيقونات -->
+    <div class="header-actions">
         <a href="cart.html">
             <i class="fa-solid fa-cart-shopping"></i>
         </a>
         <a href="favorite.html">
             <i class="fa-regular fa-heart"></i>
         </a>
-        <a href="signin.html"><!--ايقونة صفحه التسجيل-->
+        <a href="signin.html">
             <i class="fa-regular fa-user" class="active"></i>
         </a>
     </div>
-    <div class="search-box"> <!-- البحث -->
-        <input type="text"
-               placeholder="ابحث عن منتجاتك المفضلة...">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="ابحث عن منتجاتك المفضلة...">
         <i class="fa-solid fa-magnifying-glass"></i>
+        <div id="searchResults" class="search-results-dropdown"></div>
     </div>
 </header>
     <!-- MAIN-->
@@ -141,7 +141,6 @@
                             تذكرني
                         </span>
                     </label>
-                    <!--                                   -->
                     <a href="forgot-password.html" 
                         class="forgot-password">
                         نسيت كلمةالمرور؟
@@ -217,17 +216,11 @@
     </div>
 
 </footer>
-    <!-- =========================================
-         JAVASCRIPT
-    ========================================== -->
-    <!-- =========================================
-         JAVASCRIPT المصحح والشامل maram updates
-    ========================================== -->
+
+    <!-- JAVASCRIPT -->
     <script src="search.js"></script>
     <script>
-        /* =====================================
-           إظهار وإخفاء كلمة المرور
-        ===================================== */
+        /* إظهار وإخفاء كلمة المرور */
         function togglePassword() {
             const password = document.getElementById("password");
             if (password.type === "password") {
@@ -237,9 +230,7 @@
             }
         }
 
-        /* =====================================
-           تسجيل الدخول وربط الصلاحيات والتوجيه
-        ===================================== */
+        /* تسجيل الدخول وربط الصلاحيات والتوجيه وتخزين البيانات بانتظام */
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault();
 
@@ -263,16 +254,17 @@
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // 1. استخراج بيانات المستخدم
+                    // استخراج بيانات المستخدم
                     const user = data.user;
                     const role = (user.role || "").toLowerCase();
 
-                    // 2. تخزين البيانات في المتصفح لاستخدامها في التبويب الجانبي
+                    // تخزين البيانات بوضوح في المتصفح لاستخدامها في التبويب الجانبي
                     localStorage.setItem("isLoggedIn", "true");
                     localStorage.setItem("userId", user.id);
                     localStorage.setItem("userName", user.full_name);
-                    localStorage.setItem("userEmail", user.email);
+                    localStorage.setItem("userEmail", user.email); // مفتاح الفلترة الأساسي
                     localStorage.setItem("userRole", role);
+                    localStorage.setItem('user', JSON.stringify(user));
 
                     if (remember) {
                         localStorage.setItem("savedEmail", email);
@@ -281,7 +273,7 @@
                     message.textContent = data.message || "تم تسجيل الدخول بنجاح! جاري تحويلك...";
                     message.className = "message success";
 
-                    // 3. التوجيه الدقيق بناءً على الدور القادم من قاعدة البيانات
+                    // التوجيه الدقيق بناءً على الدور القادم من قاعدة البيانات
                     setTimeout(() => {
                         if (role === "seller" || role === "مؤجر") {
                             window.location.href = "seller_dashboard.php";
@@ -297,20 +289,7 @@
                     message.textContent = data.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
                     message.className = "message error";
                 }
-            })//مسح بيانات الشخص السابق وتحديثها بالشخص الجديد
-            .then(data => {
-    if (data.status === 'success') {
-        // مسح بيانات الشخص السابق وتحديثها بالشخص الجديد
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        message.textContent = "تم تسجيل الدخول بنجاح!";
-        message.className = "message success";
-        setTimeout(() => { window.location.href = "index.html"; }, 1000);
-    } else {
-        message.textContent = data.message;
-        message.className = "message error";
-    }
-})
+            })
             .catch(() => {
                 // حل بديل في حال تشغيل الصفحة بدون خادم محلي
                 const savedRole = localStorage.getItem("userRole") || "customer";
@@ -330,9 +309,7 @@
             });
         });
 
-        /* =====================================
-           مربع البحث السريع
-        ===================================== */
+        /* مربع البحث السريع */
         const searchInput = document.getElementById("searchInput");
         const searchResults = document.getElementById("searchResults");
 

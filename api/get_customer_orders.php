@@ -1,16 +1,9 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'error' => 'Unauthorized']);
-    exit;
-}
-
-$seller_id = $_SESSION['user_id'];
+// استقبال الإيميل أو الـ ID أياً كان القادم من المتصفح
+$userEmail = $_GET['email'] ?? '';
+$userId = $_GET['user_id'] ?? '';
 
 if (file_exists('db.php')) {
     require_once 'db.php';
@@ -25,27 +18,53 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8mb4");
 
-$sql = "SELECT o.*, COALESCE(u.full_name, 'مستأجر مسجل') AS customer_name, p.name AS product_name 
-        FROM orders o 
-        JOIN products p ON o.product_id = p.id
-        LEFT JOIN users u ON o.user_id = u.id 
-        WHERE p.seller_id = ?
-        ORDER BY o.id DESC";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $seller_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
 $orders = [];
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $orders[] = $row;
+$activeCount = 0;
+$totalDeposit = 0;
+$realUserId = 0;
+
+// 1. لو وصلنا الإيميل، نطلع الـ ID حق المستخدم من القاعدة
+if (!empty($userEmail)) {
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param("s", $userEmail);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res && $row = $res->fetch_assoc()) {
+        $realUserId = intval($row['id']);
+    }
+} 
+// 2. لو وصل الـ ID مباشرة، نعتمدة
+elseif (!empty($userId)) {
+    $realUserId = intval($userId);
+}
+
+// 3. لو عرفنا الـ ID، نجيب طلباته هو وبس!
+if ($realUserId > 0) {
+    $sql = "SELECT id, subtotal, total_amount, payment_method, status, created_at 
+            FROM orders 
+            WHERE user_id = ? 
+            ORDER BY id DESC";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $realUserId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $orders[] = $row;
+            if ($row['status'] === 'نشط') {
+                $activeCount++;
+            }
+            $totalDeposit += floatval($row['subtotal']);
+        }
     }
 }
 
 echo json_encode([
     'success' => true,
+    'activeCount' => $activeCount,
+    'totalDeposit' => $totalDeposit,
     'orders' => $orders
 ]);
 exit;
