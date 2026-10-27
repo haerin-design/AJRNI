@@ -383,54 +383,33 @@ if ($result && $result->num_rows > 0) {
     </table>
 </div>
 
-<!-- ================= قسم مراقبة نشاط المنصة والبلاغات ================= -->
-<div class="card mt-4 p-4 shadow-sm" style="background: #ffffff; border-radius: 12px; margin-bottom: 30px;">
-    <h3 style="margin-bottom: 20px; color: #333; font-size: 1.3rem; font-weight: bold; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
-     مراقبة نشاط المنصة ومتابعة العمليات
-    </h3>
-    
-    <!-- بطاقات الإحصائيات -->
-    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
-        <div style="flex: 1; min-width: 200px; background: #f8f9fa; padding: 15px; border-radius: 8px; border-right: 4px solid #0d6efd;">
-            <span style="font-size: 0.85rem; color: #6c757d; display: block; margin-bottom: 5px;">حالة البلاغات والشكاوى</span>
-            <strong style="color: #212529; font-size: 1rem;">لا توجد بلاغات معلقة</strong>
-        </div>
-        <div style="flex: 1; min-width: 200px; background: #f8f9fa; padding: 15px; border-radius: 8px; border-right: 4px solid #198754;">
-            <span style="font-size: 0.85rem; color: #6c757d; display: block; margin-bottom: 5px;">استقرار النظام والخدمة</span>
-            <strong style="color: #198754; font-size: 1rem;">يعمل بشكل ممتاز (100%)</strong>
-        </div>
-        <div style="flex: 1; min-width: 200px; background: #f8f9fa; padding: 15px; border-radius: 8px; border-right: 4px solid #ffc107;">
-            <span style="font-size: 0.85rem; color: #6c757d; display: block; margin-bottom: 5px;">طلبات النزاع والتأجير</span>
-            <strong style="color: #212529; font-size: 1rem;">0 طلبات قيد المراجعة</strong>
-        </div>
+<div class="section-box">
+    <div class="section-header">
+        <h3 style="color: var(--navy);">إدارة البلاغات والشكاوى</h3>
     </div>
-
-    <!-- جدول إدارة البلاغات والشكاوى -->
-    <h4 style="margin-bottom: 15px; color: #444; font-size: 1.1rem; font-weight: bold;">
-         إدارة البلاغات والشكاوى
-    </h4>
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem;">
-            <thead>
-                <tr style="background-color: #eef2f5; color: #333;">
-                    <th style="padding: 12px; border-bottom: 2px solid #dee2e6;"># ID</th>
-                    <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">المُبْلِغ</th>
-                    <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">نوع البلاغ</th>
-                    <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">تفاصيل الشكوى</th>
-                    <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">تاريخ البلاغ</th>
-                    <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">الحالة</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="6" style="padding: 20px; color: #6c757d; border-bottom: 1px solid #eee;">
-                        لا توجد بلاغات أو شكاوى مسجلة حالياً في النظام.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th># ID</th>
+                <th>المبلغ</th>
+                <th>نوع البلاغ</th>
+                <th>تفاصيل الشكوى</th>
+                <th>تاريخ البلاغ</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 20px; color: #888;">
+                    لا توجد بلاغات أو شكاوى مسجلة حالياً في النظام.
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+
+
     </main>
 
 </body>
