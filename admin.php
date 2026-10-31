@@ -207,6 +207,8 @@ if (isset($_GET['delete_user'])) {
             <li><a href="#dashboard" class="active"><i class="fa-solid fa-chart-line"></i> لوحة التحكم</a></li>
             <li><a href="#products"><i class="fa-solid fa-box-open"></i> إدارة المنتجات</a></li>
             <li><a href="#orders"><i class="fa-solid fa-file-invoice"></i> الطلبات</a></li>
+            <li><a href="#activity-monitoring"><i class="fas fa-chart-line"></i> مراقبة نشاط المنصة</a></li>
+            <li><a href="#reports-management"><i class="fas fa-exclamation-triangle"></i> إدارة البلاغات والشكاوى</a></li>
             <li><a href="index.html"><i class="fa-solid fa-store"></i> العودة للمتجر</a></li>
         </ul>
     </aside>
