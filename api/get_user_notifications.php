@@ -9,7 +9,8 @@ $email = $_SESSION['user_email'] ?? '';
 $notifications = [];
 
 if ($email !== '') {
-    $stmt = $conn->prepare("SELECT id, subject, message, created_at FROM messages WHERE type = 'notification' AND email = ? ORDER BY id DESC LIMIT 10");
+    // استعلام يطابق أعمدة جدول messages الحقيقية (id, subject, message, created_at) بناءً على إيميل المستخدم
+    $stmt = $conn->prepare("SELECT id, subject, message, created_at FROM messages WHERE email = ? ORDER BY id DESC LIMIT 10");
     if ($stmt) {
         $stmt->bind_param("s", $email);
         $stmt->execute();
