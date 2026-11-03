@@ -8,6 +8,10 @@ if ($conn->connect_error) {
 }
 // معالجة تحديث حالة منتجات المؤجرين
 if (isset($_POST['update_product_status'])) {
+    if (isset($_POST['update_product_status'])) {
+    echo "وصل الطلب للبيانات بنجاح! ID: " . $_POST['product_id'] . " الحالة: " . $_POST['status'];
+    exit();
+}
     $product_id = $_POST['product_id'];
     $new_status = $_POST['status'];
     
