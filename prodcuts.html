@@ -2077,91 +2077,83 @@ function initUserSidebar() {
 /* =====================================================
    جلب العقود والطلبات الحقيقية من قاعدة البيانات
 ===================================================== */
-// دالة محدثة لجلب الطلبات، الإيجارات، والتنبيهات الخاصة بالمستخدم الحالي فقط
 function fetchCustomerOrders() {
     const userEmail = localStorage.getItem("userEmail") || "";
     
-    const container = document.getElementById('realRentalsContainer');
-    const ordersContainer = document.getElementById('realOrdersContainer');
+    const rentalsContainer = document.getElementById('realRentalsContainer') || document.getElementById('activeRentalsContainer');
+    const ordersContainer = document.getElementById('realOrdersContainer') || document.getElementById('ordersContainer');
     const alertsContainer = document.getElementById('alertsContainer');
     
-    if (!container) return;
+    if (!userEmail) return;
 
-    if (!userEmail) {
-        container.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">يرجى تسجيل الدخول لعرض مشترياتك وعقودك</div>';
-        if (ordersContainer) ordersContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">يرجى تسجيل الدخول</div>';
-        if (alertsContainer) alertsContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد تنبيهات</div>';
-        return;
-    }
-
-    // جلب البيانات من الـ API المخصص
     fetch('api/get_customer_orders.php?email=' + encodeURIComponent(userEmail))
         .then(response => response.json())
         .then(data => {
             if (!data.success || !data.orders || data.orders.length === 0) {
-                // لو الحساب جديد أو ما عنده طلبات، تصبح القوائم والتنبيهات فارغة ونظيفة تماماً
-                container.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد عقود أو طلبات حالياً لهذا الحساب</div>';
+                if (rentalsContainer) rentalsContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد عقود إيجار حالياً</div>';
                 if (ordersContainer) ordersContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد مشتريات حالياً</div>';
-                if (alertsContainer) alertsContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد تنبيهات جديدة لهذا الحساب</div>';
-                
-                const countElem = document.getElementById('activeRentalsCount');
-                if (countElem) countElem.textContent = '0';
-                const depositElem = document.getElementById('totalDepositAmount');
-                if (depositElem) depositElem.innerHTML = `0 <span style="font-size: 12px; font-weight: normal;">ر.س</span>`;
+                if (alertsContainer) alertsContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد تنبيهات جديدة</div>';
                 return;
             }
-
-            // تحديث العدادات والإحصائيات
-            const countElem = document.getElementById('activeRentalsCount');
-            if (countElem) countElem.textContent = data.activeCount;
-
-            const depositElem = document.getElementById('totalDepositAmount');
-            if (depositElem) depositElem.innerHTML = `${Number(data.totalDeposit || 0).toLocaleString()} <span style="font-size: 12px; font-weight: normal;">ر.س</span>`;
 
             let rentalsHtml = '';
             let ordersHtml = '';
             let alertsHtml = '';
 
+            data.orders.dates = data.orders || [];
             data.orders.forEach(order => {
-                // تعبئة عقود الإيجار
-                rentalsHtml += `
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <strong style="font-size: 13px; color: #0b1c3f;">عقد طلب #${order.id}</strong>
-                        <span style="font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 12px; font-weight: bold;">
-                            ${order.status}
-                        </span>
-                    </div>
-                    <div style="font-size: 11px; color: #64748b; line-height: 1.8;">
-                        <div><i class="fa-regular fa-calendar-days" style="width: 14px;"></i> تاريخ الطلب: ${order.created_at}</div>
-                        <div style="color: #16a34a; font-weight: 600;">
-                            <i class="fa-solid fa-shield-halved" style="width: 14px;"></i> التأمين / الضمان: ${Number(order.subtotal).toLocaleString()} ر.س
-                        </div>
-                        <div style="color: #0b1c3f; font-weight: 600;">
-                            <i class="fa-solid fa-receipt" style="width: 14px;"></i> الإجمالي: ${Number(order.total_amount).toLocaleString()} ر.س (${order.payment_method})
-                        </div>
-                    </div>
-                </div>`;
+                // تحقق ذكي: إذا كان الطلب شراء (أو بدون مدة إيجار/تأمين)، يروح لمشترياتي تلقائياً
+                const isPurchase = !order.start_date && !order.end_date; 
 
-                // تنبيه تلقائي لكل طلب جديد أو نشط
+                if (isPurchase) {
+                    ordersHtml += `
+                    <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong style="font-size: 13px; color: #0b1c3f;">طلب شراء #${order.id}</strong>
+                            <span style="font-size: 10px; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 12px; font-weight: bold;">
+                                ${order.status}
+                            </span>
+                        </div>
+                        <div style="font-size: 11px; color: #64748b; line-height: 1.8;">
+                            <div><i class="fa-regular fa-calendar-days" style="width: 14px;"></i> تاريخ الشراء: ${order.created_at}</div>
+                            <div style="color: #0b1c3f; font-weight: 600;">
+                                <i class="fa-solid fa-receipt" style="width: 14px;"></i> الإجمالي: ${Number(order.total_amount).toLocaleString()} ر.س (${order.payment_method})
+                            </div>
+                        </div>
+                    </div>`;
+                } else {
+                    rentalsHtml += `
+                    <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong style="font-size: 13px; color: #0b1c3f;">عقد إيجار #${order.id}</strong>
+                            <span style="font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 12px; font-weight: bold;">
+                                ${order.status}
+                            </span>
+                        </div>
+                        <div style="font-size: 11px; color: #64748b; line-height: 1.8;">
+                            <div><i class="fa-regular fa-calendar-days" style="width: 14px;"></i> تاريخ الطلب: ${order.created_at}</div>
+                            <div style="color: #0b1c3f; font-weight: 600;">
+                                <i class="fa-solid fa-receipt" style="width: 14px;"></i> الإجمالي: ${Number(order.total_amount).toLocaleString()} ر.س (${order.payment_method})
+                            </div>
+                        </div>
+                    </div>`;
+                }
+
                 alertsHtml += `
                 <div style="border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px; background: #f0fdf4; margin-bottom: 8px; font-size: 11px; color: #166534;">
                     <div style="font-weight: bold; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                         <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> حالة الطلب #${order.id}
                     </div>
-                    تم تسجيل طلبك بنجاح وحالته الحالية: (${order.status}). تاريخ المعاملة: ${order.created_at}
+                    تم تسجيل الطلب بنجاح وحالته الحالية: (${order.status}).
                 </div>`;
             });
 
-            container.innerHTML = rentalsHtml;
-            if (ordersContainer) ordersContainer.innerHTML = rentalsHtml; // أو ربطها بجدول المشتريات لو مخصص
+            if (ordersContainer) ordersContainer.innerHTML = ordersHtml || '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد مشتريات حالياً</div>';
+            if (rentalsContainer) rentalsContainer.innerHTML = rentalsHtml || '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد عقود إيجار حالياً</div>';
             if (alertsContainer) alertsContainer.innerHTML = alertsHtml;
         })
-        .catch(err => {
-            console.error('فشل في جلب البيانات:', err);
-        });
+        .catch(err => console.error('خطأ:', err));
 }
-
 // التشغيل التلقائي عند تحميل الصفحة
 document.addEventListener("DOMContentLoaded", function() {
     fetchCustomerOrders();

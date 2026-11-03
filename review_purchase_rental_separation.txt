@@ -1,0 +1,131 @@
+﻿حزمة مراجعة: فصل المشتريات عن الإيجارات
+المشروع: AJRNI | تاريخ التجميع: 2026-11-02
+نطاق الفحص: قراءة ملفات المشروع فقط. لم تُعدّل ملفات الشيفرة أو قاعدة البيانات، ولم تُشغّل استعلامات DB. لا يحتوي التقرير كلمات مرور أو بيانات عملاء شخصية.
+
+ملاحظات عن نسخة العمل
+- api/get_customer_orders.php معدل محليًا؛ هذا التقرير يصف محتواه الحالي.
+- لم يتوفر ملف SQL للمخطط ولم تُنفذ SHOW COLUMNS. الأعمدة أدناه مستنتجة من SQL وليست تأكيدًا للمخطط الحي.
+- البحث عن rental_products لم يجد له جدولًا مستخدمًا أو ملفًا في المشروع.
+
+1. مسار البيانات الحالي
+
+المنتجات: seller_dashboard.php يضيف المنتج إلى products ويربطه بالبائع بواسطة seller_id = $_SESSION['user_id']. حقول الإضافة الظاهرة: name, category, price, image, description, is_featured. مبلغ التأمين يضمّن في description كنص، ولا يضاف كعمود منفصل.
+
+الإيجار: prodcuts.html يحسب السعر بحسب الأيام ويضيف التأمين، ثم يحفظ محليًا في localStorage.cart عنصرًا فيه type وstartDate وendDate وdays وdeposit. cart.html يعرض هذه البيانات ويرسل cart كاملة إلى api/checkout.php.
+
+الحفظ: checkout.php يقرأ عناصر cart لحساب المجاميع، لكنه ينفذ INSERT واحدًا في orders ولا يحفظ عناصر cart أو product_id أو type أو startDate/endDate أو days أو deposit في صف الطلب.
+
+العرض: prodcuts.html يستدعي api/get_customer_orders.php ثم يصنف كل سجل حسب start_date وend_date: غيابهما يعني شراء، ووجودهما يعني إيجار. لا يمرر مسار checkout الظاهر هذين التاريخين إلى INSERT؛ لذلك لا يملك هذا المسار حاليًا بيانات تمييز الإيجار المطلوبة للواجهة. user-drawer.js يضع كل نتائج الطلبات في حاوية الإيجارات ولا يملأ حاوية المشتريات.
+
+2. الملفات والمقاطع المهمة
+
+api/checkout.php
+- الأسطر 11-23: يأخذ user_id من الجلسة ويقرأ cart من JSON.
+- الأسطر 30-44: يجمع قيمة كل عنصر. deposit يدخل في حساب أساس الخصم، لكن لا يحفظ منفصلًا.
+- الأسطر 47-56: INSERT إلى orders بهذه الأعمدة:
+  user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status
+  ويستخدم insert_id كرقم الطلب/العقد في رسالة النجاح.
+- لا يوجد INSERT لتفاصيل العناصر أو بيانات الإيجار.
+
+api/get_customer_orders.php، النسخة المحلية الحالية
+- الأسطر 21-27: userId من session user_id أو userId، مع قيمة افتراضية 22 عند غيابها.
+- الأسطر 29-44: SELECT o.* مع LEFT JOIN users على orders.user_id = users.id، ثم WHERE o.user_id = ?.
+- الأسطر 63-68: JSON يحوي success وorders وactiveCount وtotalDeposit.
+- لا يوجد تصنيف إيجار/شراء في SQL، ولا قراءة من products أو rental_products.
+- الواجهة ترسل email كـquery string، لكن API الحالي لا يستخدمه.
+
+prodcuts.html
+- الأسطر 1315-1335: ينشئ حاويتين منفصلتين realRentalsContainer وrealOrdersContainer.
+- الأسطر 1847-1868: updateRentCalc يحسب (الأيام × السعر اليومي) + التأمين.
+- الأسطر 1872-1904: addRentItemToCart ينشئ بيانات الإيجار type, pricePerDay, startDate, endDate, days, deposit ويحفظها في localStorage.
+- الأسطر 2080-2095: يستدعي api/get_customer_orders.php?email=...
+- الأسطر 2103-2124: يعتبر السجل شراءً إذا لم توجد start_date وend_date.
+- الأسطر 2124-2153: الفرع الآخر يعرضه كإيجار، ثم يملأ حاويتي المشتريات والإيجارات.
+- الأسطر 2161-2165: يطلب api/get-products.php.
+- هذا المسار غير موجود في الملفات المفهرسة؛ الملف الموجود get_prodcuts.php في الجذر باسمه المختلف.
+
+cart.html
+- الأسطر 377-399: يحدد عنصر الإيجار بوجود type='rent' أو startDate/endDate، ويعرض التواريخ والمدة والتأمين.
+- الأسطر 505-543: completeCheckout يرسل cart كاملة إلى api/checkout.php كـJSON.
+- هذا يثبت وصول بيانات الإيجار إلى الطلب HTTP، لكنه لا يثبت حفظها في قاعدة البيانات.
+
+user-drawer.js
+- الأسطر 60-89: يعرض تبويبي إيجاراتي ومشترياتي؛ تبويب المشتريات نص ثابت بلا قائمة نتائج.
+- الأسطر 183-217: loadOrders يستدعي api/get_customer_orders.php ويرسم كل data.orders داخل realRentalsContainer.
+- الأسطر 286-290: يستدعي loadOrders وloadNotifications لحساب العميل.
+- النتيجة: هذا الملف لا يفصل الطلبات بين التبويبين.
+
+seller_dashboard.php
+- الأسطر 18-23: يتطلب session user_id ويستخدمه seller_id.
+- الأسطر 55-78: يقرأ اسم المنتج وتصنيفه وسعره والتأمين والشروط.
+- الأسطر 68-70: INSERT إلى products بأعمدة seller_id, name, category, price, image, description, is_featured.
+- الأسطر 80-84: يجلب منتجات البائع بواسطة WHERE seller_id = ?.
+- التأمين والشروط محفوظان داخل description حسب الشيفرة الظاهرة.
+
+get_prodcuts.php
+- الأسطر 2 و16: توجد علامات دمج Git حرفية في الملف (<<<<<<< HEAD و=======).
+- الأسطر 3-15: كتلة بديلة لإرجاع المنتجات JSON.
+- الأسطر 17 وما بعدها: كتلة لوحة البائع.
+- الأسطر 70-93: تكرار لإضافة منتج إلى products وربط seller_id وحفظ مبلغ التأمين داخل description.
+- الأسطر 95-99: يجلب قائمة منتجات البائع.
+- لم أشغل الملف؛ وجود علامات الدمج ظاهر بالقراءة فقط. مسار الواجهة api/get-products.php لا يطابق هذا الملف الجذري.
+
+admin.php
+- الأسطر 272-275: يقرأ المنتجات من products.
+- الأسطر 309-335: يقرأ الطلبات من orders باستخدام SELECT *.
+- العرض يتوقع مفاتيح مثل customer_name وproduct_name وtotal_price/price؛ هذا لا يثبت وجود هذه الأعمدة لأن SELECT * لا يضيف JOIN أو aliases.
+
+api/update_contract_status.php
+- الأسطر 30-39: يبني رقمًا نصيًا بالشكل AGR-2026-### من order_id ويجهز حالتي الإفراج عن التأمين أو إثبات الضرر.
+- الأسطر 42-49: يحدث orders.status ثم يربط الطلب بالمستخدم عبر orders.user_id = users.id.
+- الأسطر 61-62: يدخل رسالة في messages، دون ربط ظاهر بجدول تفاصيل إيجار/منتج.
+- checkout.php يستخدم orders.id كرقم العقد في رسالة النجاح؛ لا يظهر عمود مستقل باسم contract_no.
+
+3. أسماء الجداول والحقول والعلاقات المستدل عليها
+
+products
+- الحقول التي تشير إليها الاستعلامات: id, seller_id, name, category, price, image, description, is_featured. admin.php يشير أيضًا إلى status.
+- العلاقة المستدل عليها: products.seller_id -> users.id.
+- التأمين ليس عمودًا في INSERT الظاهر؛ يوضع داخل description.
+
+orders
+- INSERT يشير إلى: user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status.
+- الاستخدام يشير أيضًا إلى id وcreated_at. الواجهة تتوقع start_date وend_date.
+- العلاقة المستدل عليها: orders.user_id -> users.id.
+- checkout لا يكتب product_id ولا تفاصيل العناصر. وجود created_at أو start_date/end_date فعليًا غير مؤكد.
+
+users
+- الحقول المستخدمة في الروابط: id وfull_name؛ تسجيل الدخول يستخدم email وrole كذلك.
+- العلاقات المستعملة: orders.user_id = users.id، وproducts.seller_id = users.id.
+
+rental_products
+- لم يظهر أي مرجع له في الملفات أو SQL؛ لا يمكن إثبات وجود الجدول أو أعمدته.
+- لم يظهر جدول order_items أو جدول تفاصيل طلب بديل ضمن المسارات المفحوصة.
+
+4. ما تثبته الأدلة وما لا تثبته
+
+مؤكد من الشيفرة:
+1) checkout لا يخزن تواريخ الإيجار أو تفاصيل العناصر في INSERT الظاهر.
+2) واجهة فصل التبويبين تعتمد على start_date/end_date.
+3) user-drawer.js يضع الطلبات في حاوية الإيجارات ولا يعرض قائمة مشتريات.
+4) مسار تحميل المنتجات api/get-products.php غير موجود ضمن الملفات المفهرسة؛ وget_prodcuts.php يحوي علامات دمج.
+5) لم يُعثر على استخدام rental_products.
+
+يحتاج قاعدة البيانات/الخادم لتأكيده:
+- وجود الأعمدة created_at وstart_date/end_date وproduct_id فعليًا في orders.
+- وجود triggers أو كود خارج مساحة المشروع يحفظ تفاصيل إضافية.
+- مطابقة نسخة الخادم للملفات المحلية.
+
+5. استعلامات قراءة فقط للتحقق لاحقًا
+لم تُنفذ هذه الاستعلامات:
+  SHOW TABLES;
+  SHOW COLUMNS FROM products;
+  SHOW COLUMNS FROM orders;
+  SHOW COLUMNS FROM users;
+
+بعد التحقق من الأعمدة الموجودة فقط، يمكن فحص طلبات المستخدم دون بيانات شخصية:
+  SELECT id, user_id, status, subtotal, shipping_fee, total_amount, created_at
+  FROM orders WHERE user_id = 22 ORDER BY id DESC;
+احذف من SELECT أي عمود لا يظهر في SHOW COLUMNS. لا تستخرج الاسم أو البريد أو بيانات الدفع.
+
+نهاية الحزمة

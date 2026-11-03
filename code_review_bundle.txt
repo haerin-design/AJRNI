@@ -1,0 +1,1313 @@
+﻿AJRNI — CODE REVIEW BUNDLE: purchase / rental separation
+Generated: 2026-11-03 | Read-only source review
+
+SCOPE AND HANDLING
+This bundle contains relevant source excerpts and schema definitions only. No PHP was run and no SQL statement was executed. No source file or database was modified.
+The SQL dump at C:\Users\hamoh\Downloads\ajrni_db (1).sql was read as text. Only CREATE TABLE / ALTER TABLE structure was used. All INSERT rows were excluded, including order, user, product, and message data.
+db.php and authentication files containing secrets or credentials were not copied. The customer name/email/message construction part of api/update_contract_status.php is omitted; only order status and contract-number logic is included.
+Line numbers refer to the files as present during this review. Files may contain local uncommitted changes.
+
+REVIEW MAP (observed behavior; not a change proposal)
+1. Catalog: static cards in prodcuts.html and offerss.html carry data-type buy/rent. Dynamic rental cards in prodcuts.html request api/get-products.php.
+2. Seller listing: seller_dashboard.php and get_prodcuts.php add rows to products, with seller_id from the session. The seller form calls the amount a rental price and stores deposit/terms in description.
+3. Cart: purchase handlers store name/price/image/category/quantity in localStorage.cart. Rental handler stores type, dates, days and deposit too.
+4. Checkout: cart.html sends the cart JSON to api/checkout.php. That endpoint calculates totals and inserts one aggregate row in orders; its INSERT does not persist item lines, product id, product type, rental dates, days, or deposit as separate order fields.
+5. Retrieval/display: api/get_customer_orders.php selects orders rows. prodcuts.html separates rows based on start_date/end_date. The SQL dump orders definition has neither field. user-drawer.js renders returned rows into its rentals container, while the purchases tab is static.
+6. SQL dump defines rental_products, but no application source reference to rental_products was found. No order_items table was found in the dump or application sources.
+7. The SQL dump orders.status enum does not include the active status string assigned in checkout.php. This is a source/schema mismatch in the supplied dump; runtime behavior depends on whether the live database matches this dump and its SQL mode.
+8. get_prodcuts.php contains literal Git conflict markers at lines 2, 16 and 355. prodcuts.html requests api/get-products.php, which is absent from the api file list; the root get_prodcuts.php is a different path and has conflict markers.
+
+A. DATABASE DDL EXTRACTS (from downloaded SQL dump; no data rows)
+Source: C:\Users\hamoh\Downloads\ajrni_db (1).sql
+orders, lines 79-89: columns are id, user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status, created_at. No product_id, start_date, end_date, item type, or deposit column appears.
+products, lines 115-125: id, name, category, price, image, description, is_featured, created_at, seller_id.
+rental_products, lines 140-149: id, seller_id, name, rental_price, deposit_fee, max_rental_days, image, created_at.
+messages, lines 30-37: id, name, email, subject, message, created_at. No type column in this dump.
+Declared key relations: orders.user_id has index and foreign key to users.id (lines 222-224 and 292-293). The dump adds primary keys to products.id and rental_products.id (lines 229-230 and 235-236). No seller_id foreign key is declared for products or rental_products in the inspected ALTER statements.
+The dump contains other table DDL (offers, users); they are not order detail tables. No CREATE TABLE for order_items was found.
+
+B. CHECKOUT: complete endpoint
+
+===== SOURCE: api/checkout.php | lines 1-67 =====
+   1: <?php
+   2: session_start();
+   3: header('Content-Type: application/json; charset=utf-8');
+   4: require_once '../db.php';
+   5: mysqli_report(MYSQLI_REPORT_OFF);
+   6: 
+   7: try {
+   8:     $conn->set_charset("utf8mb4");
+   9: 
+  10:     // السيرفر يعرف المستخدم من الجلسة، مو من المتصفح
+  11:     $userId = intval($_SESSION['user_id'] ?? 0);
+  12:     if ($userId === 0) {
+  13:         echo json_encode(["status" => "error", "code" => "auth", "message" => "لازم تسجّل دخول أو تنشئ حساب أولاً."]);
+  14:         exit();
+  15:     }
+  16: 
+  17:     $data = json_decode(file_get_contents('php://input'), true);
+  18:     $cart = $data['cart'] ?? [];
+  19: 
+  20:     if (empty($cart) || !is_array($cart)) {
+  21:         echo json_encode(["status" => "error", "message" => "السلة فارغة."]);
+  22:         exit();
+  23:     }
+  24: 
+  25:     $shippingMethod = trim($data['shippingMethod'] ?? 'توصيل سريع');
+  26:     $paymentMethod  = trim($data['paymentMethod'] ?? 'بطاقة مدى / ائتمانية');
+  27:     $shippingFee    = 35; // ثابتة من السيرفر
+  28: 
+  29:     // نحسب المبالغ من السلة نفسها (ما نصدق المجموع الجاي من المتصفح)
+  30:     $subtotal = 0;
+  31:     $discountBase = 0;
+  32:     foreach ($cart as $item) {
+  33:         $price   = max(0, floatval($item['price'] ?? 0));
+  34:         $deposit = max(0, floatval($item['deposit'] ?? 0));
+  35:         $qty     = max(1, intval($item['quantity'] ?? 1));
+  36:         $subtotal     += $price * $qty;
+  37:         $discountBase += max(0, $price - $deposit) * $qty; // الخصم بدون التأمين المسترد
+  38:     }
+  39: 
+  40:     $discountCode    = strtoupper(trim($data['discountCode'] ?? ''));
+  41:     $validCodes      = ["AJRNI15" => 15];
+  42:     $discountPercent = $validCodes[$discountCode] ?? 0;
+  43:     $discountAmount  = round($discountBase * $discountPercent / 100, 2);
+  44:     $total           = $subtotal - $discountAmount + $shippingFee;
+  45: 
+  46:     $status = 'نشط';
+  47:     $orderStmt = $conn->prepare("INSERT INTO orders (user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+  48:     if (!$orderStmt) {
+  49:         echo json_encode(["status" => "error", "message" => "خطأ في الاستعلام: " . $conn->error]);
+  50:         exit();
+  51:     }
+  52:     $orderStmt->bind_param("idddsss", $userId, $subtotal, $shippingFee, $total, $shippingMethod, $paymentMethod, $status);
+  53: 
+  54:     if ($orderStmt->execute()) {
+  55:         $contractId = $conn->insert_id;
+  56:         echo json_encode(["status" => "success", "message" => "تم إستلام طلبك بنجاح! رقم العقد: #" . $contractId]);
+  57:     } else {
+  58:         echo json_encode(["status" => "error", "message" => "حدث خطأ أثناء حفظ الطلب: " . $orderStmt->error]);
+  59:     }
+  60: } catch (Throwable $e) {
+  61:     echo json_encode(["status" => "error", "message" => "خطأ: " . $e->getMessage()]);
+  62: }
+  63: ?>
+
+C. CUSTOMER ORDER API: complete endpoint
+
+===== SOURCE: api/get_customer_orders.php | lines 1-75 =====
+   1: <?php
+   2: if (session_status() === PHP_SESSION_NONE) {
+   3:     session_start();
+   4: }
+   5: header('Content-Type: application/json; charset=utf-8');
+   6: 
+   7: // تضمين ملف الاتصال بقاعدة البيانات حسب مساره المحتمل
+   8: if (file_exists('../db.php')) {
+   9:     require_once '../db.php';
+  10: } elseif (file_exists('db.php')) {
+  11:     require_once 'db.php';
+  12: } else {
+  13:     $conn = new mysqli("localhost", "root", "", "ajrni_db");
+  14: }
+  15: 
+  16: if ($conn->connect_error) {
+  17:     echo json_encode(['success' => false, 'error' => 'Database connection failed', 'orders' => []]);
+  18:     exit();
+  19: }
+  20: 
+  21: // جلب رقم المستخدم من الجلسة، مع إمكانية التراجع للرقم 22 للاختبار المؤقت إذا لزم
+  22: $userId = intval($_SESSION['user_id'] ?? $_SESSION['userId'] ?? 22);
+  23: 
+  24: if ($userId === 0) {
+  25:     echo json_encode(['success' => false, 'error' => 'Unauthorized', 'orders' => []]);
+  26:     exit();
+  27: }
+  28: 
+  29: // الاستعلام المتوافق تماماً مع أعمدة جدول orders الفعلية (بدون product_id)
+  30: $sql = "SELECT o.*, COALESCE(u.full_name, 'مستأجر مسجل') AS customer_name 
+  31:         FROM orders o 
+  32:         LEFT JOIN users u ON o.user_id = u.id 
+  33:         WHERE o.user_id = ? 
+  34:         ORDER BY o.id DESC";
+  35: 
+  36: $stmt = $conn->prepare($sql);
+  37: if (!$stmt) {
+  38:     echo json_encode(['success' => false, 'error' => 'Query preparation failed', 'orders' => []]);
+  39:     exit();
+  40: }
+  41: 
+  42: $stmt->bind_param("i", $userId);
+  43: $stmt->execute();
+  44: $result = $stmt->get_result();
+  45: 
+  46: $orders = [];
+  47: $totalDeposit = 0;
+  48: $activeCount = 0;
+  49: 
+  50: if ($result) {
+  51:     while ($row = $result->fetch_assoc()) {
+  52:         $orders[] = $row;
+  53:         if (isset($row['status']) && $row['status'] === 'نشط') {
+  54:             $activeCount++;
+  55:             $totalDeposit += floatval($row['subtotal'] ?? 0);
+  56:         }
+  57:     }
+  58: }
+  59: 
+  60: $stmt->close();
+  61: $conn->close();
+  62: 
+  63: echo json_encode([
+  64:     'success' => true,
+  65:     'orders' => $orders,
+  66:     'activeCount' => $activeCount,
+  67:     'totalDeposit' => $totalDeposit
+  68: ]);
+  69: exit();
+  70: ?>
+
+D. CART: rendering and complete checkout function
+
+===== SOURCE: cart.html | lines 345-415 =====
+ 345: 
+ 346: function removeDiscountCode() {
+ 347:     localStorage.removeItem("discountCode");
+ 348:     renderCart();
+ 349: }
+ 350: 
+ 351:         function renderCart() {
+ 352:             let cart = JSON.parse(localStorage.getItem("cart")) || [];
+ 353:             const container = document.getElementById("cart-content-area");
+ 354: 
+ 355:             if (cart.length === 0) {
+ 356:                 container.innerHTML = `
+ 357:                     <div class="empty-cart">
+ 358:                         <i class="fa-solid fa-cart-shopping"></i>
+ 359:                         <p>سلة المشتريات فارغة حالياً!</p>
+ 360:                         <a href="prodcuts.html">تصفح المنتجات الآن</a>
+ 361:                     </div>
+ 362:                 `;
+ 363:                 return;
+ 364:             }
+ 365: 
+ 366:             let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+ 367:             let shippingFee = 35; // رسوم توصيل ثابتة تجريبية
+ 368:             let discountPercent = getDiscountPercent();
+ 369: // المبلغ القابل للخصم = السعر بدون مبلغ التأمين المسترد
+ 370: let discountBase = cart.reduce((sum, item) => {
+ 371:     const deposit = Number(item.deposit) || 0;
+ 372:     return sum + Math.max(0, item.price - deposit) * item.quantity;
+ 373: }, 0);
+ 374: let discountAmount = Math.round(discountBase * discountPercent) / 100;
+ 375: let appliedCode = localStorage.getItem("discountCode") || "";
+ 376: 
+ 377:             let itemsHTML = cart.map((item, index) => {
+ 378:                 // التحقق هل السلعة مستأجرة مع تواريخ
+ 379:                 const isRent = item.type === 'rent' || (item.startDate && item.endDate);
+ 380: 
+ 381:                 return `
+ 382:                 <div class="cart-item">
+ 383:                     <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+ 384:                     <div class="cart-item-details">
+ 385:                         <div class="cart-item-category">${item.category || (isRent ? 'إيجار' : 'منتج')}</div>
+ 386:                         <div class="cart-item-title">${item.name}</div>
+ 387:                         <div class="cart-item-price">${item.price} ر.س</div>
+ 388: 
+ 389:                         ${isRent ? `
+ 390:                             <div style="margin-top: 6px; font-size: 12px; color: #334155; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 6px 10px; display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+ 391:                                 <span>📅 <strong>من:</strong> ${item.startDate} <strong>إلى:</strong> ${item.endDate}</span>
+ 392:                                 <span style="color: #94a3b8;">|</span>
+ 393:                                 <span>⏳ <strong>المدة:</strong> ${item.days || 1} يوم</span>
+ 394:                                 ${item.deposit ? `
+ 395:                                     <span style="color: #94a3b8;">|</span>
+ 396:                                     <span style="color: #16a34a; font-weight: 600;">(تأمين مسترد: ${item.deposit} ر.س)</span>
+ 397:                                 ` : ''}
+ 398:                             </div>
+ 399:                         ` : ''}
+ 400:                     </div>
+ 401:                     <div class="cart-item-actions">
+ 402:                         <div class="quantity-controls">
+ 403:                             <button class="quantity-btn" onclick="updateQty(${index}, -1)">-</button>
+ 404:                             <span class="quantity-display">${item.quantity}</span>
+ 405:                             <button class="quantity-btn" onclick="updateQty(${index}, 1)">+</button>
+ 406:                         </div>
+ 407:                         <button class="remove-btn" onclick="removeItem(${index})"><i class="fa-solid fa-trash"></i></button>
+ 408:                     </div>
+ 409:                 </div>
+ 410:             `;
+ 411:             }).join('');
+ 412: 
+ 413:             container.innerHTML = `
+ 414:                 <div class="cart-layout">
+ 415:                     <div class="cart-items-container">
+
+===== SOURCE: cart.html | lines 485-545 =====
+ 485:             `;
+ 486:         }
+ 487: 
+ 488:         function updateQty(index, change) {
+ 489:             let cart = JSON.parse(localStorage.getItem("cart")) || [];
+ 490:             cart[index].quantity += change;
+ 491:             if (cart[index].quantity <= 0) {
+ 492:                 cart.splice(index, 1);
+ 493:             }
+ 494:             localStorage.setItem("cart", JSON.stringify(cart));
+ 495:             renderCart();
+ 496:         }
+ 497: 
+ 498:         function removeItem(index) {
+ 499:             let cart = JSON.parse(localStorage.getItem("cart")) || [];
+ 500:             cart.splice(index, 1);
+ 501:             localStorage.setItem("cart", JSON.stringify(cart));
+ 502:             renderCart();
+ 503:         }
+ 504: 
+ 505:        function completeCheckout() {
+ 506:     let cart = JSON.parse(localStorage.getItem("cart")) || [];
+ 507:     if (cart.length === 0) return;
+ 508:         if (!localStorage.getItem("userEmail")) {
+ 509:         alert("لازم تسجّل دخول أو تنشئ حساب أولاً قبل إتمام الطلب.");
+ 510:         window.location.href = "signin.html";
+ 511:         return;
+ 512:     }
+ 513: 
+ 514:     let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+ 515: 
+ 516:     const payload = {
+ 517:         userEmail: localStorage.getItem("userEmail") || "",
+ 518:         discountCode: localStorage.getItem("discountCode") || "",
+ 519:         cart: cart,
+ 520:         subtotal: subtotal,
+ 521:         shippingFee: 35,
+ 522:         shippingMethod: "توصيل سريع",
+ 523:         paymentMethod: "بطاقة مدى / ائتمانية"
+ 524:     };
+ 525: 
+ 526:     fetch('api/checkout.php', {
+ 527:         method: 'POST',
+ 528:         headers: { 'Content-Type': 'application/json' },
+ 529:         body: JSON.stringify(payload)
+ 530:     })
+ 531:     .then(res => res.json())
+ 532:     .then(data => {
+ 533:         alert(data.message);
+ 534:         if (data.status === 'success') {
+ 535:             localStorage.removeItem("cart");
+ 536:             localStorage.removeItem("discountCode");
+ 537:             window.location.href = "index.html";
+ 538:         }
+ 539:     })
+ 540:     .catch(err => {
+ 541:         alert("تعذر الاتصال بالسيرفر: " + err);
+ 542:     });
+ 543: }
+ 544:     </script>
+ 545:     <script src="user-drawer.js"></script>
+
+E. PRODUCT CATALOG AND ADD-TO-CART
+prodcuts.html contains static buy cards (for example lines 462-490) and static rental cards (for example lines 871-933). These are distinguished in markup by data-type. Other cards repeat this pattern.
+
+===== SOURCE: prodcuts.html | lines 1517-1614 =====
+1517:     /* =================================================
+1518:        السلة
+1519:     ================================================= */
+1520: 
+1521:     const addButtons =
+1522:         document.querySelectorAll(".cart-btn");
+1523: 
+1524: 
+1525:     addButtons.forEach(function (button) {
+1526: 
+1527: 
+1528:         button.addEventListener(
+1529:             "click",
+1530:             function () {
+1531: 
+1532: 
+1533:                 const productCard =
+1534:                     button.closest(".product-card");
+1535: 
+1536: 
+1537:                 if (!productCard) return;
+1538:                 
+1539: // إذا كان المنتج للإيجار، نتجاهله هنا لأن له دالة خاصة تفحص التواريخ
+1540:             if (productCard.dataset.type === "rent") {
+1541:                 return;
+1542:             }
+1543: 
+1544:                 const categoryElement =
+1545:                     productCard.querySelector(
+1546:                         ".product-category"
+1547:                     );
+1548: 
+1549: 
+1550:                 const product = {
+1551: 
+1552:                     name:
+1553:                         productCard.dataset.name,
+1554: 
+1555:                     price:
+1556:                         Number(
+1557:                             productCard.dataset.price
+1558:                         ),
+1559: 
+1560:                     image:
+1561:                         productCard.dataset.image,
+1562: 
+1563:                     category:
+1564:                         categoryElement
+1565:                             ? categoryElement.textContent.trim()
+1566:                             : "",
+1567: 
+1568:                     quantity: 1
+1569: 
+1570:                 };
+1571:                 let cart =
+1572:                     JSON.parse(
+1573:                         localStorage.getItem("cart")
+1574:                     ) || [];
+1575:                 const existingProduct =
+1576:                     cart.find(function (item) {
+1577: 
+1578:                         return item.name === product.name;
+1579: 
+1580:                     });
+1581:                 if (existingProduct) {
+1582:                     existingProduct.quantity += 1;
+1583:                 } else {
+1584: 
+1585:                     cart.push(product);
+1586: 
+1587:                 }
+1588:                 localStorage.setItem(
+1589:                     "cart",
+1590:                     JSON.stringify(cart)
+1591:                 );
+1592:                 const oldText =
+1593:                     button.innerHTML;
+1594:                 button.innerHTML =
+1595:                     "✓ تمت الإضافة";
+1596:                 button.style.backgroundColor =
+1597:                     "#27ae60";
+1598:                 setTimeout(function () {
+1599: 
+1600:                     button.innerHTML =
+1601:                         oldText;
+1602:                     button.style.backgroundColor =
+1603:                         "";
+1604:                 }, 1200);
+1605:                 updateCartCount();
+1606:             }
+1607:         );
+1608:     });
+1609:     updateCartCount();
+1610:     /* =================================================
+1611:        تحميل المفضلة
+1612:     ================================================= */
+1613:     loadFavorites();
+1614: });
+
+===== SOURCE: prodcuts.html | lines 1847-1917 =====
+1847: function updateRentCalc(inputElement, pricePerDay, deposit) {
+1848:     const box = inputElement.closest('.rent-details-box');
+1849:     const startVal = box.querySelector('.start-date').value;
+1850:     const endVal = box.querySelector('.end-date').value;
+1851:     const calcInfo = box.querySelector('.rent-calc-info');
+1852:     if (startVal && endVal) {
+1853:         const start = new Date(startVal);
+1854:         const end = new Date(endVal);
+1855:         const diffTime = end - start;
+1856:         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+1857:         if (diffDays > 0) {
+1858:             const total = (diffDays * pricePerDay) + deposit;
+1859:             box.querySelector('.days-val').textContent = diffDays;
+1860:             box.querySelector('.total-val').textContent = total;
+1861:             calcInfo.style.display = 'block';
+1862:         } else {
+1863:         showCustomToast('يرجى التأكد من أن تاريخ النهاية بعد تاريخ البداية.');
+1864:             inputElement.value = '';
+1865:             calcInfo.style.display = 'none';
+1866:         }
+1867:     }
+1868: }
+1869: /* =====================================================
+1870:    إضافة عقد الإيجار إلى السلة
+1871: ===================================================== */
+1872: function addRentItemToCart(buttonElement, name, pricePerDay, image, deposit) {
+1873:     const card = buttonElement.closest('.product-card');
+1874:     const box = card.querySelector('.rent-details-box');
+1875:     const startVal = box.querySelector('.start-date').value;
+1876:     const endVal = box.querySelector('.end-date').value;
+1877: 
+1878:     if (!startVal || !endVal) {
+1879:         showCustomToast('يرجى تحديد فترة الإيجار (من تاريخ وإلى تاريخ) أولاً.');
+1880:         return;
+1881:     }
+1882:     const days = parseInt(box.querySelector('.days-val').textContent);
+1883:     const total = parseFloat(box.querySelector('.total-val').textContent);
+1884:     // سطر جديد: يقرأ التصنيف (مثل "الإلكترونيات والترفيه") من كارد المنتج مباشرة
+1885:     const categoryElement = card.querySelector('.product-category');
+1886:     const category = categoryElement ? categoryElement.textContent.trim() : 'عام';
+1887:     const rentItem = {
+1888:         id: 'rent_' + Date.now(),
+1889:         type: 'إيجار',
+1890:         name: name,
+1891:         category: category, // حفظ التصنيف في السلة لمنع ظهور undefined
+1892:         price: total,
+1893:         pricePerDay: pricePerDay,
+1894:         startDate: startVal,
+1895:         endDate: endVal,
+1896:         days: days,
+1897:         deposit: deposit,
+1898:         image: image,
+1899:         quantity: 1
+1900:     };
+1901: 
+1902:     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+1903:     cart.push(rentItem);
+1904:     localStorage.setItem('cart', JSON.stringify(cart));
+1905: 
+1906:     const oldText = buttonElement.innerHTML;
+1907:     buttonElement.innerHTML = '✓ تم حجز الإيجار';
+1908:     const oldBg = buttonElement.style.backgroundColor;
+1909:     buttonElement.style.backgroundColor = '#27ae60';
+1910: 
+1911:     setTimeout(function () {
+1912:         buttonElement.innerHTML = oldText;
+1913:         buttonElement.style.backgroundColor = oldBg;
+1914:     }, 1200);
+1915: 
+1916:     updateCartCount();
+1917: }
+
+F. DYNAMIC RENTAL PRODUCT LOADER
+The function is included whole. Its requested path is checked against the API file listing above.
+
+===== SOURCE: prodcuts.html | lines 2161-2238 =====
+2161: function loadDynamicProducts() {
+2162:     fetch('api/get-products.php')
+2163:         .then(res => res.json())
+2164:         .then(data => {
+2165:             if (!data.success || !data.products || data.products.length === 0) return;
+2166: 
+2167:             const container = document.getElementById('productsContainer');
+2168:             if (!container) return;
+2169: 
+2170:             data.products.forEach(p => {
+2171:                 let deposit = 79;
+2172:                 const match = (p.description || '').match(/(\d+)\s*ر\.س/);
+2173:                 if (match) deposit = parseInt(match[1]);
+2174: 
+2175:                 const card = document.createElement('div');
+2176:                 card.className = 'product-card';
+2177:                 card.dataset.type = 'rent';
+2178:                 card.dataset.name = p.name;
+2179:                 card.dataset.price = p.price;
+2180:                 card.dataset.image = p.image || 'Outdoor Seating.jpg';
+2181: 
+2182:                 card.innerHTML = `
+2183:                     <div class="product-img-container">
+2184:                         <span class="badge" style="background-color: #0b1c3f; color: #fff;">
+2185:                             متاح للإيجار
+2186:                         </span>
+2187:                         <button class="wishlist-btn" type="button" onclick="addToFavorites(this)">
+2188:                             <i class="fa-regular fa-heart"></i>
+2189:                         </button>
+2190:                         <img src="${p.image || 'Outdoor Seating.jpg'}" alt="${p.name}" onerror="this.onerror=null; this.src='Outdoor Seating.jpg';">
+2191:                     </div>
+2192: 
+2193:                     <div class="product-info">
+2194:                         <div class="product-category">${p.category || 'أجهزة ومعدات'}</div>
+2195:                         <div class="product-name">${p.name}</div>
+2196:                         <div class="product-price">
+2197:                             ${p.price} ر.س <span style="font-size: 13px; font-weight: normal; color: #64748b;">/ اليوم</span>
+2198:                         </div>
+2199: 
+2200:                         <!-- حجز المدة والتاريخ للإيجار -->
+2201:                         <div class="rent-details-box" style="margin: 10px 0; padding: 10px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 13px;">
+2202:                             <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+2203:                                 <div style="flex: 1;">
+2204:                                     <label style="display: block; font-size: 11px; color: #64748b; margin-bottom: 3px;">من تاريخ:</label>
+2205:                                     <input type="text" class="start-date" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" onchange="updateRentCalc(this, ${p.price}, ${deposit})" style="width: 100%; padding: 5px 8px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 12px; box-sizing: border-box; color: #334155; text-align: center;">
+2206:                                 </div>
+2207:                                 <div style="flex: 1;">
+2208:                                     <label style="display: block; font-size: 11px; color: #64748b; margin-bottom: 3px;">إلى تاريخ:</label>
+2209:                                     <input type="text" class="end-date" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" onchange="updateRentCalc(this, ${p.price}, ${deposit})" style="width: 100%; padding: 5px 8px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 12px; box-sizing: border-box; color: #334155; text-align: center;">
+2210:                                 </div>
+2211:                             </div>
+2212:                             <div class="rent-calc-info" style="display: none; text-align: center; color: #1e293b; font-weight: bold; border-top: 1px dashed #cbd5e1; padding-top: 6px;">
+2213:                                 المدة: <span class="days-val">0</span> أيام | الإجمالي: <span class="total-val">0</span> ر.س
+2214:                                 <div style="font-size: 11px; color: #16a34a; font-weight: normal; margin-top: 2px;">(شامل ${deposit} ر.س تأمين مسترد)</div>
+2215:                             </div>
+2216:                         </div>
+2217: 
+2218:                         <button 
+2219:                             class="cart-btn" 
+2220:                             type="button" 
+2221:                             onclick="addRentItemToCart(this, '${p.name}', ${p.price}, '${p.image || 'Outdoor Seating.jpg'}', ${deposit})"
+2222:                             style="background-color: #0b1c3f;"
+2223:                         >
+2224:                             استئجار وإضافة للسلة
+2225:                             <i class="fa-solid fa-cart-shopping"></i>
+2226:                         </button>
+2227:                     </div>
+2228:                 `;
+2229: 
+2230:                 container.prepend(card);
+2231:                             const si = document.getElementById('searchInput');
+2232:             if (si && si.value.trim() !== '') si.dispatchEvent(new Event('input'));
+2233:             });
+2234:         })
+2235:         .catch(err => console.error('خطأ في جلب المنتجات:', err));
+2236: }
+2237: 
+2238: document.addEventListener('DOMContentLoaded', loadDynamicProducts);
+
+G. ORDER FETCH AND PURCHASE/RENTAL DISPLAY
+Includes the complete fetchCustomerOrders function and DOMContentLoaded invocation.
+
+===== SOURCE: prodcuts.html | lines 2080-2160 =====
+2080: function fetchCustomerOrders() {
+2081:     const userEmail = localStorage.getItem("userEmail") || "";
+2082:     
+2083:     const rentalsContainer = document.getElementById('realRentalsContainer') || document.getElementById('activeRentalsContainer');
+2084:     const ordersContainer = document.getElementById('realOrdersContainer') || document.getElementById('ordersContainer');
+2085:     const alertsContainer = document.getElementById('alertsContainer');
+2086:     
+2087:     if (!userEmail) return;
+2088: 
+2089:     fetch('api/get_customer_orders.php?email=' + encodeURIComponent(userEmail))
+2090:         .then(response => response.json())
+2091:         .then(data => {
+2092:             if (!data.success || !data.orders || data.orders.length === 0) {
+2093:                 if (rentalsContainer) rentalsContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد عقود إيجار حالياً</div>';
+2094:                 if (ordersContainer) ordersContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد مشتريات حالياً</div>';
+2095:                 if (alertsContainer) alertsContainer.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد تنبيهات جديدة</div>';
+2096:                 return;
+2097:             }
+2098: 
+2099:             let rentalsHtml = '';
+2100:             let ordersHtml = '';
+2101:             let alertsHtml = '';
+2102: 
+2103:             data.orders.dates = data.orders || [];
+2104:             data.orders.forEach(order => {
+2105:                 // تحقق ذكي: إذا كان الطلب شراء (أو بدون مدة إيجار/تأمين)، يروح لمشترياتي تلقائياً
+2106:                 const isPurchase = !order.start_date && !order.end_date; 
+2107: 
+2108:                 if (isPurchase) {
+2109:                     ordersHtml += `
+2110:                     <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; margin-bottom: 8px;">
+2111:                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+2112:                             <strong style="font-size: 13px; color: #0b1c3f;">طلب شراء #${order.id}</strong>
+2113:                             <span style="font-size: 10px; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 12px; font-weight: bold;">
+2114:                                 ${order.status}
+2115:                             </span>
+2116:                         </div>
+2117:                         <div style="font-size: 11px; color: #64748b; line-height: 1.8;">
+2118:                             <div><i class="fa-regular fa-calendar-days" style="width: 14px;"></i> تاريخ الشراء: ${order.created_at}</div>
+2119:                             <div style="color: #0b1c3f; font-weight: 600;">
+2120:                                 <i class="fa-solid fa-receipt" style="width: 14px;"></i> الإجمالي: ${Number(order.total_amount).toLocaleString()} ر.س (${order.payment_method})
+2121:                             </div>
+2122:                         </div>
+2123:                     </div>`;
+2124:                 } else {
+2125:                     rentalsHtml += `
+2126:                     <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; margin-bottom: 8px;">
+2127:                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+2128:                             <strong style="font-size: 13px; color: #0b1c3f;">عقد إيجار #${order.id}</strong>
+2129:                             <span style="font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 12px; font-weight: bold;">
+2130:                                 ${order.status}
+2131:                             </span>
+2132:                         </div>
+2133:                         <div style="font-size: 11px; color: #64748b; line-height: 1.8;">
+2134:                             <div><i class="fa-regular fa-calendar-days" style="width: 14px;"></i> تاريخ الطلب: ${order.created_at}</div>
+2135:                             <div style="color: #0b1c3f; font-weight: 600;">
+2136:                                 <i class="fa-solid fa-receipt" style="width: 14px;"></i> الإجمالي: ${Number(order.total_amount).toLocaleString()} ر.س (${order.payment_method})
+2137:                             </div>
+2138:                         </div>
+2139:                     </div>`;
+2140:                 }
+2141: 
+2142:                 alertsHtml += `
+2143:                 <div style="border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px; background: #f0fdf4; margin-bottom: 8px; font-size: 11px; color: #166534;">
+2144:                     <div style="font-weight: bold; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+2145:                         <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> حالة الطلب #${order.id}
+2146:                     </div>
+2147:                     تم تسجيل الطلب بنجاح وحالته الحالية: (${order.status}).
+2148:                 </div>`;
+2149:             });
+2150: 
+2151:             if (ordersContainer) ordersContainer.innerHTML = ordersHtml || '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد مشتريات حالياً</div>';
+2152:             if (rentalsContainer) rentalsContainer.innerHTML = rentalsHtml || '<div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد عقود إيجار حالياً</div>';
+2153:             if (alertsContainer) alertsContainer.innerHTML = alertsHtml;
+2154:         })
+2155:         .catch(err => console.error('خطأ:', err));
+2156: }
+2157: // التشغيل التلقائي عند تحميل الصفحة
+2158: document.addEventListener("DOMContentLoaded", function() {
+2159:     fetchCustomerOrders();
+2160: });
+
+H. USER DRAWER: tabs, order loading, and invocation
+
+===== SOURCE: user-drawer.js | lines 60-95 =====
+  60:         <div style="display: flex; border-bottom: 1px solid #e2e8f0; background: #ffffff;">
+  61:             <button type="button" class="side-tab-btn" onclick="switchSideTab('rentals', this)" style="flex: 1; padding: 12px 5px; border: none; background: transparent; font-weight: 700; font-size: 13px; color: #0b1c3f; border-bottom: 2px solid #0b1c3f; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+  62:                 <i class="fa-solid fa-clock-rotate-left"></i> إيجاراتي
+  63:             </button>
+  64:             <button type="button" class="side-tab-btn" onclick="switchSideTab('orders', this)" style="flex: 1; padding: 12px 5px; border: none; background: transparent; font-size: 13px; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+  65:                 <i class="fa-solid fa-bag-shopping"></i> مشترياتي
+  66:             </button>
+  67:             <button type="button" class="side-tab-btn" onclick="switchSideTab('alerts', this)" style="flex: 1; padding: 12px 5px; border: none; background: transparent; font-size: 13px; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+  68:                 <i class="fa-regular fa-bell"></i> التنبيهات
+  69:             </button>
+  70:         </div>
+  71: 
+  72:         <div style="padding: 15px; flex: 1; overflow-y: auto;">
+  73:             <div id="sideTab-rentals" class="side-panel-content">
+  74:                 <div style="font-size: 12px; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+  75:                     <i class="fa-solid fa-file-contract" style="color: #0b1c3f;"></i>
+  76:                     عقود الإيجار والطلبات المسجلة:
+  77:                 </div>
+  78:                 <div id="realRentalsContainer" style="display: flex; flex-direction: column; gap: 10px;">
+  79:                     <div style="text-align: center; color: #64748b; font-size: 12px; padding: 15px;">جاري تحميل العقود...</div>
+  80:                 </div>
+  81:             </div>
+  82: 
+  83:             <div id="sideTab-orders" class="side-panel-content" style="display: none;">
+  84:                 <div style="font-size: 12px; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+  85:                     <i class="fa-solid fa-receipt" style="color: #0b1c3f;"></i>
+  86:                     المنتجات المشتراة ملكية دائمة:
+  87:                 </div>
+  88:                 <div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">لا توجد مشتريات حالياً</div>
+  89:             </div>
+  90: 
+  91:             <div id="sideTab-alerts" class="side-panel-content" style="display: none;">
+  92:                 <div id="alertsContainer" style="display: flex; flex-direction: column; gap: 10px;">
+  93:                     <div style="text-align: center; color: #888; font-size: 12px; padding: 15px;">جاري تحميل التنبيهات...</div>
+  94:                 </div>
+  95:             </div>
+
+===== SOURCE: user-drawer.js | lines 182-217 =====
+ 182:     /* ---------- جلب العقود ---------- */
+ 183:     function loadOrders() {
+ 184:         fetch("api/get_customer_orders.php")
+ 185:             .then(function (r) { return r.json(); })
+ 186:             .then(function (data) {
+ 187:                 var box = document.getElementById("realRentalsContainer");
+ 188:                 if (!box) return;
+ 189: 
+ 190:                 if (!data.success || !data.orders || data.orders.length === 0) {
+ 191:                     box.innerHTML = '<div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px;">لا توجد عقود أو طلبات حالياً</div>';
+ 192:                     return;
+ 193:                 }
+ 194: 
+ 195:                 var count = document.getElementById("drawerActiveCount");
+ 196:                 if (count) count.textContent = data.activeCount;
+ 197:                 var dep = document.getElementById("drawerDeposit");
+ 198:                 if (dep) dep.innerHTML = Number(data.totalDeposit).toLocaleString() + ' <span style="font-size:12px; font-weight:normal;">ر.س</span>';
+ 199: 
+ 200:                 box.innerHTML = data.orders.map(function (o) {
+ 201:                     return '<div style="border:1px solid #e2e8f0; border-radius:10px; padding:12px; background:#fff;">' +
+ 202:                         '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">' +
+ 203:                         '<strong style="font-size:13px; color:#0b1c3f;">عقد طلب #' + esc(o.id) + '</strong>' +
+ 204:                         '<span style="font-size:10px; background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:12px; font-weight:bold;">' + esc(o.status) + '</span>' +
+ 205:                         '</div>' +
+ 206:                         '<div style="font-size:11px; color:#64748b; line-height:1.8;">' +
+ 207:                         '<div><i class="fa-regular fa-calendar-days" style="width:14px;"></i> تاريخ التسجيل: ' + esc(o.created_at) + '</div>' +
+ 208:                         '<div style="color:#16a34a; font-weight:600;"><i class="fa-solid fa-shield-halved" style="width:14px;"></i> التأمين / الضمان: ' + Number(o.subtotal).toLocaleString() + ' ر.س</div>' +
+ 209:                         '<div style="color:#0b1c3f; font-weight:600;"><i class="fa-solid fa-receipt" style="width:14px;"></i> الإجمالي: ' + Number(o.total_amount).toLocaleString() + ' ر.س (' + esc(o.payment_method) + ')</div>' +
+ 210:                         '</div></div>';
+ 211:                 }).join("");
+ 212:             })
+ 213:             .catch(function () {
+ 214:                 var box = document.getElementById("realRentalsContainer");
+ 215:                 if (box) box.innerHTML = '<div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px;">لا توجد عقود أو طلبات حالياً</div>';
+ 216:             });
+ 217:     }
+
+===== SOURCE: user-drawer.js | lines 244-295 =====
+ 244:     /* ---------- التشغيل ---------- */
+ 245:     function start() {
+ 246:         var slot = getHeaderSlot();
+ 247:         var isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+ 248:         var userName = localStorage.getItem("userName");
+ 249:         var userRole = (localStorage.getItem("userRole") || "").toLowerCase();
+ 250: 
+ 251:         // زائر: أيقونة تودي لتسجيل الدخول
+ 252:         if (!isLoggedIn || !userName) {
+ 253:             if (slot) {
+ 254:                 slot.innerHTML = '<a href="login.html" title="تسجيل الدخول" style="font-size:18px; padding:5px;"><i class="fa-regular fa-user"></i></a>';
+ 255:             }
+ 256:             return;
+ 257:         }
+ 258: 
+ 259:         // مسجل دخول: أيقونة خضراء + القائمة
+ 260:         document.body.insertAdjacentHTML("beforeend", DRAWER_HTML);
+ 261: 
+ 262:         if (slot) {
+ 263:             slot.innerHTML = '<button type="button" onclick="toggleUserSidebar()" title="حسابي" style="background:transparent; border:none; font-size:18px; cursor:pointer; padding:5px;"><i class="fa-solid fa-user-check" style="color:#16a34a;"></i></button>';
+ 264:         }
+ 265: 
+ 266:         document.getElementById("sideUserName").textContent = userName;
+ 267: 
+ 268:         var isSeller = (userRole === "seller" || userRole === "مؤجر");
+ 269:         var badge = document.getElementById("sideUserRoleBadge");
+ 270: 
+ 271:         if (isSeller) {
+ 272:             badge.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#60a5fa;"></i> حساب مؤجر موثّق (إدارة السلع)';
+ 273:             document.getElementById("sellerReturnBox").style.display = "block";
+ 274:             document.getElementById("customerSection").style.display = "none";
+ 275:             document.getElementById("sellerSection").style.display = "block";
+ 276: 
+ 277:             var navbar = document.querySelector(".navbar");
+ 278:             if (navbar && !navbar.querySelector('a[href="seller_dashboard.php"]')) {
+ 279:                 var link = document.createElement("a");
+ 280:                 link.href = "seller_dashboard.php";
+ 281:                 link.innerHTML = '<i class="fa-solid fa-store" style="font-size:12px;"></i> بوابة المؤجر';
+ 282:                 link.style.color = "#2563eb";
+ 283:                 link.style.fontWeight = "bold";
+ 284:                 navbar.appendChild(link);
+ 285:             }
+ 286:         } else {
+ 287:             badge.innerHTML = '<i class="fa-solid fa-shield-halved" style="font-size:10px;"></i> حساب عميل موثّق (مستأجر / مشتري)';
+ 288:             loadOrders();
+ 289:             loadNotifications();
+ 290:         }
+ 291:     }
+ 292: 
+ 293:     if (document.readyState === "loading") {
+ 294:         document.addEventListener("DOMContentLoaded", start);
+ 295:     } else {
+
+I. SELLER PRODUCT INSERTION
+seller_dashboard.php and get_prodcuts.php contain parallel seller-product flows. The latter also has merge-conflict markers.
+
+===== SOURCE: seller_dashboard.php | lines 1-90 =====
+   1: <?php
+   2: if (session_status() === PHP_SESSION_NONE) {
+   3:     session_start();
+   4: }
+   5: 
+   6: // 1. الاتصال بقاعدة البيانات
+   7: if (file_exists('db.php')) {
+   8:     require_once 'db.php';
+   9: } else {
+  10:     $conn = new mysqli("localhost", "root", "", "ajrni_db");
+  11:     if ($conn->connect_error) {
+  12:         die("خطأ في الاتصال بقاعدة البيانات: " . $conn->connect_error);
+  13:     }
+  14: }
+  15: $conn->set_charset("utf8mb4");
+  16: 
+  17: // 2. التحقق من تسجيل الدخول الحقيقي
+  18: if (!isset($_SESSION['user_id'])) {
+  19:     header("Location: login.html");
+  20:     exit();
+  21: }
+  22: 
+  23: $seller_id = $_SESSION['user_id'];
+  24: 
+  25: // 3. جلب الاسم الحقيقي للمؤجر من عمود full_name في جدول users
+  26: $seller_name = "مؤجر معتمد";
+  27: $stmt_user = $conn->prepare("SELECT full_name FROM users WHERE id = ?");
+  28: if ($stmt_user) {
+  29:     $stmt_user->bind_param("i", $seller_id);
+  30:     $stmt_user->execute();
+  31:     $res_user = $stmt_user->get_result();
+  32:     if ($row_user = $res_user->fetch_assoc()) {
+  33:         $seller_name = $row_user['full_name'];
+  34:     }
+  35:     $stmt_user->close();
+  36: }
+  37: 
+  38: $alert_text = "";
+  39: $alert_type = "";
+  40: 
+  41: // 4. معالجة حذف منتج خاص بالمؤجر الحالي فقط
+  42: if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+  43:     $delete_id = intval($_GET['id']);
+  44:     $stmt_del = $conn->prepare("DELETE FROM products WHERE id = ? AND seller_id = ?");
+  45:     if ($stmt_del) {
+  46:         $stmt_del->bind_param("ii", $delete_id, $seller_id);
+  47:         if ($stmt_del->execute()) {
+  48:             $alert_text = "تم حذف السلعة بنجاح من قاعدة البيانات.";
+  49:             $alert_type = "success";
+  50:         }
+  51:         $stmt_del->close();
+  52:     }
+  53: }
+  54: 
+  55: // 5. معالجة إضافة سلعة جديدة للمؤجر الحالي
+  56: if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btn_add_product'])) {
+  57:     $item_name     = trim($_POST['item_name'] ?? '');
+  58:     $item_category = trim($_POST['item_category'] ?? '');
+  59:     $item_price    = floatval($_POST['item_price'] ?? 0);
+  60:     $item_deposit  = trim($_POST['item_deposit'] ?? '0');
+  61:     $item_terms    = trim($_POST['item_terms'] ?? '');
+  62:     $item_image    = "products.jpg";
+  63:     $is_featured   = 0;
+  64: 
+  65:     $desc_text = "مبلغ التأمين: " . $item_deposit . " ر.س | الشروط: " . $item_terms;
+  66: 
+  67:     if (!empty($item_name) && $item_price > 0) {
+  68:         $stmt = $conn->prepare("INSERT INTO products (seller_id, name, category, price, image, description, is_featured) VALUES (?, ?, ?, ?, ?, ?, ?)");
+  69:         if ($stmt) {
+  70:             $stmt->bind_param("issdssi", $seller_id, $item_name, $item_category, $item_price, $item_image, $desc_text, $is_featured);
+  71:             if ($stmt->execute()) {
+  72:                 $alert_text = "تمت إضافة السلعة بنجاح وحفظها في قاعدة البيانات.";
+  73:                 $alert_type = "success";
+  74:             }
+  75:             $stmt->close();
+  76:         }
+  77:     }
+  78: }
+  79: 
+  80: // 6. جلب منتجات هذا المؤجر فقط من جدول products
+  81: $stmt_list = $conn->prepare("SELECT id, name, category, price, description FROM products WHERE seller_id = ? ORDER BY id DESC");
+  82: $stmt_list->bind_param("i", $seller_id);
+  83: $stmt_list->execute();
+  84: $products_list = $stmt_list->get_result();
+  85: 
+  86: $realProductsCount = ($products_list) ? $products_list->num_rows : 0;
+  87: $realActiveRentals = 0;
+  88: $realEarnings      = 0.00;
+  89: $realDeposits      = 0.00;
+  90: ?>
+
+===== SOURCE: get_prodcuts.php | lines 1-105 =====
+   1: <?php
+   2: <<<<<<< HEAD
+   3: header('Content-Type: application/json; charset=utf-8');
+   4: require_once 'db.php';
+   5: 
+   6: $products = [];
+   7: $result = $conn->query("SELECT id, name, category, price, image, description FROM products ORDER BY id DESC");
+   8: 
+   9: if ($result) {
+  10:     while ($row = $result->fetch_assoc()) {
+  11:         $products[] = $row;
+  12:     }
+  13: }
+  14: 
+  15: echo json_encode(['success' => true, 'products' => $products], JSON_UNESCAPED_UNICODE);
+  16: =======
+  17: if (session_status() === PHP_SESSION_NONE) {
+  18:     session_start();
+  19: }
+  20: 
+  21: // 1. الاتصال بقاعدة البيانات
+  22: if (file_exists('db.php')) {
+  23:     require_once 'db.php';
+  24: } else {
+  25:     $conn = new mysqli("localhost", "root", "", "ajrni_db");
+  26:     if ($conn->connect_error) {
+  27:         die("خطأ في الاتصال بقاعدة البيانات: " . $conn->connect_error);
+  28:     }
+  29: }
+  30: $conn->set_charset("utf8mb4");
+  31: 
+  32: // 2. التحقق من تسجيل الدخول الحقيقي
+  33: if (!isset($_SESSION['user_id'])) {
+  34:     header("Location: login.html");
+  35:     exit();
+  36: }
+  37: 
+  38: $seller_id = $_SESSION['user_id'];
+  39: 
+  40: // 3. جلب الاسم الحقيقي للمؤجر من عمود full_name في جدول users
+  41: $seller_name = "مؤجر معتمد";
+  42: $stmt_user = $conn->prepare("SELECT full_name FROM users WHERE id = ?");
+  43: if ($stmt_user) {
+  44:     $stmt_user->bind_param("i", $seller_id);
+  45:     $stmt_user->execute();
+  46:     $res_user = $stmt_user->get_result();
+  47:     if ($row_user = $res_user->fetch_assoc()) {
+  48:         $seller_name = $row_user['full_name'];
+  49:     }
+  50:     $stmt_user->close();
+  51: }
+  52: 
+  53: $alert_text = "";
+  54: $alert_type = "";
+  55: 
+  56: // 4. معالجة حذف منتج خاص بالمؤجر الحالي فقط
+  57: if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+  58:     $delete_id = intval($_GET['id']);
+  59:     $stmt_del = $conn->prepare("DELETE FROM products WHERE id = ? AND seller_id = ?");
+  60:     if ($stmt_del) {
+  61:         $stmt_del->bind_param("ii", $delete_id, $seller_id);
+  62:         if ($stmt_del->execute()) {
+  63:             $alert_text = "تم حذف السلعة بنجاح من قاعدة البيانات.";
+  64:             $alert_type = "success";
+  65:         }
+  66:         $stmt_del->close();
+  67:     }
+  68: }
+  69: 
+  70: // 5. معالجة إضافة سلعة جديدة للمؤجر الحالي
+  71: if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btn_add_product'])) {
+  72:     $item_name     = trim($_POST['item_name'] ?? '');
+  73:     $item_category = trim($_POST['item_category'] ?? '');
+  74:     $item_price    = floatval($_POST['item_price'] ?? 0);
+  75:     $item_deposit  = trim($_POST['item_deposit'] ?? '0');
+  76:     $item_terms    = trim($_POST['item_terms'] ?? '');
+  77:     $item_image    = "products.jpg";
+  78:     $is_featured   = 0;
+  79: 
+  80:     $desc_text = "مبلغ التأمين: " . $item_deposit . " ر.س | الشروط: " . $item_terms;
+  81: 
+  82:     if (!empty($item_name) && $item_price > 0) {
+  83:         $stmt = $conn->prepare("INSERT INTO products (seller_id, name, category, price, image, description, is_featured) VALUES (?, ?, ?, ?, ?, ?, ?)");
+  84:         if ($stmt) {
+  85:             $stmt->bind_param("issdssi", $seller_id, $item_name, $item_category, $item_price, $item_image, $desc_text, $is_featured);
+  86:             if ($stmt->execute()) {
+  87:                 $alert_text = "تمت إضافة السلعة بنجاح وحفظها في قاعدة البيانات.";
+  88:                 $alert_type = "success";
+  89:             }
+  90:             $stmt->close();
+  91:         }
+  92:     }
+  93: }
+  94: 
+  95: // 6. جلب منتجات هذا المؤجر فقط من جدول products
+  96: $stmt_list = $conn->prepare("SELECT id, name, category, price, description FROM products WHERE seller_id = ? ORDER BY id DESC");
+  97: $stmt_list->bind_param("i", $seller_id);
+  98: $stmt_list->execute();
+  99: $products_list = $stmt_list->get_result();
+ 100: 
+ 101: $realProductsCount = ($products_list) ? $products_list->num_rows : 0;
+ 102: $realActiveRentals = 0;
+ 103: $realEarnings      = 0.00;
+ 104: $realDeposits      = 0.00;
+ 105: ?>
+Additional conflict marker locations in get_prodcuts.php: line 355 is the closing marker.
+get_prodcuts.php lines 289-325 contain the seller form fields including rental price and deposit field; corresponding seller_dashboard.php form is lines 274-310.
+
+J. RELATED STATUS / CONTRACT NUMBER HANDLING
+Only order-specific lines are included. Lines 45-62 are intentionally omitted because they fetch and construct customer-identifying notification data.
+
+===== SOURCE: api/update_contract_status.php | lines 21-44 =====
+  21: $data = json_decode(file_get_contents('php://input'), true);
+  22: $orderId = intval($data['order_id'] ?? 0);
+  23: $action  = $data['action'] ?? '';
+  24: 
+  25: if (!$orderId || !in_array($action, ['release', 'damage'])) {
+  26:     echo json_encode(['success' => false, 'error' => 'بيانات الطلب غير صالحة']);
+  27:     exit;
+  28: }
+  29: 
+  30: $contractNo = "AGR-2026-" . str_pad($orderId, 3, '0', STR_PAD_LEFT);
+  31: 
+  32: if ($action === 'release') {
+  33:     $status  = 'مكتمل';
+  34:     $subject = "إفراج عن التأمين للعقد #$contractNo";
+  35:     $msgText = "عزيزي المستأجر، تم فحص المنتج المسترجع بنجاح وإرجاع مبلغ التأمين لحسابك.";
+  36: } else {
+  37:     $status  = 'نزاع - إثبات ضرر';
+  38:     $subject = "تنبيه ضرر للعقد #$contractNo";
+  39:     $msgText = "عزيزي المستأجر، تم تسجيل إثبات ضرر على السلعة للعقد #$contractNo واقتطاع القيمة من التأمين.";
+  40: }
+  41: 
+  42: // 1. تحديث حالة الطلب في جدول orders
+  43: $conn->query("UPDATE orders SET status = '$status' WHERE id = $orderId");
+  44: 
+
+K. ADDITIONAL PURCHASE CART HANDLER
+index.html has another purchase-card handler using the same localStorage cart model.
+
+===== SOURCE: index.html | lines 558-609 =====
+ 558:         setFavoriteHeart(button, isFavorite);
+ 559:     });
+ 560: 
+ 561: });
+ 562: 
+ 563: document.addEventListener("DOMContentLoaded", function () {
+ 564: 
+ 565:     const addButtons = document.querySelectorAll(".cart-btn");
+ 566: 
+ 567:     addButtons.forEach(button => {
+ 568: 
+ 569:         button.addEventListener("click", function () {
+ 570: 
+ 571:             const productCard = button.closest(".product-card");
+ 572: 
+ 573:             const product = {
+ 574:                 name: productCard.dataset.name,
+ 575:                 price: Number(productCard.dataset.price),
+ 576:                 image: productCard.dataset.image,
+ 577:                 quantity: 1
+ 578:             };
+ 579: 
+ 580:             let cart = JSON.parse(localStorage.getItem("cart")) || [];
+ 581: 
+ 582:             // البحث عن المنتج إذا كان موجودًا
+ 583:             const existingProduct = cart.find(
+ 584:                 item => item.name === product.name
+ 585:             );
+ 586: 
+ 587:             if (existingProduct) {
+ 588:                 existingProduct.quantity += 1;
+ 589:             } else {
+ 590:                 cart.push(product);
+ 591:             }
+ 592: 
+ 593:             // حفظ السلة
+ 594:             localStorage.setItem("cart", JSON.stringify(cart));
+ 595: 
+ 596:             // تغيير شكل الزر مؤقتًا
+ 597:             const oldText = button.textContent;
+ 598: 
+ 599:             button.textContent = "✓ تمت الإضافة";
+ 600:             button.style.backgroundColor = "#27ae60";
+ 601: 
+ 602:             setTimeout(() => {
+ 603:                 button.textContent = oldText;
+ 604:                 button.style.backgroundColor = "";
+ 605:             }, 1200);
+ 606: 
+ 607:             // تحديث رقم السلة
+ 608:             updateCartCount();
+ 609:         });
+
+L. OFFERS PAGE CART HANDLER
+offerss.html marks purchase cards in its markup and skips cards with data-type rent in the generic add handler.
+
+===== SOURCE: offerss.html | lines 731-845 =====
+ 731:     const addButtons =
+ 732:         document.querySelectorAll(".cart-btn");
+ 733: 
+ 734: 
+ 735:     addButtons.forEach(function (button) {
+ 736: 
+ 737: 
+ 738:         button.addEventListener(
+ 739:             "click",
+ 740:             function () {
+ 741: 
+ 742: 
+ 743:                 const productCard =
+ 744:                     button.closest(".product-card");
+ 745: 
+ 746: 
+ 747:                 if (!productCard) return;
+ 748:                 
+ 749: // إذا كان المنتج للإيجار، نتجاهله هنا لأن له دالة خاصة تفحص التواريخ
+ 750:             if (productCard.dataset.type === "rent") {
+ 751:                 return;
+ 752:             }
+ 753: 
+ 754:                 const categoryElement =
+ 755:                     productCard.querySelector(
+ 756:                         ".product-category"
+ 757:                     );
+ 758: 
+ 759: 
+ 760:                 const product = {
+ 761: 
+ 762:                     name:
+ 763:                         productCard.dataset.name,
+ 764: 
+ 765:                     price:
+ 766:                         Number(
+ 767:                             productCard.dataset.price
+ 768:                         ),
+ 769: 
+ 770:                     image:
+ 771:                         productCard.dataset.image,
+ 772: 
+ 773:                     category:
+ 774:                         categoryElement
+ 775:                             ? categoryElement.textContent.trim()
+ 776:                             : "",
+ 777: 
+ 778:                     quantity: 1
+ 779: 
+ 780:                 };
+ 781: 
+ 782: 
+ 783:                 let cart =
+ 784:                     JSON.parse(
+ 785:                         localStorage.getItem("cart")
+ 786:                     ) || [];
+ 787: 
+ 788: 
+ 789:                 const existingProduct =
+ 790:                     cart.find(function (item) {
+ 791: 
+ 792:                         return item.name === product.name;
+ 793: 
+ 794:                     });
+ 795: 
+ 796: 
+ 797:                 if (existingProduct) {
+ 798: 
+ 799:                     existingProduct.quantity += 1;
+ 800: 
+ 801:                 } else {
+ 802: 
+ 803:                     cart.push(product);
+ 804: 
+ 805:                 }
+ 806: 
+ 807: 
+ 808:                 localStorage.setItem(
+ 809:                     "cart",
+ 810:                     JSON.stringify(cart)
+ 811:                 );
+ 812: 
+ 813: 
+ 814:                 const oldText =
+ 815:                     button.innerHTML;
+ 816: 
+ 817: 
+ 818:                 button.innerHTML =
+ 819:                     "✓ تمت الإضافة";
+ 820: 
+ 821: 
+ 822:                 button.style.backgroundColor =
+ 823:                     "#27ae60";
+ 824: 
+ 825: 
+ 826:                 setTimeout(function () {
+ 827: 
+ 828:                     button.innerHTML =
+ 829:                         oldText;
+ 830: 
+ 831:                     button.style.backgroundColor =
+ 832:                         "";
+ 833: 
+ 834:                 }, 1200);
+ 835: 
+ 836: 
+ 837:                 updateCartCount();
+ 838: 
+ 839:             }
+ 840:         );
+ 841: 
+ 842:     });
+ 843: 
+ 844: 
+ 845:     updateCartCount();
+
+===== SOURCE: offerss.html | lines 1238-1278 =====
+1238: function addRentItemToCart(buttonElement, name, pricePerDay, image, deposit) {
+1239:     const card = buttonElement.closest('.product-card');
+1240:     const box = card.querySelector('.rent-details-box');
+1241:     const startVal = box.querySelector('.start-date').value;
+1242:     const endVal = box.querySelector('.end-date').value;
+1243: 
+1244:     if (!startVal || !endVal) {
+1245:         showCustomToast('يرجى تحديد فترة الإيجار (من تاريخ وإلى تاريخ) أولاً.');
+1246:         return;
+1247:     }
+1248: 
+1249:     const days = parseInt(box.querySelector('.days-val').textContent);
+1250:     const total = parseFloat(box.querySelector('.total-val').textContent);
+1251: 
+1252:     // سطر جديد: يقرأ التصنيف (مثل "الإلكترونيات والترفيه") من كارد المنتج مباشرة
+1253:     const categoryElement = card.querySelector('.product-category');
+1254:     const category = categoryElement ? categoryElement.textContent.trim() : 'عام';
+1255: 
+1256:     const rentItem = {
+1257:         id: 'rent_' + Date.now(),
+1258:         type: 'إيجار',
+1259:         name: name,
+1260:         category: category, // حفظ التصنيف في السلة لمنع ظهور undefined
+1261:         price: total,
+1262:         pricePerDay: pricePerDay,
+1263:         startDate: startVal,
+1264:         endDate: endVal,
+1265:         days: days,
+1266:         deposit: deposit,
+1267:         image: image,
+1268:         quantity: 1
+1269:     };
+1270: 
+1271:     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+1272:     cart.push(rentItem);
+1273:     localStorage.setItem('cart', JSON.stringify(cart));
+1274: 
+1275:     const oldText = buttonElement.innerHTML;
+1276:     buttonElement.innerHTML = '✓ تم حجز الإيجار';
+1277:     const oldBg = buttonElement.style.backgroundColor;
+1278:     buttonElement.style.backgroundColor = '#27ae60';
+
+FILES / ARTIFACTS CHECKED
+Included excerpts: api/checkout.php, api/get_customer_orders.php, cart.html, prodcuts.html, user-drawer.js, seller_dashboard.php, get_prodcuts.php, api/update_contract_status.php, index.html, offerss.html, and DDL from the downloaded SQL dump.
+API directory listing checked: api/get-products.php is absent; api/get_customer_orders.php and api/checkout.php are present.
+No migrations directory or project SQL file was found under the workspace file listing. The SQL dump was supplied through the IDE tab outside the workspace.
+No source references to rental_products or order_items were found.
+
+END OF BUNDLE
+
+M. RAW DDL EXCERPTS FROM SQL DUMP (structure only; no INSERT/data rows)
+
+===== SQL DDL: messages | dump lines 30-37 =====
+  30: CREATE TABLE `messages` (
+  31:   `id` int(11) NOT NULL,
+  32:   `name` varchar(100) NOT NULL,
+  33:   `email` varchar(100) NOT NULL,
+  34:   `subject` varchar(150) NOT NULL,
+  35:   `message` text NOT NULL,
+  36:   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  37: ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+===== SQL DDL: orders | dump lines 79-89 =====
+  79: CREATE TABLE `orders` (
+  80:   `id` int(11) NOT NULL,
+  81:   `user_id` int(11) NOT NULL,
+  82:   `subtotal` decimal(10,2) NOT NULL,
+  83:   `shipping_fee` decimal(10,2) DEFAULT 35.00,
+  84:   `total_amount` decimal(10,2) NOT NULL,
+  85:   `shipping_method` varchar(100) DEFAULT 'توصيل سريع',
+  86:   `payment_method` varchar(100) NOT NULL,
+  87:   `status` enum('قيد الانتظار','جاري التوصيل','مكتمل','ملغى') DEFAULT 'قيد الانتظار',
+  88:   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  89: ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+===== SQL DDL: products | dump lines 115-125 =====
+ 115: CREATE TABLE `products` (
+ 116:   `id` int(11) NOT NULL,
+ 117:   `name` varchar(150) NOT NULL,
+ 118:   `category` varchar(50) NOT NULL,
+ 119:   `price` decimal(10,2) NOT NULL,
+ 120:   `image` varchar(255) NOT NULL,
+ 121:   `description` text DEFAULT NULL,
+ 122:   `is_featured` tinyint(1) DEFAULT 0,
+ 123:   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+ 124:   `seller_id` int(11) NOT NULL DEFAULT 1
+ 125: ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+===== SQL DDL: rental_products | dump lines 140-149 =====
+ 140: CREATE TABLE `rental_products` (
+ 141:   `id` int(11) NOT NULL,
+ 142:   `seller_id` int(11) NOT NULL,
+ 143:   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+ 144:   `rental_price` decimal(10,2) NOT NULL,
+ 145:   `deposit_fee` decimal(10,2) NOT NULL,
+ 146:   `max_rental_days` int(11) NOT NULL,
+ 147:   `image` varchar(255) DEFAULT NULL,
+ 148:   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+ 149: ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+===== SQL DDL: orders primary/index | dump lines 222-224 =====
+ 222: ALTER TABLE `orders`
+ 223:   ADD PRIMARY KEY (`id`),
+ 224:   ADD KEY `user_id` (`user_id`);
+
+===== SQL DDL: products primary key | dump lines 229-230 =====
+ 229: ALTER TABLE `products`
+ 230:   ADD PRIMARY KEY (`id`);
+
+===== SQL DDL: rental_products primary key | dump lines 235-236 =====
+ 235: ALTER TABLE `rental_products`
+ 236:   ADD PRIMARY KEY (`id`);
+
+===== SQL DDL: orders foreign key to users | dump lines 292-293 =====
+ 292: ALTER TABLE `orders`
+ 293:   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+Only DDL ranges are appended above. Lines containing INSERT statements and all row values remain excluded.

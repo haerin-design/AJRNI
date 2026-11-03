@@ -179,16 +179,22 @@
         return slot;
     }
 
-    /* ---------- جلب العقود ---------- */
+    
+   /* ---------- جلب العقود والمشتريات وفصلها بذكاء ---------- */
     function loadOrders() {
-        fetch("get_customer_orders.php")
+        fetch("api/get_customer_orders.php")
             .then(function (r) { return r.json(); })
             .then(function (data) {
-                var box = document.getElementById("realRentalsContainer");
-                if (!box) return;
+                var rentalsBox = document.getElementById("realRentalsContainer");
+                var ordersBoxParent = document.querySelector("#sideTab-orders"); 
+                
+                if (!rentalsBox) return;
 
                 if (!data.success || !data.orders || data.orders.length === 0) {
-                    box.innerHTML = '<div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px;">لا توجد عقود أو طلبات حالياً</div>';
+                    rentalsBox.innerHTML = '<div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px;">لا توجد عقود إيجار حالياً</div>';
+                    if (ordersBoxParent) {
+                        ordersBoxParent.innerHTML = '<div style="font-size: 12px; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-receipt" style="color: #0b1c3f;"></i> المنتجات المشتراة ملكية دائمة:</div><div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px;">لا توجد مشتريات حالياً</div>';
+                    }
                     return;
                 }
 
@@ -197,25 +203,46 @@
                 var dep = document.getElementById("drawerDeposit");
                 if (dep) dep.innerHTML = Number(data.totalDeposit).toLocaleString() + ' <span style="font-size:12px; font-weight:normal;">ر.س</span>';
 
-                box.innerHTML = data.orders.map(function (o) {
-                    return '<div style="border:1px solid #e2e8f0; border-radius:10px; padding:12px; background:#fff;">' +
+                var rentalsHtml = '';
+                var ordersHtml = '';
+
+                data.orders.forEach(function (o) {
+                    // فرز ذكي: المنتجات التي تمثل مشتريات (أو ليس لها تأمين إيجار) تذهب لتبويب مشترياتي
+                    // يمكنك تعديل الشرط هنا بناءً على قيمة المنتج أو طريقة تفريقه
+                    var isPurchase = (Number(o.subtotal) === 2000); // كمثال: المنتجات بقيمة 2000 تعتبر شراء أو حسب رغبتك
+
+                    var cardHtml = '<div style="border:1px solid #e2e8f0; border-radius:10px; padding:12px; background:#fff; margin-bottom:8px;">' +
                         '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">' +
-                        '<strong style="font-size:13px; color:#0b1c3f;">عقد طلب #' + esc(o.id) + '</strong>' +
-                        '<span style="font-size:10px; background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:12px; font-weight:bold;">' + esc(o.status) + '</span>' +
+                        '<strong style="font-size:13px; color:#0b1c3f;">#' + esc(o.id) + (isPurchase ? ' طلب شراء' : ' طلب إيجار') + '</strong>' +
+                        '<span style="font-size:10px; background:' + (isPurchase ? '#dcfce7; color:#166534;' : '#e0f2fe; color:#0369a1;') + ' padding:2px 8px; border-radius:12px; font-weight:bold;">' + esc(o.status) + '</span>' +
                         '</div>' +
                         '<div style="font-size:11px; color:#64748b; line-height:1.8;">' +
-                        '<div><i class="fa-regular fa-calendar-days" style="width:14px;"></i> تاريخ التسجيل: ' + esc(o.created_at) + '</div>' +
-                        '<div style="color:#16a34a; font-weight:600;"><i class="fa-solid fa-shield-halved" style="width:14px;"></i> التأمين / الضمان: ' + Number(o.subtotal).toLocaleString() + ' ر.س</div>' +
+                        '<div><i class="fa-regular fa-calendar-days" style="width:14px;"></i> التاريخ: ' + esc(o.created_at) + '</div>' +
+                        (!isPurchase ? '<div style="color:#16a34a; font-weight:600;"><i class="fa-solid fa-shield-halved" style="width:14px;"></i> التأمين: ' + Number(o.subtotal).toLocaleString() + ' ر.س</div>' : '') +
                         '<div style="color:#0b1c3f; font-weight:600;"><i class="fa-solid fa-receipt" style="width:14px;"></i> الإجمالي: ' + Number(o.total_amount).toLocaleString() + ' ر.س (' + esc(o.payment_method) + ')</div>' +
                         '</div></div>';
-                }).join("");
+
+                    if (isPurchase) {
+                        ordersHtml += cardHtml;
+                    } else {
+                        rentalsHtml += cardHtml;
+                    }
+                });
+
+                // تعبئة إيجاراتي
+                rentalsBox.innerHTML = rentalsHtml || '<div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px;">لا توجد عقود إيجار حالياً</div>';
+
+                // تعبئة مشترياتي
+                if (ordersBoxParent) {
+                    ordersBoxParent.innerHTML = '<div style="font-size: 12px; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-receipt" style="color: #0b1c3f;"></i> المنتجات المشتراة ملكية دائمة:</div>' + 
+                        (ordersHtml || '<div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px;">لا توجد مشتريات حالياً</div>');
+                }
             })
             .catch(function () {
                 var box = document.getElementById("realRentalsContainer");
                 if (box) box.innerHTML = '<div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px;">لا توجد عقود أو طلبات حالياً</div>';
             });
     }
-
     /* ---------- جلب التنبيهات ---------- */
     function loadNotifications() {
         fetch("api/get_user_notifications.php")
