@@ -297,7 +297,7 @@
      HEADER
 ========================= -->
 
-<header class="header"> <!--الشريط-->
+<header class="header"> <!---->
     <div class="logo-area">
         <div class="logo-circle">
             <i class="fa-solid fa-box-open"></i>
@@ -308,9 +308,9 @@
         </div>
     </div>
     <nav class="navbar"> <!-- القوائم بالشريط -->
-        <a href="index.html">الرئيسية</a>
-        <a href="prodcuts.html" >المنتجات</a>
-        <a href="offerss.html"class="active" >العروض</a>
+        <a href="index.html" >الرئيسية</a>
+        <a href="prodcuts.html">المنتجات</a>
+        <a href="offerss.html" class="active">العروض</a>
         <a href="contacct.html">تواصل معنا</a>
     </nav>
     <div class="header-actions"> <!-- الأيقونات -->
@@ -323,18 +323,13 @@
         <a href="signin.html"><!--ايقونة صفحه التسجيل-->
             <i class="fa-regular fa-user"></i>
         </a>
-    </div>
+    </div>    
     <div class="search-box">
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="ابحث عن منتجاتك المفضلة..."
-    >
-
-    <button id="searchButton" type="button">
-        <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
-</div>
+        <input type="text" id="searchInput" placeholder="ابحث عن منتجاتك المفضلة...">
+        <button id="searchButton" type="button" style="background:transparent;border:none;cursor:pointer;color:inherit;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
 </header>
 
 
@@ -554,7 +549,7 @@
 </footer>
 
 
-
+<script src="search.js"></script>
 <script>
 
 /* =====================================================
@@ -1329,7 +1324,6 @@ function changeCampingSlide(direction) {
     }
 }
 </script>
-
-
+<script src="user-drawer.js"></script>
 </body>
 </html>
