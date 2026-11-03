@@ -24,13 +24,15 @@ if (isset($_POST['update_product_status'])) {
     } else {
         $msg_text = "عذراً، تم رفض طلب منتجك.";
     }
-    
-    // إدخال الرسالة في جدول messages
-    $msg_query = "INSERT INTO messages (name, email, subject, message, created_at) VALUES ('المشرف', 'admin@ajrni.com', 'حالة الطلب', '$msg_text', NOW())";
-    mysqli_query($conn, $msg_query);
-    
-    header("Location: " . $_SERVER['PHP_SELF']);
+
+    // تجهيز استعلام الإدخال
+    $msg_query = "INSERT INTO messages (name, email, subject, message, created_at) VALUES ('المشرف', 'admin@ajrni.com', 'تحديث حالة المنتج', '$msg_text', NOW())";
+
+    // كود الفحص التجريبي (حيظهر الخطأ إذا وجد)
+    mysqli_query($conn, $msg_query) or die("خطأ في قاعدة البيانات: " . mysqli_error($conn));
+    echo "تمت الإضافة بنجاح!";
     exit();
+    
 }
 
 
