@@ -16,8 +16,10 @@ if (isset($_POST['update_product_status'])) {
     $stmt->close();
     
     $msg_text = ($new_status == 'مقبول') ? "تم قبول طلب منتجك بنجاح وعرضه في الموقع." : "عذراً، تم رفض طلب منتجك.";
-    $msg_query = "INSERT INTO messages (name, email, subject, message, created_at) VALUES ('المشرف', '', 'حالة الطلب', '$msg_text', NOW());";
-    mysqli_query($conn, $msg_query);
+    $msg_query = "INSERT INTO messages (name, email, subject, message, created_at) VALUES ('المشرف', 'admin@ajrni.com', 'حالة الطلب', '$msg_text', NOW())";
+    if (!mysqli_query($conn, $msg_query)) {
+        echo("Error: " . mysqli_error($conn));
+    }
     
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
