@@ -14,8 +14,14 @@ if (isset($_POST['update_product_status'])) {
     $stmt->bind_param("si", $new_status, $product_id);
     $stmt->execute();
     $stmt->close();
+    
+    $msg_text = ($new_status == 'مقبول') ? "تم قبول طلب منتجك بنجاح وعرضه في الموقع." : "عذراً، تم رفض طلب منتجك.";
+    $msg_query = "INSERT INTO messages (name, email, subject, message, created_at) VALUES ('المشرف', '', 'حالة الطلب', '$msg_text', NOW());";
+    mysqli_query($conn, $msg_query);
+    
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
+
 }
 
 // معالجة حذف المستخدم
