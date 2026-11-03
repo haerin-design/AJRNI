@@ -8,7 +8,6 @@ if ($conn->connect_error) {
 }
 // معالجة تحديث حالة منتجات المؤجرين
 if (isset($_POST['update_product_status'])) {
-    echo "<h1 style='color:green; text-align:center;'>وصلت الضغطة لصفحة الأدمن بنجاح!</h1>";
     $product_id = $_POST['product_id'];
     $new_status = $_POST['status'];
     
@@ -29,12 +28,16 @@ if (isset($_POST['update_product_status'])) {
     // تجهيز استعلام الإدخال
     $msg_query = "INSERT INTO messages (name, email, subject, message, created_at) VALUES ('المشرف', 'admin@ajrni.com', 'تحديث حالة المنتج', '$msg_text', NOW())";
 
-    // كود الفحص التجريبي (حيظهر الخطأ إذا وجد)
-    mysqli_query($conn, $msg_query) or die("خطأ في قاعدة البيانات: " . mysqli_error($conn));
-    echo "تمت الإضافة بنجاح!";
-    exit();
-    
+    // تنفيذ استعلام الإدخال
+    mysqli_query($conn, $msg_query) or die("خطأ: " . mysqli_error($conn));
+
+    // إعادة التوجيه لصفحة الأدمن
+    header("Location: admin.php");
+    exit(); 
 }
+
+
+
 
 
 // معالجة حذف المستخدم
@@ -238,7 +241,7 @@ if (isset($_GET['delete_user'])) {
         <!-- الهيدر العلوي -->
         <div class="header-bar">
             <div>
-                <h2>مرحباً، 1 <span id="admin-name"></span> </h2>
+                <h2>مرحباً،  <span id="admin-name"></span> </h2>
                 <span style="color: var(--gray); font-size: 13px;">نظام إدارة متجر أجرني</span>
             </div>
             <a href="login.html" style="color: #e74c3c; text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 6px; background-color: #fdf2f2;">
