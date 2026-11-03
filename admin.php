@@ -8,11 +8,31 @@ if ($conn->connect_error) {
 }
 // معالجة تحديث حالة منتجات المؤجرين
 if (isset($_POST['update_product_status'])) {
+   if (isset($_POST['update_product_status'])) {
     $product_id = $_POST['product_id'];
-    $new_status = $_POST['status']; 
+    $new_status = $_POST['status'];
+    
+    // تحديث حالة المنتج في قاعدة البيانات
     $stmt = $conn->prepare("UPDATE products SET status = ? WHERE id = ?");
     $stmt->bind_param("si", $new_status, $product_id);
     $stmt->execute();
+    $stmt->close();
+    
+    // تحديد نص الرسالة بناءً على الحالة
+    $status_clean = trim($new_status);
+    if ($status_clean == 'مقبول' || $status_clean == 'approved' || $status_clean == 'مقبولة') {
+        $msg_text = "تم قبول طلب منتجك بنجاح وعرضه في الموقع.";
+    } else {
+        $msg_text = "عذراً، تم رفض طلب منتجك.";
+    }
+    
+    // إدخال الرسالة في جدول messages
+    $msg_query = "INSERT INTO messages (name, email, subject, message, created_at) VALUES ('المشرف', 'admin@ajrni.com', 'حالة الطلب', '$msg_text', NOW())";
+    mysqli_query($conn, $msg_query);
+    
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
     $stmt->close();
     
     $status_clean = trim($new_status);
