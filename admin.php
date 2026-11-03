@@ -8,7 +8,6 @@ if ($conn->connect_error) {
 }
 // معالجة تحديث حالة منتجات المؤجرين
 if (isset($_POST['update_product_status'])) {
-   if (isset($_POST['update_product_status'])) {
     $product_id = $_POST['product_id'];
     $new_status = $_POST['status'];
     
@@ -20,7 +19,7 @@ if (isset($_POST['update_product_status'])) {
     
     // تحديد نص الرسالة بناءً على الحالة
     $status_clean = trim($new_status);
-    if ($status_clean == 'مقبول' || $status_clean == 'approved' || $status_clean == 'مقبولة') {
+    if ($status_clean == 'مقبول' || $status_clean == 'مقبولة' || $status_clean == 'approved') {
         $msg_text = "تم قبول طلب منتجك بنجاح وعرضه في الموقع.";
     } else {
         $msg_text = "عذراً، تم رفض طلب منتجك.";
@@ -33,28 +32,7 @@ if (isset($_POST['update_product_status'])) {
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
-    $stmt->close();
-    
-    $status_clean = trim($new_status);
-    
-    if ($status_clean == 'مقبول' || $status_clean == 'approved' || $status_clean == 'مقبولة') {
-        $msg_text = "تم قبول طلب منتجك بنجاح وعرضه في الموقع.";
-    } else {
-        $msg_text = "عذراً، تم رفض طلب منتجك.";
-    }
-    
-    $msg_query = "INSERT INTO messages (name, email, subject, message, created_at) VALUES ('المشرف', 'admin@ajrni.com', 'حالة الطلب', '$msg_text', NOW())";
-    
-    $result = mysqli_query($conn, $msg_query);
-    
-    if (!$result) {
-        die("خطأ في قاعدة البيانات: " . mysqli_error($conn));
-    }
-    
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
 
-}
 
 // معالجة حذف المستخدم
 if (isset($_GET['delete_user'])) {
