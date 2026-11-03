@@ -8,10 +8,6 @@ if ($conn->connect_error) {
 }
 // معالجة تحديث حالة منتجات المؤجرين
 if (isset($_POST['update_product_status'])) {
-    if (isset($_POST['update_product_status'])) {
-    echo "وصل الطلب للبيانات بنجاح! ID: " . $_POST['product_id'] . " الحالة: " . $_POST['status'];
-    exit();
-}
     $product_id = $_POST['product_id'];
     $new_status = $_POST['status'];
     
@@ -302,13 +298,13 @@ if (isset($_GET['delete_user'])) {
             
             // أزرار الموافقة والرفض
             echo "<td>
-                    <form method='POST' style='display:inline-block;'>
+                    <form action='admin.php' method='POST' style='display:inline-block;'>
                         <input type='hidden' name='product_id' value='" . $row['id'] . "'>
                         <input type='hidden' name='status' value='مقبول'>
                         <button type='submit' name='update_product_status' style='background-color: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 5px;'>موافقة</button>
                     </form>
                     
-                    <form method='POST' style='display:inline-block;'>
+                    <form action='admin.php' method='POST' style='display:inline-block;'>
                         <input type='hidden' name='product_id' value='" . $row['id'] . "'>
                         <input type='hidden' name='status' value='مرفوض'>
                         <button type='submit' name='update_product_status' style='background-color: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;'>رفض</button>
