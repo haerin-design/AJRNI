@@ -33,6 +33,7 @@ try {
         $price   = max(0, floatval($item['price'] ?? 0));
         $deposit = max(0, floatval($item['deposit'] ?? 0));
         $qty     = max(1, intval($item['quantity'] ?? 1));
+        
         $subtotal     += $price * $qty;
         $discountBase += max(0, $price - $deposit) * $qty; // الخصم بدون التأمين المسترد
     }
@@ -40,10 +41,12 @@ try {
     $discountCode    = strtoupper(trim($data['discountCode'] ?? ''));
     $validCodes      = ["AJRNI15" => 15];
     $discountPercent = $validCodes[$discountCode] ?? 0;
+    
     $discountAmount  = round($discountBase * $discountPercent / 100, 2);
     $total           = $subtotal - $discountAmount + $shippingFee;
 
-    $status = 'نشط';
+    // ضبط الحالة الافتراضية لتكون قيد الانتظار لتظهر في لوحة الأدمن بشكل صحيح
+    $status = 'قيد الانتظار';
     $orderStmt = $conn->prepare("INSERT INTO orders (user_id, subtotal, shipping_fee, total_amount, shipping_method, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
     if (!$orderStmt) {
         echo json_encode(["status" => "error", "message" => "خطأ في الاستعلام: " . $conn->error]);
