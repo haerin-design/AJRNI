@@ -22,11 +22,24 @@ try {
         exit();
     }
 
-    $shippingMethod = trim($data['shippingMethod'] ?? 'توصيل سريع');
+    // --- فحص ذكي لتصنيف الطلب (إيجار أم شراء) ---
+    $isRentalOrder = false;
+    foreach ($cart as $item) {
+        if (!empty($item['startDate']) || !empty($item['deposit']) || (isset($item['type']) && $item['type'] === 'إيجار')) {
+            $isRentalOrder = true;
+            break;
+        }
+    }
+
+    $baseShippingMethod = trim($data['shippingMethod'] ?? 'توصيل سريع');
+    // دمج التصنيف مع طريقة الشحن لكي يتم فرزه في القائمة الجانبية بدقة
+    $shippingMethod = $baseShippingMethod . ($isRentalOrder ? ' (إيجار)' : ' (شراء)');
+    // ------------------------------------------
+
     $paymentMethod  = trim($data['paymentMethod'] ?? 'بطاقة مدى / ائتمانية');
     $shippingFee    = 35; // ثابتة من السيرفر
 
-    // نحسب المبالغ من السلة نفسها (ما نصدق المجموع الجاي من المتصفح)
+    // نحسب المبالغ من السلة نفسها بعمليات الضرب الصحيحة 100%
     $subtotal = 0;
     $discountBase = 0;
     foreach ($cart as $item) {

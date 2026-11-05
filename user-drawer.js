@@ -209,8 +209,10 @@
                 data.orders.forEach(function (o) {
                     // فرز ذكي: المنتجات التي تمثل مشتريات (أو ليس لها تأمين إيجار) تذهب لتبويب مشترياتي
                     // يمكنك تعديل الشرط هنا بناءً على قيمة المنتج أو طريقة تفريقه
-                    var isPurchase = (Number(o.subtotal) === 2000); // كمثال: المنتجات بقيمة 2000 تعتبر شراء أو حسب رغبتك
-
+                    
+                    // فرز دقيق بناءً على ما حفظه السيرفر في طريقة الشحن
+var isRental = o.shipping_method && o.shipping_method.includes('إيجار');
+var isPurchase = !isRental;
                     var cardHtml = '<div style="border:1px solid #e2e8f0; border-radius:10px; padding:12px; background:#fff; margin-bottom:8px;">' +
                         '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">' +
                         '<strong style="font-size:13px; color:#0b1c3f;">#' + esc(o.id) + (isPurchase ? ' طلب شراء' : ' طلب إيجار') + '</strong>' +

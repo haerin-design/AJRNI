@@ -1872,8 +1872,13 @@ function updateRentCalc(inputElement, pricePerDay, deposit) {
 function addRentItemToCart(buttonElement, name, pricePerDay, image, deposit) {
     const card = buttonElement.closest('.product-card');
     const box = card.querySelector('.rent-details-box');
-    const startVal = box.querySelector('.start-date').value;
-    const endVal = box.querySelector('.end-date').value;
+    
+    // التقاط آمن لحقول التاريخ بغض النظر عن أسماء الكلاسات
+    const startInput = box ? box.querySelector('input[type="date"], .start-date, [name*="start"]') : card.querySelector('input[type="date"]');
+    const endInput = box ? box.querySelector('input[type="date"]:nth-of-type(2), .end-date, [name*="end"]') : null;
+
+    const startVal = startInput ? startInput.value : '';
+    const endVal = endInput ? endInput.value : '';
 
     if (!startVal || !endVal) {
         showCustomToast('يرجى تحديد فترة الإيجار (من تاريخ وإلى تاريخ) أولاً.');
@@ -2102,9 +2107,9 @@ function fetchCustomerOrders() {
 
             data.orders.dates = data.orders || [];
             data.orders.forEach(order => {
-                // تحقق ذكي: إذا كان الطلب شراء (أو بدون مدة إيجار/تأمين)، يروح لمشترياتي تلقائياً
-                const isPurchase = !order.start_date && !order.end_date; 
-
+                // الشرط الأصلي الذي كان يعتمد على عدم وجود تاريخ بداية ونهاية للإيجار
+const isRental = order.shipping_method && order.shipping_method.includes('إيجار');
+const isPurchase = !isRental;
                 if (isPurchase) {
                     ordersHtml += `
                     <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; margin-bottom: 8px;">
@@ -2159,7 +2164,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchCustomerOrders();
 });
 function loadDynamicProducts() {
-    fetch('api/get-products.php')
+    fetch('api/get_prodcuts.php')
         .then(res => res.json())
         .then(data => {
             if (!data.success || !data.products || data.products.length === 0) return;
